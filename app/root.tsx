@@ -1,11 +1,32 @@
+import { LinksFunction } from '@remix-run/node';
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+} from '@remix-run/react';
 
+// links
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+      crossOrigin: 'anonymous',
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
+    },
+  ];
+};
+
+// layout
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -24,6 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Root component.
+ */
 export default function App() {
   return <Outlet />;
 }
