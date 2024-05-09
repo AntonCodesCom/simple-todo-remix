@@ -1,3 +1,4 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { LinksFunction } from '@remix-run/node';
 import {
   Links,
@@ -6,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import theme from './theme';
 
 // links
 export const links: LinksFunction = () => {
@@ -49,5 +51,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
  * Root component.
  */
 export default function App() {
-  return <Outlet />;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Outlet />
+    </ThemeProvider>
+  );
 }
