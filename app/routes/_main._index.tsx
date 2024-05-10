@@ -1,26 +1,18 @@
 import { Delete, Edit } from '@mui/icons-material';
 import {
-  Box,
   Checkbox,
   Container,
-  FormControlLabel,
-  Grid,
   IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   Typography,
 } from '@mui/material';
 import type { MetaFunction } from '@remix-run/node';
 import { useState } from 'react';
+import TodoList from '~/Todo/components/List';
 
 // meta
 export const meta: MetaFunction = () => {
@@ -90,15 +82,6 @@ function CheckboxList() {
   );
 }
 
-const todos = [
-  {
-    label: 'Lorem ipsum dolor sit amet.',
-  },
-  {
-    label: 'Todo 2',
-  },
-];
-
 /**
  * Index (root) route component.
  */
@@ -108,35 +91,7 @@ export default function RouteIndex() {
       <Typography variant="h4" component="h1" mb={3}>
         My Todos
       </Typography>
-      <TableContainer>
-        <Table sx={{ width: 'auto' }}>
-          <TableBody>
-            {todos.map((x, i) => {
-              const htmlId = `TodoListItem${i}`;
-              return (
-                <TableRow key={i}>
-                  <TableCell padding="checkbox">
-                    <Checkbox id={htmlId} />
-                  </TableCell>
-                  <TableCell>
-                    <label htmlFor={htmlId} style={{ cursor: 'pointer' }}>
-                      {x.label}
-                    </label>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton size="small">
-                      <Edit fontSize="small" />
-                    </IconButton>{' '}
-                    <IconButton size="small">
-                      <Delete fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <TodoList />
     </Container>
   );
 }
