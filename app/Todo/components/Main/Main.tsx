@@ -12,7 +12,13 @@ export default function TodoMain({ todos }: Props) {
       <Typography variant="h4" component="h1" mb={3}>
         My Todos
       </Typography>
-      {todos && <TodoList todos={todos} />}
+      {todos && todos.length > 0 ? (
+        <TodoList todos={todos} />
+      ) : (
+        <Typography variant="body2" color="GrayText">
+          No todos yet. Add one!
+        </Typography>
+      )}
     </Container>
   );
 }
