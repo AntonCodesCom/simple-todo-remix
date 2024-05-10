@@ -6,18 +6,31 @@ import {
   Link,
   Popover,
   Stack,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 interface Props {
   sessionId: string;
 }
 
 export default function CommonSession({ sessionId }: Props) {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = open ? 'CommonSession-popover' : undefined;
+
+  useEffect(() => {
+    if (tooltipOpen) {
+      const timeout = setTimeout(() => {
+        setTooltipOpen(false);
+      }, 1500);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [tooltipOpen]);
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -27,6 +40,7 @@ export default function CommonSession({ sessionId }: Props) {
   }
   function handleCopy() {
     navigator.clipboard.writeText(sessionId);
+    setTooltipOpen(true);
   }
 
   return (
@@ -39,15 +53,17 @@ export default function CommonSession({ sessionId }: Props) {
       >
         <Typography variant="body2" color="GrayText">
           Your session ID is:{' '}
-          <ButtonBase
-            style={{
-              fontWeight: 500,
-              textDecoration: 'underline',
-            }}
-            onClick={handleCopy}
-          >
-            {sessionId}
-          </ButtonBase>{' '}
+          <Tooltip open={tooltipOpen} title="Copied" placement="top" arrow>
+            <ButtonBase
+              style={{
+                fontWeight: 500,
+                textDecoration: 'underline',
+              }}
+              onClick={handleCopy}
+            >
+              {sessionId}
+            </ButtonBase>
+          </Tooltip>{' '}
           <span style={{ whiteSpace: 'nowrap' }}>
             (
             <Link
