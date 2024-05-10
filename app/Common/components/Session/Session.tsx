@@ -39,7 +39,9 @@ export default function CommonSession({ sessionId }: Props) {
     setAnchorEl(null);
   }
   function handleCopy() {
-    navigator.clipboard.writeText(sessionId);
+    const url = new URL(window.location.origin);
+    url.searchParams.append('sessionId', sessionId);
+    window.navigator.clipboard.writeText(url.toString());
     setTooltipOpen(true);
   }
 
