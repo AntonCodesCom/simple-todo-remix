@@ -11,6 +11,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: colors.cyan[600],
+      contrastText: 'white',
     },
   },
   spacing: (x: number) => `${x}rem`,

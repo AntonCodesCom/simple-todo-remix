@@ -17,7 +17,7 @@ export default function CommonHeader() {
         >
           Remix Todo
         </Typography>
-        <Button component={Link} to="/about" sx={{ color: 'white' }}>
+        <Button component={Link} to="/about" color="inherit">
           About
         </Button>
       </Toolbar>

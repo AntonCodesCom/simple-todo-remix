@@ -1,4 +1,11 @@
-import { Container, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import TodoList from '../List';
 import TodoItem from '~/Todo/types/Item';
 
@@ -9,9 +16,16 @@ interface Props {
 export default function TodoMain({ todos }: Props) {
   return (
     <Container>
-      <Typography variant="h4" component="h1" mb={3}>
+      <Typography variant="h4" component="h1" mb={2}>
         My Todos
       </Typography>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <Stack direction="row" gap={0.5}>
+          <TextField placeholder="Something to do..." size="small" />
+          <Button variant="contained">Add</Button>
+        </Stack>
+      </form>
+      <Box mb={1.5} />
       {todos && todos.length > 0 ? (
         <TodoList todos={todos} />
       ) : (

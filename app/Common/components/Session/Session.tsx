@@ -103,7 +103,6 @@ export default function CommonSession({ sessionId }: Props) {
           <Stack direction="row" gap={0.5}>
             <Button
               variant="contained"
-              sx={{ color: 'white' }}
               onClick={() => {
                 handleCopy();
                 handlePopoverClose();
