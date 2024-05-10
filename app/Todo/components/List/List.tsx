@@ -18,11 +18,16 @@ export default function TodoList() {
   return (
     <>
       <Box display="table">
-        <Box display="table-row-group">
+        <Box role="list" display="table-row-group">
           {todos.map((x, i) => {
             const htmlId = `TodoList-item_${i}`;
             return (
-              <Box key={i} display="table-row" className={styles.row}>
+              <Box
+                key={i}
+                role="listitem"
+                display="table-row"
+                className={styles.row}
+              >
                 <Box display="table-cell" className={styles.cell}>
                   <Checkbox id={htmlId} />
                 </Box>
