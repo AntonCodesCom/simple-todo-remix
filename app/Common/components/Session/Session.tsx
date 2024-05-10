@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonBase,
   Container,
   Link,
   Popover,
@@ -38,7 +39,15 @@ export default function CommonSession({ sessionId }: Props) {
       >
         <Typography variant="body2" color="GrayText">
           Your session ID is:{' '}
-          <span style={{ fontWeight: 500 }}>{sessionId}</span>{' '}
+          <ButtonBase
+            style={{
+              fontWeight: 500,
+              textDecoration: 'underline',
+            }}
+            onClick={handleCopy}
+          >
+            {sessionId}
+          </ButtonBase>{' '}
           <span style={{ whiteSpace: 'nowrap' }}>
             (
             <Link
