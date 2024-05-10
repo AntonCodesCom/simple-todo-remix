@@ -11,7 +11,7 @@ export default function CommonLayout({ children }: Props) {
   return (
     <Stack minHeight="100vh">
       <CommonHeader />
-      <Box mb={4} />
+      <Box mb={3} />
       <Box component="main" flex={1}>
         {children}
       </Box>
