@@ -24,6 +24,9 @@ export default function CommonSession({ sessionId }: Props) {
   function handlePopoverClose() {
     setAnchorEl(null);
   }
+  function handleCopy() {
+    navigator.clipboard.writeText(sessionId);
+  }
 
   return (
     <Container>
@@ -71,7 +74,14 @@ export default function CommonSession({ sessionId }: Props) {
             and paste it in the browser address bar.
           </Typography>
           <Stack direction="row" gap={0.5}>
-            <Button variant="contained" sx={{ color: 'white' }}>
+            <Button
+              variant="contained"
+              sx={{ color: 'white' }}
+              onClick={() => {
+                handleCopy();
+                handlePopoverClose();
+              }}
+            >
               Copy link
             </Button>
             <Button variant="outlined" onClick={handlePopoverClose}>
