@@ -21,8 +21,10 @@ export default function TodoMain({ todos }: Props) {
       </Typography>
       <form onSubmit={(e) => e.preventDefault()}>
         <Stack direction="row" gap={0.5}>
-          <TextField placeholder="Something to do..." size="small" />
-          <Button variant="contained">Add</Button>
+          <TextField placeholder="Something to do..." size="small" required />
+          <Button type="submit" variant="contained">
+            Add
+          </Button>
         </Stack>
       </form>
       <Box mb={1.5} />

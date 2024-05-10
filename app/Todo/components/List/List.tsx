@@ -36,7 +36,9 @@ export default function TodoList({ todos }: Props) {
               <Box display="table-cell" className={styles.cell}>
                 <IconButton size="small">
                   <Edit fontSize="small" />
-                </IconButton>{' '}
+                </IconButton>
+              </Box>
+              <Box display="table-cell" className={styles.cell} pl={0.25}>
                 <IconButton size="small">
                   <Delete fontSize="small" />
                 </IconButton>
