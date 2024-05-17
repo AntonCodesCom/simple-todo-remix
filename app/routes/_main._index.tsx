@@ -24,7 +24,6 @@ async function fetchTodos(
   });
   if (!res.ok) {
     throw new Error('Unexpected error occurred while fetching todos.');
-    // TODO: handle 401
   }
   const data = await res.json();
   return todoItemSchema.array().parse(data);
