@@ -26,7 +26,10 @@ async function fetchTodos(
     throw new Error('Unexpected error occurred while fetching todos.');
   }
   const data = await res.json();
-  return todoItemSchema.array().parse(data);
+  return todoItemSchema
+    .array()
+    .parse(data)
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 }
 
 // loader
