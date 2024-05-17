@@ -6,8 +6,7 @@ import { useEffect, useState } from 'react';
 export default function TodoAdd() {
   const fetcher = useFetcher();
   const [label, setLabel] = useState('');
-
-  // TODO: loading state
+  const loading = fetcher.state === 'submitting';
 
   useEffect(() => {
     if (fetcher.state === 'idle') {
@@ -25,8 +24,14 @@ export default function TodoAdd() {
           required
           value={label}
           onChange={(e) => setLabel(e.target.value)}
+          disabled={loading}
         />
-        <Button type="submit" variant="contained" startIcon={<Add />}>
+        <Button
+          type="submit"
+          variant="contained"
+          startIcon={<Add />}
+          disabled={loading}
+        >
           Add
         </Button>
       </Stack>
