@@ -12,7 +12,7 @@ export default function CommonLayout({ children }: Props) {
     <Stack minHeight="100vh">
       <CommonHeader />
       <Box mb={3} />
-      <Box component="main" flex={1}>
+      <Box component="main" flex={1} mb={3}>
         {children}
       </Box>
       <CommonFooter />
