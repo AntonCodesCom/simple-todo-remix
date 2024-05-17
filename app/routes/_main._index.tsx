@@ -3,10 +3,12 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useRouteError } from '@remix-run/react';
+import CommonErrorScreen from '~/Common/components/ErrorScreen';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
 import config from '~/config';
+import envMode from '~/envMode';
 import sessions from '~/sessions';
 
 // utility
@@ -45,6 +47,13 @@ export const meta: MetaFunction = () => {
     { name: 'description', content: 'Remix Todo app.' },
   ];
 };
+
+// error boundary
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { isDev } = envMode;
+  return <CommonErrorScreen error={error} isDev={isDev} />;
+}
 
 /**
  * Index (root) route component.
