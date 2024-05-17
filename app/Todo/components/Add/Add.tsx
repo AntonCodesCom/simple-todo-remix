@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 export default function TodoAdd() {
   const fetcher = useFetcher();
   const [label, setLabel] = useState('');
-  const loading = fetcher.state === 'submitting';
+  const loading = fetcher.state === 'submitting' || fetcher.state === 'loading';
 
   useEffect(() => {
     if (fetcher.state === 'idle') {
