@@ -21,7 +21,7 @@ export default function TodoList({ todos }: Props) {
               className={styles.row}
             >
               <Box display="table-cell" className={styles.cell}>
-                <Checkbox id={htmlId} />
+                <Checkbox id={htmlId} defaultChecked={x.done} />
               </Box>
               <Box className={styles.cell} display="table-cell" pr={1}>
                 <Typography
