@@ -1,3 +1,9 @@
-export default interface TodoItem {
-  label: string;
-}
+import { z } from 'zod';
+
+export const todoItemSchema = z.object({
+  label: z.string(),
+});
+
+type TodoItem = z.infer<typeof todoItemSchema>;
+
+export default TodoItem;
