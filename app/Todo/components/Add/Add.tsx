@@ -1,8 +1,21 @@
 import { Add } from '@mui/icons-material';
-import { Button, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Box } from '@mui/system';
 import { useFetcher } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
+// sub-component
+function LoadingIcon() {
+  return (
+    <Box display="inline-block" lineHeight={1} mx={0.12}>
+      <CircularProgress color="inherit" size="1rem" />
+    </Box>
+  );
+}
+
+/**
+ * "Add todo" form component.
+ */
 export default function TodoAdd() {
   const fetcher = useFetcher();
   const [label, setLabel] = useState('');
@@ -29,7 +42,7 @@ export default function TodoAdd() {
         <Button
           type="submit"
           variant="contained"
-          startIcon={<Add />}
+          startIcon={loading ? <LoadingIcon /> : <Add />}
           disabled={loading}
         >
           Add
