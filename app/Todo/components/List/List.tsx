@@ -9,7 +9,7 @@ interface Props {
 
 export default function TodoList({ todos }: Props) {
   return (
-    <Box display="table">
+    <Box display="table" width="100%">
       <Box role="list" display="table-row-group">
         {todos.map((x, i) => {
           const htmlId = `TodoList-item_${i}`;

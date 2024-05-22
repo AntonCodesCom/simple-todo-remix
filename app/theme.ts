@@ -5,6 +5,7 @@ const theme = createTheme({
     MuiContainer: {
       defaultProps: {
         fixed: true,
+        maxWidth: 'md',
       },
     },
   },

@@ -34,6 +34,7 @@ export default function TodoAdd() {
           name="label"
           placeholder="Something to do..."
           size="small"
+          fullWidth
           required
           value={label}
           onChange={(e) => setLabel(e.target.value)}

@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import TodoList from '../List';
 import TodoItem from '~/Todo/types/Item';
 import TodoAdd from '../Add';
@@ -10,18 +10,22 @@ interface Props {
 export default function TodoMain({ todos }: Props) {
   return (
     <Container>
-      <Typography variant="h4" component="h1" mb={2}>
-        My Todos
-      </Typography>
-      <TodoAdd />
-      <Box mb={1.5} />
-      {todos && todos.length > 0 ? (
-        <TodoList todos={todos} />
-      ) : (
-        <Typography variant="body2" color="GrayText">
-          No todos yet. Add one!
-        </Typography>
-      )}
+      <Grid container>
+        <Grid item xs={12} md={8}>
+          <Typography variant="h4" component="h1" mb={2}>
+            My Todos
+          </Typography>
+          <TodoAdd />
+          <Box mb={1.5} />
+          {todos && todos.length > 0 ? (
+            <TodoList todos={todos} />
+          ) : (
+            <Typography variant="body2" color="GrayText">
+              No todos yet. Add one!
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
     </Container>
   );
 }
