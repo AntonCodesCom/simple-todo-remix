@@ -67,7 +67,15 @@ export default function TodoListItem({ todo }: Props) {
             <Edit fontSize="small" />
           </IconButton>
           <Box pl={0.25} />
-          <IconButton size="small" onClick={handlePopoverOpen}>
+          <IconButton
+            size="small"
+            onClick={handlePopoverOpen}
+            sx={{
+              '&:hover': {
+                color: 'error.main',
+              },
+            }}
+          >
             <Delete fontSize="small" />
           </IconButton>
         </Stack>
