@@ -2,8 +2,12 @@ import { ActionFunctionArgs, redirect } from '@remix-run/node';
 import config from '~/config';
 import sessions from '~/sessions';
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // action
 export async function action({ request }: ActionFunctionArgs) {
+  await delay(1); // simulating latency
   const { apiBaseUrl } = config();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));

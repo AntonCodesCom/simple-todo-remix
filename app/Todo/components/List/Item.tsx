@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Drawer,
   IconButton,
   Popover,
@@ -34,8 +35,10 @@ export default function TodoListItem({ todo }: Props) {
   const [editingActive, setEditingActive] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
-  const updateFetcher = useFetcher();
+  const checkFetcher = useFetcher();
+  const checkLoading = ['loading', 'submitting'].includes(checkFetcher.state);
   // const deleteFetcher = useFetcher();
+  const loading = checkLoading;
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -50,7 +53,7 @@ export default function TodoListItem({ todo }: Props) {
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     const _done = e.target.checked;
     setChecked(_done);
-    updateFetcher.submit(
+    checkFetcher.submit(
       {
         done: _done,
       },
@@ -67,18 +70,19 @@ export default function TodoListItem({ todo }: Props) {
           px: 0.25,
         }}
       >
-        <Stack
-          direction="row"
-          alignItems="center"
-          minHeight="3.25rem"
-          component="form"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <Checkbox
-            id={checkboxHtmlId}
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
+        <Stack direction="row" alignItems="center" minHeight="3.25rem">
+          {checkLoading ? (
+            <Stack direction="row" alignItems="center" p={0.7}>
+              <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
+            </Stack>
+          ) : (
+            <Checkbox
+              disabled={loading}
+              id={checkboxHtmlId}
+              checked={checked}
+              onChange={handleCheckboxChange}
+            />
+          )}
           <Box flex={1} pr={1}>
             <Typography
               variant="body2"
@@ -89,18 +93,24 @@ export default function TodoListItem({ todo }: Props) {
                 cursor: 'pointer',
                 p: 1,
                 pl: 0.5,
+                color: loading ? 'text.disabled' : 'inherit',
+                fontWeight: checked ? 400 : 500,
                 textDecoration: checked ? 'line-through' : 'none',
               }}
-              fontWeight={checked ? 400 : 500}
             >
               {label}
             </Typography>
           </Box>
-          <IconButton size="small" onClick={() => setEditingActive((x) => !x)}>
+          <IconButton
+            disabled={loading}
+            size="small"
+            onClick={() => setEditingActive((x) => !x)}
+          >
             <Edit fontSize="small" />
           </IconButton>
           <Box pl={0.25} />
           <IconButton
+            disabled={loading}
             size="small"
             onClick={handlePopoverOpen}
             sx={{
