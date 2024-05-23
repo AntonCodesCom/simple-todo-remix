@@ -10,8 +10,8 @@ export default function TodoList({ todos }: Props) {
   return (
     <Box display="table" width="100%">
       <Box role="list" display="table-row-group">
-        {todos.map((x, i) => (
-          <TodoListItem key={i} todo={x} />
+        {todos.map((x) => (
+          <TodoListItem key={x.id} todo={x} />
         ))}
       </Box>
     </Box>
