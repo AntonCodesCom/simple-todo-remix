@@ -37,8 +37,10 @@ export default function TodoListItem({ todo }: Props) {
   const popoverOpen = Boolean(anchorEl);
   const checkFetcher = useFetcher();
   const checkLoading = ['loading', 'submitting'].includes(checkFetcher.state);
+  const updateFetcher = useFetcher();
+  const updateLoading = ['loading', 'submitting'].includes(updateFetcher.state);
   // const deleteFetcher = useFetcher();
-  const loading = checkLoading;
+  const loading = checkLoading || updateLoading;
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -185,7 +187,7 @@ export default function TodoListItem({ todo }: Props) {
           </Stack>
         </Toolbar>
         <Box px={1.5} pt={1}>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <updateFetcher.Form action={`update/${id}`} method="POST">
             <TextField
               multiline
               rows={3}
@@ -194,16 +196,22 @@ export default function TodoListItem({ todo }: Props) {
               name="label"
               placeholder="Something to do..."
               required
-              value={label}
+              defaultValue={label}
             />
             <Box mb={1.5} />
             <Stack direction="row" gap={0.5}>
-              <Button variant="contained">Update</Button>
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={handleDrawerClose}
+              >
+                Update
+              </Button>
               <Button variant="outlined" onClick={handleDrawerClose}>
                 Cancel
               </Button>
             </Stack>
-          </form>
+          </updateFetcher.Form>
         </Box>
       </Drawer>
     </Box>
