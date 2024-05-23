@@ -2,12 +2,21 @@ import {
   Box,
   Button,
   Checkbox,
+  Drawer,
   IconButton,
   Popover,
   Stack,
+  TextField,
+  Toolbar,
   Typography,
 } from '@mui/material';
-import { Block, Delete, DeleteOutlined, Edit } from '@mui/icons-material';
+import {
+  Block,
+  Close,
+  Delete,
+  DeleteOutlined,
+  Edit,
+} from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { MouseEvent, useState } from 'react';
 import styles from './Item.module.css';
@@ -118,6 +127,54 @@ export default function TodoListItem({ todo }: Props) {
           </Stack>
         </Box>
       </Popover>
+      <Drawer
+        anchor="right"
+        hideBackdrop
+        open={editingActive}
+        onClose={() => setEditingActive(false)}
+      >
+        <Toolbar disableGutters>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            width="100%"
+            pl={1.5}
+            pr={0.75}
+          >
+            <Typography variant="h6" component="h2">
+              Update Todo
+            </Typography>
+            <IconButton onClick={() => setEditingActive(false)}>
+              <Close />
+            </IconButton>
+          </Stack>
+        </Toolbar>
+        <Box px={1.5} pt={1}>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <TextField
+              multiline
+              rows={3}
+              fullWidth
+              size="small"
+              name="label"
+              placeholder="Something to do..."
+              required
+              value={label}
+            />
+            <Box mb={1.5} />
+            <Stack direction="row" gap={0.5}>
+              <Button variant="contained">Update</Button>
+              <Button
+                variant="outlined"
+                onClick={() => setEditingActive(false)}
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </form>
+        </Box>
+      </Drawer>
     </Box>
   );
 }
