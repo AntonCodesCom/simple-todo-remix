@@ -70,7 +70,9 @@ export default function TodoListItem({ todo }: Props) {
                 cursor: 'pointer',
                 p: 1,
                 pl: 0.5,
+                textDecoration: done ? 'line-through' : 'none',
               }}
+              fontWeight={done ? 400 : 500}
             >
               {label}
             </Typography>
