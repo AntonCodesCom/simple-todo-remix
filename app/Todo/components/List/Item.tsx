@@ -39,8 +39,9 @@ export default function TodoListItem({ todo }: Props) {
   const checkLoading = ['loading', 'submitting'].includes(checkFetcher.state);
   const updateFetcher = useFetcher();
   const updateLoading = ['loading', 'submitting'].includes(updateFetcher.state);
-  // const deleteFetcher = useFetcher();
-  const loading = checkLoading || updateLoading;
+  const deleteFetcher = useFetcher();
+  const deleteLoading = ['loading', 'submitting'].includes(deleteFetcher.state);
+  const loading = checkLoading || updateLoading || deleteLoading;
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -139,16 +140,20 @@ export default function TodoListItem({ todo }: Props) {
           <Typography variant="body2" textAlign="center" mb={1}>
             Are you sure?
           </Typography>
-          <Stack direction="row" gap={0.5}>
+          <Stack
+            direction="row"
+            gap={0.5}
+            component={deleteFetcher.Form}
+            action={`delete/${id}`}
+            method="POST"
+          >
             <Button
+              type="submit"
               variant="outlined"
               size="small"
               color="error"
               startIcon={<DeleteOutlined />}
-              onClick={() => {
-                handlePopoverClose();
-                // TODO: deletion
-              }}
+              onClick={handlePopoverClose}
             >
               Yes
             </Button>

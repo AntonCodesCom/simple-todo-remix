@@ -2,6 +2,7 @@ import { ActionFunctionArgs, redirect } from '@remix-run/node';
 import config from '~/config';
 import sessions from '~/sessions';
 
+// utility
 interface Params {
   id: string;
   userId: string;
@@ -9,8 +10,6 @@ interface Params {
   label?: string;
   done?: boolean;
 }
-
-// utility
 async function updateTodo({
   id,
   userId,
