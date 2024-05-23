@@ -39,6 +39,9 @@ export default function TodoListItem({ todo }: Props) {
   function handlePopoverClose() {
     setAnchorEl(null);
   }
+  function handleDrawerClose() {
+    setEditingActive(false);
+  }
 
   return (
     <Box role="listitem" className={styles.root}>
@@ -131,7 +134,7 @@ export default function TodoListItem({ todo }: Props) {
         anchor="right"
         hideBackdrop
         open={editingActive}
-        onClose={() => setEditingActive(false)}
+        onClose={handleDrawerClose}
       >
         <Toolbar disableGutters>
           <Stack
@@ -145,7 +148,7 @@ export default function TodoListItem({ todo }: Props) {
             <Typography variant="h6" component="h2">
               Update Todo
             </Typography>
-            <IconButton onClick={() => setEditingActive(false)}>
+            <IconButton onClick={handleDrawerClose}>
               <Close />
             </IconButton>
           </Stack>
@@ -165,10 +168,7 @@ export default function TodoListItem({ todo }: Props) {
             <Box mb={1.5} />
             <Stack direction="row" gap={0.5}>
               <Button variant="contained">Update</Button>
-              <Button
-                variant="outlined"
-                onClick={() => setEditingActive(false)}
-              >
+              <Button variant="outlined" onClick={handleDrawerClose}>
                 Cancel
               </Button>
             </Stack>
