@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const todoItemSchema = z.object({
+  id: z.string(),
   label: z.string(),
   done: z.boolean(),
   createdAt: z.string().datetime(),

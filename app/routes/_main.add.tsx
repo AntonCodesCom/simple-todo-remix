@@ -18,7 +18,7 @@ async function addTodo(
     body: JSON.stringify({ label }),
   });
   if (!res.ok) {
-    throw new Error('Unexpected error occurred requesting POST /todo.');
+    throw new Error('Unexpected error occurred while requesting POST /todo.');
   }
 }
 
