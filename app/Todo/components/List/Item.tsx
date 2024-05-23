@@ -57,7 +57,7 @@ export default function TodoListItem({ todo }: Props) {
       {
         done: _done,
       },
-      { action: 'update', method: 'POST' },
+      { action: `update/${id}`, method: 'POST' },
     );
   }
 
