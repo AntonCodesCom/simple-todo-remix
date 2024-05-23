@@ -18,8 +18,9 @@ import {
   Edit,
 } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 import styles from './Item.module.css';
+import { useFetcher } from '@remix-run/react';
 
 interface Props {
   todo: TodoItem;
@@ -27,11 +28,14 @@ interface Props {
 
 export default function TodoListItem({ todo }: Props) {
   const { id, label, done } = todo;
+  const [checked, setChecked] = useState(done);
   const checkboxHtmlId = `TodoListItem_checkbox-${id}`;
   const popoverHtmlId = `TodoListItem_popover-${id}`;
   const [editingActive, setEditingActive] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
+  const updateFetcher = useFetcher();
+  // const deleteFetcher = useFetcher();
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -41,6 +45,17 @@ export default function TodoListItem({ todo }: Props) {
   }
   function handleDrawerClose() {
     setEditingActive(false);
+  }
+
+  function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+    const _done = e.target.checked;
+    setChecked(_done);
+    updateFetcher.submit(
+      {
+        done: _done,
+      },
+      { action: 'update', method: 'POST' },
+    );
   }
 
   return (
@@ -59,7 +74,11 @@ export default function TodoListItem({ todo }: Props) {
           component="form"
           onSubmit={(e) => e.preventDefault()}
         >
-          <Checkbox id={checkboxHtmlId} defaultChecked={done} />
+          <Checkbox
+            id={checkboxHtmlId}
+            checked={checked}
+            onChange={handleCheckboxChange}
+          />
           <Box flex={1} pr={1}>
             <Typography
               variant="body2"
@@ -70,9 +89,9 @@ export default function TodoListItem({ todo }: Props) {
                 cursor: 'pointer',
                 p: 1,
                 pl: 0.5,
-                textDecoration: done ? 'line-through' : 'none',
+                textDecoration: checked ? 'line-through' : 'none',
               }}
-              fontWeight={done ? 400 : 500}
+              fontWeight={checked ? 400 : 500}
             >
               {label}
             </Typography>
