@@ -22,6 +22,79 @@ import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { useFetcher } from '@remix-run/react';
 
+interface TodoCardDeleteProps {
+  disabled?: boolean;
+  onDelete?: () => void;
+}
+function TodoCardDelete({
+  disabled = false,
+  onDelete = () => {},
+}: TodoCardDeleteProps) {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const popoverOpen = Boolean(anchorEl);
+
+  function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
+    setAnchorEl(e.currentTarget);
+  }
+  function handlePopoverClose() {
+    setAnchorEl(null);
+  }
+
+  return (
+    <>
+      <IconButton
+        disabled={disabled}
+        size="small"
+        onClick={handlePopoverOpen}
+        sx={{
+          '&:hover': {
+            color: 'error.main',
+          },
+        }}
+      >
+        <Delete fontSize="small" />
+      </IconButton>
+      <Popover
+        anchorEl={anchorEl}
+        open={popoverOpen}
+        onClose={handlePopoverClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      >
+        <Box maxWidth="20rem" p={1}>
+          <Typography variant="body2" textAlign="center" mb={1}>
+            Are you sure?
+          </Typography>
+          <Stack direction="row" gap={0.5}>
+            <Button
+              variant="outlined"
+              size="small"
+              color="error"
+              startIcon={<DeleteOutlined />}
+              onClick={() => {
+                handlePopoverClose();
+                onDelete();
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<Block />}
+              onClick={handlePopoverClose}
+            >
+              No
+            </Button>
+          </Stack>
+        </Box>
+      </Popover>
+    </>
+  );
+}
+
 interface Props {
   todo: TodoItem;
 }
@@ -30,10 +103,7 @@ export default function TodoCard({ todo }: Props) {
   const { id, label, done } = todo;
   const [checked, setChecked] = useState(done);
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
-  const popoverHtmlId = `TodoCard_popover-${id}`;
   const [editingActive, setEditingActive] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const popoverOpen = Boolean(anchorEl);
   const checkFetcher = useFetcher();
   const checkLoading = ['loading', 'submitting'].includes(checkFetcher.state);
   const updateFetcher = useFetcher();
@@ -42,17 +112,14 @@ export default function TodoCard({ todo }: Props) {
   const deleteLoading = ['loading', 'submitting'].includes(deleteFetcher.state);
   const loading = checkLoading || updateLoading || deleteLoading;
 
-  function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(e.currentTarget);
-  }
-  function handlePopoverClose() {
-    setAnchorEl(null);
-  }
   function handleDrawerClose() {
     setEditingActive(false);
   }
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+    if (loading) {
+      return;
+    }
     const _done = e.target.checked;
     setChecked(_done);
     checkFetcher.submit(
@@ -60,6 +127,19 @@ export default function TodoCard({ todo }: Props) {
         done: _done,
       },
       { action: `update/${id}`, method: 'POST' },
+    );
+  }
+
+  function handleDelete() {
+    if (loading) {
+      return;
+    }
+    deleteFetcher.submit(
+      {},
+      {
+        action: `delete/${id}`,
+        method: 'POST',
+      },
     );
   }
 
@@ -120,61 +200,8 @@ export default function TodoCard({ todo }: Props) {
           <Edit fontSize="small" />
         </IconButton>
         <Box pl={0.25} />
-        <IconButton
-          disabled={loading}
-          size="small"
-          onClick={handlePopoverOpen}
-          sx={{
-            '&:hover': {
-              color: 'error.main',
-            },
-          }}
-        >
-          <Delete fontSize="small" />
-        </IconButton>
+        <TodoCardDelete disabled={loading} onDelete={handleDelete} />
       </Stack>
-      <Popover
-        id={popoverHtmlId}
-        anchorEl={anchorEl}
-        open={popoverOpen}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        <Box maxWidth="20rem" p={1}>
-          <Typography variant="body2" textAlign="center" mb={1}>
-            Are you sure?
-          </Typography>
-          <Stack
-            direction="row"
-            gap={0.5}
-            component={deleteFetcher.Form}
-            action={`delete/${id}`}
-            method="POST"
-          >
-            <Button
-              type="submit"
-              variant="outlined"
-              size="small"
-              color="error"
-              startIcon={<DeleteOutlined />}
-              onClick={handlePopoverClose}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<Block />}
-              onClick={handlePopoverClose}
-            >
-              No
-            </Button>
-          </Stack>
-        </Box>
-      </Popover>
       <Drawer
         anchor="right"
         hideBackdrop

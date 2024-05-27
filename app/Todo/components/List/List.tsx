@@ -11,8 +11,8 @@ export default function TodoList({ todos }: Props) {
     <Box display="table" width="100%">
       <Box role="list" display="table-row-group">
         {todos.map((x) => (
-          <Box role="listitem">
-            <TodoCard key={x.id} todo={x} />
+          <Box key={x.id} role="listitem">
+            <TodoCard todo={x} />
           </Box>
         ))}
       </Box>
