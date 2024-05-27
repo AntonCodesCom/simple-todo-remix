@@ -5,95 +5,16 @@ import {
   CircularProgress,
   Drawer,
   IconButton,
-  Popover,
   Stack,
   TextField,
   Toolbar,
   Typography,
 } from '@mui/material';
-import {
-  Block,
-  Close,
-  Delete,
-  DeleteOutlined,
-  Edit,
-} from '@mui/icons-material';
+import { Close, Edit } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useFetcher } from '@remix-run/react';
-
-interface TodoCardDeleteProps {
-  disabled?: boolean;
-  onDelete?: () => void;
-}
-function TodoCardDelete({
-  disabled = false,
-  onDelete = () => {},
-}: TodoCardDeleteProps) {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const popoverOpen = Boolean(anchorEl);
-
-  function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(e.currentTarget);
-  }
-  function handlePopoverClose() {
-    setAnchorEl(null);
-  }
-
-  return (
-    <>
-      <IconButton
-        disabled={disabled}
-        size="small"
-        onClick={handlePopoverOpen}
-        sx={{
-          '&:hover': {
-            color: 'error.main',
-          },
-        }}
-      >
-        <Delete fontSize="small" />
-      </IconButton>
-      <Popover
-        anchorEl={anchorEl}
-        open={popoverOpen}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        <Box maxWidth="20rem" p={1}>
-          <Typography variant="body2" textAlign="center" mb={1}>
-            Are you sure?
-          </Typography>
-          <Stack direction="row" gap={0.5}>
-            <Button
-              variant="outlined"
-              size="small"
-              color="error"
-              startIcon={<DeleteOutlined />}
-              onClick={() => {
-                handlePopoverClose();
-                onDelete();
-              }}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<Block />}
-              onClick={handlePopoverClose}
-            >
-              No
-            </Button>
-          </Stack>
-        </Box>
-      </Popover>
-    </>
-  );
-}
+import TodoCardDelete from './Delete';
 
 interface Props {
   todo: TodoItem;
