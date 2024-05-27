@@ -20,7 +20,6 @@ import {
 } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import styles from './Card.module.css';
 import { useFetcher } from '@remix-run/react';
 
 interface Props {
@@ -74,8 +73,14 @@ export default function TodoCard({ todo }: Props) {
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
           px: 0.25,
+          '&:first-child': {
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4,
+          },
+          '&:hover': {
+            backgroundColor: '#fafafa', // TODO: theme color
+          },
         }}
-        className={styles.root}
       >
         {checkLoading ? (
           <Stack direction="row" alignItems="center" p={0.7}>
