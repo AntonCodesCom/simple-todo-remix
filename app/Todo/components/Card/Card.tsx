@@ -44,7 +44,7 @@ interface Props {
  * Todo card component.
  */
 export default function TodoCard({ todo }: Props) {
-  const { id, label, done } = todo;
+  const { id, done } = todo;
   // const [checked, setChecked] = useState(done);
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [editingActive, setEditingActive] = useState(false);
@@ -71,6 +71,19 @@ export default function TodoCard({ todo }: Props) {
     checkFetcher.submit(
       {
         done: _done,
+      },
+      { action: `update/${id}`, method: 'POST' },
+    );
+  }
+
+  function handleEdit(_label: string) {
+    if (loading) {
+      return;
+    }
+    setEditingActive(false);
+    updateFetcher.submit(
+      {
+        label: _label,
       },
       { action: `update/${id}`, method: 'POST' },
     );
@@ -108,7 +121,9 @@ export default function TodoCard({ todo }: Props) {
       {editingActive ? (
         <TodoCardEdit
           todo={todo}
+          disabled={loading}
           onCloseClick={() => setEditingActive(false)}
+          onEdit={handleEdit}
         />
       ) : (
         <TodoCardCheck
