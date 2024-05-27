@@ -15,6 +15,8 @@ import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, useState } from 'react';
 import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
+import TodoCardCheck from './Check';
+import TodoCardEdit from './Edit';
 
 interface Props {
   todo: TodoItem;
@@ -65,6 +67,38 @@ export default function TodoCard({ todo }: Props) {
   }
 
   return (
+    <Box
+      sx={{
+        borderBottom: '1px solid',
+        borderBottomColor: 'divider',
+        px: 0.25,
+        '&:first-of-type': {
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4,
+        },
+        '&:hover': {
+          backgroundColor: '#fafafa', // TODO: theme color
+        },
+      }}
+    >
+      {editingActive ? (
+        <TodoCardEdit
+          todo={todo}
+          onCloseClick={() => setEditingActive(false)}
+        />
+      ) : (
+        <TodoCardCheck
+          todo={todo}
+          DeleteElement={
+            <TodoCardDelete disabled={loading} onDelete={handleDelete} />
+          }
+          onEditClick={() => setEditingActive(true)}
+        />
+      )}
+    </Box>
+  );
+
+  /*return (
     <>
       <Stack
         direction="row"
@@ -74,7 +108,7 @@ export default function TodoCard({ todo }: Props) {
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
           px: 0.25,
-          '&:first-child': {
+          '&:first-of-type': {
             borderTopLeftRadius: 4,
             borderTopRightRadius: 4,
           },
@@ -175,5 +209,5 @@ export default function TodoCard({ todo }: Props) {
         </Box>
       </Drawer>
     </>
-  );
+  );*/
 }
