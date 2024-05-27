@@ -12,16 +12,37 @@ import {
 } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
 import TodoCardCheck from './Check';
 import TodoCardEdit from './Edit';
 
+// utility
+// TODO: better `ref` type definition
+function useOutsideClick(ref: RefObject<any>, callback: () => void) {
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref && ref.current && !ref.current.contains(event.target)) {
+        event.preventDefault();
+        callback();
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref]);
+}
+
+// props
 interface Props {
   todo: TodoItem;
 }
 
+/**
+ * Todo card component.
+ */
 export default function TodoCard({ todo }: Props) {
   const { id, label, done } = todo;
   const [checked, setChecked] = useState(done);
@@ -34,6 +55,10 @@ export default function TodoCard({ todo }: Props) {
   const deleteFetcher = useFetcher();
   const deleteLoading = ['loading', 'submitting'].includes(deleteFetcher.state);
   const loading = checkLoading || updateLoading || deleteLoading;
+  const ref = useRef(null);
+
+  // closing editing if clicked outside of the card
+  useOutsideClick(ref, () => setEditingActive(false));
 
   function handleDrawerClose() {
     setEditingActive(false);
@@ -68,6 +93,7 @@ export default function TodoCard({ todo }: Props) {
 
   return (
     <Box
+      ref={ref}
       sx={{
         borderBottom: '1px solid',
         borderBottomColor: 'divider',
