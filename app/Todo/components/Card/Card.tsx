@@ -45,7 +45,7 @@ interface Props {
  */
 export default function TodoCard({ todo }: Props) {
   const { id, label, done } = todo;
-  const [checked, setChecked] = useState(done);
+  // const [checked, setChecked] = useState(done);
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [editingActive, setEditingActive] = useState(false);
   const checkFetcher = useFetcher();
@@ -57,19 +57,17 @@ export default function TodoCard({ todo }: Props) {
   const loading = checkLoading || updateLoading || deleteLoading;
   const ref = useRef(null);
 
-  // closing editing if clicked outside of the card
+  // closing editing mode if clicked outside of the card
   useOutsideClick(ref, () => setEditingActive(false));
 
   function handleDrawerClose() {
     setEditingActive(false);
   }
 
-  function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleCheckToggle(_done: boolean) {
     if (loading) {
       return;
     }
-    const _done = e.target.checked;
-    setChecked(_done);
     checkFetcher.submit(
       {
         done: _done,
@@ -119,6 +117,8 @@ export default function TodoCard({ todo }: Props) {
             <TodoCardDelete disabled={loading} onDelete={handleDelete} />
           }
           onEditClick={() => setEditingActive(true)}
+          disabled={loading}
+          onCheckToggle={handleCheckToggle}
         />
       )}
     </Box>

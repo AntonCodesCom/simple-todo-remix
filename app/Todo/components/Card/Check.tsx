@@ -13,6 +13,7 @@ import { ChangeEvent, ReactElement, useState } from 'react';
 interface Props {
   todo: TodoItem;
   DeleteElement: ReactElement;
+  disabled?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
 }
@@ -20,6 +21,7 @@ interface Props {
 export default function TodoCardCheck({
   todo,
   DeleteElement,
+  disabled = false,
   onEditClick = () => {},
   onCheckToggle = () => {},
 }: Props) {
@@ -28,12 +30,8 @@ export default function TodoCardCheck({
   const [checked, setChecked] = useState(done);
 
   const checkLoading = false; // TODO
-  const loading = false; // TODO
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
-    if (loading) {
-      return;
-    }
     const _done = e.target.checked;
     setChecked(_done);
     onCheckToggle(_done);
@@ -47,7 +45,7 @@ export default function TodoCardCheck({
         </Stack>
       ) : (
         <Checkbox
-          disabled={loading}
+          disabled={disabled}
           id={checkboxHtmlId}
           checked={checked}
           onChange={handleCheckboxChange}
@@ -63,7 +61,7 @@ export default function TodoCardCheck({
             cursor: 'pointer',
             p: 1,
             pl: 0.5,
-            color: loading
+            color: disabled
               ? 'text.disabled'
               : done
                 ? 'text.secondary'
@@ -74,7 +72,7 @@ export default function TodoCardCheck({
           {label}
         </Typography>
       </Box>
-      <IconButton disabled={loading} size="small" onClick={onEditClick}>
+      <IconButton disabled={disabled} size="small" onClick={onEditClick}>
         <Edit fontSize="small" />
       </IconButton>
       <Box pl={0.25} />
