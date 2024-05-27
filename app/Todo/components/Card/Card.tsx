@@ -65,67 +65,69 @@ export default function TodoCard({ todo }: Props) {
   }
 
   return (
-    <Box role="listitem" className={styles.root}>
-      <Box
+    <>
+      <Stack
+        direction="row"
+        alignItems="center"
+        minHeight="3.25rem"
         sx={{
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
           px: 0.25,
         }}
+        className={styles.root}
       >
-        <Stack direction="row" alignItems="center" minHeight="3.25rem">
-          {checkLoading ? (
-            <Stack direction="row" alignItems="center" p={0.7}>
-              <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
-            </Stack>
-          ) : (
-            <Checkbox
-              disabled={loading}
-              id={checkboxHtmlId}
-              checked={checked}
-              onChange={handleCheckboxChange}
-            />
-          )}
-          <Box flex={1} pr={1}>
-            <Typography
-              variant="body2"
-              component="label"
-              htmlFor={checkboxHtmlId}
-              sx={{
-                display: 'block',
-                cursor: 'pointer',
-                p: 1,
-                pl: 0.5,
-                color: loading ? 'text.disabled' : 'inherit',
-                fontWeight: checked ? 400 : 500,
-                textDecoration: checked ? 'line-through' : 'none',
-              }}
-            >
-              {label}
-            </Typography>
-          </Box>
-          <IconButton
+        {checkLoading ? (
+          <Stack direction="row" alignItems="center" p={0.7}>
+            <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
+          </Stack>
+        ) : (
+          <Checkbox
             disabled={loading}
-            size="small"
-            onClick={() => setEditingActive((x) => !x)}
-          >
-            <Edit fontSize="small" />
-          </IconButton>
-          <Box pl={0.25} />
-          <IconButton
-            disabled={loading}
-            size="small"
-            onClick={handlePopoverOpen}
+            id={checkboxHtmlId}
+            checked={checked}
+            onChange={handleCheckboxChange}
+          />
+        )}
+        <Box flex={1} pr={1}>
+          <Typography
+            variant="body2"
+            component="label"
+            htmlFor={checkboxHtmlId}
             sx={{
-              '&:hover': {
-                color: 'error.main',
-              },
+              display: 'block',
+              cursor: 'pointer',
+              p: 1,
+              pl: 0.5,
+              color: loading ? 'text.disabled' : 'inherit',
+              fontWeight: checked ? 400 : 500,
+              textDecoration: checked ? 'line-through' : 'none',
             }}
           >
-            <Delete fontSize="small" />
-          </IconButton>
-        </Stack>
-      </Box>
+            {label}
+          </Typography>
+        </Box>
+        <IconButton
+          disabled={loading}
+          size="small"
+          onClick={() => setEditingActive((x) => !x)}
+        >
+          <Edit fontSize="small" />
+        </IconButton>
+        <Box pl={0.25} />
+        <IconButton
+          disabled={loading}
+          size="small"
+          onClick={handlePopoverOpen}
+          sx={{
+            '&:hover': {
+              color: 'error.main',
+            },
+          }}
+        >
+          <Delete fontSize="small" />
+        </IconButton>
+      </Stack>
       <Popover
         id={popoverHtmlId}
         anchorEl={anchorEl}
@@ -219,6 +221,6 @@ export default function TodoCard({ todo }: Props) {
           </updateFetcher.Form>
         </Box>
       </Drawer>
-    </Box>
+    </>
   );
 }
