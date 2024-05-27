@@ -1,7 +1,7 @@
 import { Box, Container, Grid, Typography } from '@mui/material';
-import TodoList from '../List';
 import TodoItem from '~/Todo/types/Item';
 import TodoAdd from '../Add';
+import TodoCard from '../Card';
 
 interface Props {
   todos: TodoItem[] | null | undefined;
@@ -18,7 +18,13 @@ export default function TodoMain({ todos }: Props) {
           <TodoAdd />
           <Box mb={1.5} />
           {todos && todos.length > 0 ? (
-            <TodoList todos={todos} />
+            <Box role="list" width="100%">
+              {todos.map((x) => (
+                <Box key={x.id} role="listitem">
+                  <TodoCard todo={x} />
+                </Box>
+              ))}
+            </Box>
           ) : (
             <Typography variant="body2" color="GrayText">
               No todos yet. Add one!
