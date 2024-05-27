@@ -63,8 +63,11 @@ export default function TodoCardCheck({
             cursor: 'pointer',
             p: 1,
             pl: 0.5,
-            color: loading ? 'text.disabled' : 'inherit',
-            fontWeight: checked ? 400 : 500,
+            color: loading
+              ? 'text.disabled'
+              : done
+                ? 'text.secondary'
+                : 'text.primary',
             textDecoration: checked ? 'line-through' : 'none',
           }}
         >
