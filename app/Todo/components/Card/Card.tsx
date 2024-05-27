@@ -20,18 +20,18 @@ import {
 } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import styles from './Item.module.css';
+import styles from './Card.module.css';
 import { useFetcher } from '@remix-run/react';
 
 interface Props {
   todo: TodoItem;
 }
 
-export default function TodoListItem({ todo }: Props) {
+export default function TodoCard({ todo }: Props) {
   const { id, label, done } = todo;
   const [checked, setChecked] = useState(done);
-  const checkboxHtmlId = `TodoListItem_checkbox-${id}`;
-  const popoverHtmlId = `TodoListItem_popover-${id}`;
+  const checkboxHtmlId = `TodoCard_checkbox-${id}`;
+  const popoverHtmlId = `TodoCard_popover-${id}`;
   const [editingActive, setEditingActive] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
