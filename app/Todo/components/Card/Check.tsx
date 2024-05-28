@@ -8,7 +8,7 @@ import {
 import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { CheckboxCell, Root } from './elements';
+import { CheckboxCell, Root, TextCell } from './elements';
 
 interface Props {
   todo: TodoItem;
@@ -58,27 +58,25 @@ export default function TodoCardCheck({
           />
         )}
       </CheckboxCell>
-      <Box flex={1} pr={1}>
+      <TextCell>
         <Typography
           component="label"
           htmlFor={checkboxHtmlId}
           sx={{
             display: 'block',
-            cursor: 'pointer',
-            p: 1,
-            pl: 0.5,
+            p: 0.5,
             color: disabled
               ? 'text.disabled'
               : done
                 ? 'text.secondary'
                 : 'text.primary',
             textDecoration: checked ? 'line-through' : 'none',
-            lineHeight: 1.5,
+            cursor: 'pointer',
           }}
         >
           {label}
         </Typography>
-      </Box>
+      </TextCell>
       <IconButton disabled={disabled} size="small" onClick={onEditClick}>
         <EditOutlined fontSize="small" />
       </IconButton>

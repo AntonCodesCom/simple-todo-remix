@@ -1,4 +1,4 @@
-import { Stack, StackProps, styled } from '@mui/material';
+import { Box, Stack, StackProps, styled } from '@mui/material';
 
 export const Root = styled(Stack)<StackProps>(({ theme }) => ({
   alignItems: 'center',
@@ -18,4 +18,11 @@ export const CheckboxCell = styled(Stack)({
   alignItems: 'center',
   justifyContent: 'center',
   width: '2.75rem',
+});
+
+export const TextCell = styled(Stack)({
+  flex: 1,
+  alignItems: 'center',
+  padding: '0.5rem',
+  paddingLeft: 0,
 });
