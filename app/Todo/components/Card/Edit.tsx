@@ -33,10 +33,18 @@ export default function TodoCardEdit({
       onSubmit={handleSubmit}
     >
       <Checkbox disabled defaultChecked={done} />
-      <Box flex={1} pr={1}>
+      <Box flex={1} pr={1} py={0.475}>
         <TextField
+          size="small"
           multiline
           fullWidth
+          InputProps={{
+            sx: {
+              pl: 0.5,
+              lineHeight: 1.5,
+            },
+          }}
+          required
           name="label"
           value={text}
           onChange={(e) => setText(e.target.value)}

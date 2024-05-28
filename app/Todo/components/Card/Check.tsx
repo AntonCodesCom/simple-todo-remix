@@ -53,11 +53,10 @@ export default function TodoCardCheck({
       )}
       <Box flex={1} pr={1}>
         <Typography
-          variant="body2"
           component="label"
           htmlFor={checkboxHtmlId}
           sx={{
-            display: 'block',
+            display: 'inline-block',
             cursor: 'pointer',
             p: 1,
             pl: 0.5,
@@ -67,6 +66,7 @@ export default function TodoCardCheck({
                 ? 'text.secondary'
                 : 'text.primary',
             textDecoration: checked ? 'line-through' : 'none',
+            lineHeight: 1.5,
           }}
         >
           {label}
