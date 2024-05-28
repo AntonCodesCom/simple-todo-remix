@@ -10,9 +10,8 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
 import TodoCardCheck from './Check';
@@ -22,9 +21,8 @@ import TodoCardEdit from './Edit';
 // TODO: better `ref` type definition
 function useOutsideClick(ref: RefObject<any>, callback: () => void) {
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (ref && ref.current && !ref.current.contains(event.target)) {
-        event.preventDefault();
+    function handleClickOutside(e: MouseEvent) {
+      if (ref && ref.current && !ref.current.contains(e.target)) {
         callback();
       }
     }
