@@ -2,7 +2,7 @@ import { Box, Checkbox, IconButton, Stack, TextField } from '@mui/material';
 import { Check, CheckCircle, HighlightOff } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
-import { CheckboxCell, Root, TextCell } from './elements';
+import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
 
 // utility
 // TODO: better `ref` type definition
@@ -68,13 +68,16 @@ export default function TodoCardEdit({
           autoFocus
         />
       </TextCell>
-      <IconButton type="submit" disabled={disabled} size="small">
-        <CheckCircle color="primary" />
-      </IconButton>
-      <Box pl={0.025} />
-      <IconButton disabled={disabled} size="small" onClick={onDeactivate}>
-        <HighlightOff />
-      </IconButton>
+      <ActionCell>
+        <IconButton type="submit" disabled={disabled}>
+          <CheckCircle color="primary" />
+        </IconButton>
+      </ActionCell>
+      <ActionCell>
+        <IconButton disabled={disabled} onClick={onDeactivate}>
+          <HighlightOff />
+        </IconButton>
+      </ActionCell>
     </Root>
   );
 }

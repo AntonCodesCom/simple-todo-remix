@@ -1,5 +1,4 @@
 import {
-  Box,
   Checkbox,
   CircularProgress,
   IconButton,
@@ -8,7 +7,7 @@ import {
 import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { CheckboxCell, Root, TextCell } from './elements';
+import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
 
 interface Props {
   todo: TodoItem;
@@ -77,11 +76,12 @@ export default function TodoCardCheck({
           {label}
         </Typography>
       </TextCell>
-      <IconButton disabled={disabled} size="small" onClick={onEditClick}>
-        <EditOutlined fontSize="small" />
-      </IconButton>
-      <Box pl={0.25} />
-      {DeleteElement}
+      <ActionCell>
+        <IconButton disabled={disabled} onClick={onEditClick}>
+          <EditOutlined fontSize="small" />
+        </IconButton>
+      </ActionCell>
+      <ActionCell>{DeleteElement}</ActionCell>
     </Root>
   );
 }

@@ -26,3 +26,9 @@ export const TextCell = styled(Stack)({
   padding: '0.5rem',
   paddingLeft: 0,
 });
+
+export const ActionCell = styled(Stack)({
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '2.5rem',
+});

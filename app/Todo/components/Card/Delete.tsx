@@ -32,7 +32,6 @@ export default function TodoCardDelete({
     <>
       <IconButton
         disabled={disabled}
-        size="small"
         onClick={handlePopoverOpen}
         sx={{
           '&:hover': {
