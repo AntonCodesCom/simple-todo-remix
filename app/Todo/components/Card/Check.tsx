@@ -3,13 +3,12 @@ import {
   Checkbox,
   CircularProgress,
   IconButton,
-  Stack,
   Typography,
 } from '@mui/material';
 import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { Root } from './elements';
+import { CheckboxCell, Root } from './elements';
 
 interface Props {
   todo: TodoItem;
@@ -40,25 +39,25 @@ export default function TodoCardCheck({
 
   return (
     <Root>
-      {checkLoading ? (
-        <Stack direction="row" alignItems="center" p={0.7}>
+      <CheckboxCell>
+        {checkLoading ? (
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
-        </Stack>
-      ) : (
-        <Checkbox
-          checkedIcon={<Check />}
-          sx={{
-            color: 'primary.main',
-            '&.Mui-checked': {
-              color: 'text.secondary',
-            },
-          }}
-          disabled={disabled}
-          id={checkboxHtmlId}
-          checked={checked}
-          onChange={handleCheckboxChange}
-        />
-      )}
+        ) : (
+          <Checkbox
+            checkedIcon={<Check />}
+            sx={{
+              color: 'primary.main',
+              '&.Mui-checked': {
+                color: 'text.secondary',
+              },
+            }}
+            disabled={disabled}
+            id={checkboxHtmlId}
+            checked={checked}
+            onChange={handleCheckboxChange}
+          />
+        )}
+      </CheckboxCell>
       <Box flex={1} pr={1}>
         <Typography
           component="label"

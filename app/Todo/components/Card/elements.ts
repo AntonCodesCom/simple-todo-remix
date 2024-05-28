@@ -14,4 +14,8 @@ export const Root = styled(Stack)<StackProps>(({ theme }) => ({
   },
 }));
 
-export const CheckboxCell = styled(Stack)({});
+export const CheckboxCell = styled(Stack)({
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '2.75rem',
+});
