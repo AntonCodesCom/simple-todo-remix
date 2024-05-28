@@ -62,7 +62,7 @@ export default function TodoCardCheck({
           component="label"
           htmlFor={checkboxHtmlId}
           sx={{
-            display: 'block',
+            flex: 1,
             p: 0.5,
             color: disabled
               ? 'text.disabled'

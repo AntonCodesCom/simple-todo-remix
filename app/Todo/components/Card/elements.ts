@@ -1,4 +1,4 @@
-import { Box, Stack, StackProps, styled } from '@mui/material';
+import { Stack, StackProps, styled } from '@mui/material';
 
 export const Root = styled(Stack)<StackProps>(({ theme }) => ({
   alignItems: 'center',
