@@ -1,5 +1,5 @@
 import { Box, Checkbox, IconButton, Stack, TextField } from '@mui/material';
-import { Check, Close } from '@mui/icons-material';
+import { CheckCircle, HighlightOff } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { FormEvent, useState } from 'react';
 
@@ -48,14 +48,15 @@ export default function TodoCardEdit({
           name="label"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          autoFocus
         />
       </Box>
       <IconButton type="submit" disabled={disabled} size="small">
-        <Check fontSize="small" />
+        <CheckCircle color="primary" />
       </IconButton>
-      <Box pl={0.25} />
+      <Box pl={0.025} />
       <IconButton disabled={disabled} size="small" onClick={onCloseClick}>
-        <Close fontSize="small" />
+        <HighlightOff />
       </IconButton>
     </Stack>
   );

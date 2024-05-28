@@ -40,7 +40,7 @@ export default function TodoCardDelete({
           },
         }}
       >
-        <Delete fontSize="small" />
+        <DeleteOutlined fontSize="small" />
       </IconButton>
       <Popover
         anchorEl={anchorEl}

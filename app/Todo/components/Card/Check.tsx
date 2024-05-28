@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Edit } from '@mui/icons-material';
+import { Edit, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
 
@@ -73,7 +73,7 @@ export default function TodoCardCheck({
         </Typography>
       </Box>
       <IconButton disabled={disabled} size="small" onClick={onEditClick}>
-        <Edit fontSize="small" />
+        <EditOutlined fontSize="small" />
       </IconButton>
       <Box pl={0.25} />
       {DeleteElement}
