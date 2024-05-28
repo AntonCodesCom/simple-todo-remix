@@ -2,6 +2,7 @@ import { Box, Checkbox, IconButton, Stack, TextField } from '@mui/material';
 import { Check, CheckCircle, HighlightOff } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { FormEvent, useState } from 'react';
+import { Root } from './elements';
 
 interface Props {
   todo: TodoItem;
@@ -25,13 +26,7 @@ export default function TodoCardEdit({
   }
 
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      minHeight="3.25rem"
-      component="form"
-      onSubmit={handleSubmit}
-    >
+    <Root component="form" onSubmit={handleSubmit}>
       <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
       <Box flex={1} pr={1} py={0.475}>
         <TextField
@@ -58,6 +53,6 @@ export default function TodoCardEdit({
       <IconButton disabled={disabled} size="small" onClick={onCloseClick}>
         <HighlightOff />
       </IconButton>
-    </Stack>
+    </Root>
   );
 }

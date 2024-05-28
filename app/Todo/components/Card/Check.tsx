@@ -9,6 +9,7 @@ import {
 import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
+import { Root } from './elements';
 
 interface Props {
   todo: TodoItem;
@@ -38,7 +39,7 @@ export default function TodoCardCheck({
   }
 
   return (
-    <Stack direction="row" alignItems="center" minHeight="3.25rem">
+    <Root>
       {checkLoading ? (
         <Stack direction="row" alignItems="center" p={0.7}>
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
@@ -84,6 +85,6 @@ export default function TodoCardCheck({
       </IconButton>
       <Box pl={0.25} />
       {DeleteElement}
-    </Stack>
+    </Root>
   );
 }
