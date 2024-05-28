@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Block, Delete, DeleteOutlined } from '@mui/icons-material';
+import { Block, DeleteOutlined } from '@mui/icons-material';
 import { MouseEvent, useState } from 'react';
 
 interface Props {
@@ -53,7 +53,7 @@ export default function TodoCardDelete({
       >
         <Box maxWidth="20rem" p={1}>
           <Typography variant="body2" textAlign="center" mb={1}>
-            Are you sure?
+            Delete this Todo?
           </Typography>
           <Stack direction="row" gap={0.5}>
             <Button

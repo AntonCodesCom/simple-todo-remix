@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Edit, EditOutlined } from '@mui/icons-material';
+import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useState } from 'react';
 
@@ -45,6 +45,13 @@ export default function TodoCardCheck({
         </Stack>
       ) : (
         <Checkbox
+          checkedIcon={<Check />}
+          sx={{
+            color: 'primary.main',
+            '&.Mui-checked': {
+              color: 'text.secondary',
+            },
+          }}
           disabled={disabled}
           id={checkboxHtmlId}
           checked={checked}
@@ -56,7 +63,7 @@ export default function TodoCardCheck({
           component="label"
           htmlFor={checkboxHtmlId}
           sx={{
-            display: 'inline-block',
+            display: 'block',
             cursor: 'pointer',
             p: 1,
             pl: 0.5,
