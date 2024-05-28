@@ -36,6 +36,7 @@ export default function TodoAdd() {
           size="small"
           fullWidth
           required
+          inputProps={{ maxLength: 1000 }}
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           disabled={loading}

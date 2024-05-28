@@ -61,6 +61,9 @@ export default function TodoCardEdit({
               lineHeight: 1.5,
             },
           }}
+          inputProps={{
+            maxLength: 1000,
+          }}
           required
           name="label"
           value={text}
