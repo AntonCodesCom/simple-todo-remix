@@ -72,11 +72,11 @@ export default function TodoCard({ todo }: Props) {
   ) : (
     <TodoCardCheck
       todo={todo}
-      DeleteElement={
+      deleteElement={
         <TodoCardDelete disabled={loading} onDelete={handleDelete} />
       }
       onEditClick={() => setEditingActive(true)}
-      disabled={loading}
+      // disabled={loading}
       onCheckToggle={handleCheckToggle}
     />
   );

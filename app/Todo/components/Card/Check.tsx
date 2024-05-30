@@ -4,14 +4,14 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { Check, EditOutlined } from '@mui/icons-material';
+import { Check, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { ChangeEvent, ReactElement, useState } from 'react';
+import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
 
 interface Props {
   todo: TodoItem;
-  DeleteElement: ReactElement;
+  deleteElement: ReactElement;
   disabled?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
@@ -19,7 +19,7 @@ interface Props {
 
 export default function TodoCardCheck({
   todo,
-  DeleteElement,
+  deleteElement,
   disabled = false,
   onEditClick = () => {},
   onCheckToggle = () => {},
@@ -28,21 +28,54 @@ export default function TodoCardCheck({
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [checked, setChecked] = useState(done);
 
-  const checkLoading = false; // TODO
+  // invisible loading state (stage 1)
+  const [loading1, setLoading1] = useState(false);
+
+  // visible loading state (stage 2)
+  const [loading2, setLoading2] = useState(false);
+  const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
+  const delay2 = 200;
+
+  // whether to show the disabled state visually
+  const disabledVisible = disabled || loading2;
+
+  useEffect(() => {
+    setChecked(done);
+    setLoading1(false);
+    setLoading2(false);
+    clearTimeout(timeout2);
+    setTimeout2(undefined);
+  }, [done]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+    if (loading1 || loading2 || disabled) {
+      return;
+    }
+    setLoading1(true);
+    setTimeout2(
+      setTimeout(() => {
+        setLoading2(true);
+      }, delay2),
+    );
     const _done = e.target.checked;
-    setChecked(_done);
     onCheckToggle(_done);
+  }
+
+  function handleEditClick() {
+    if (loading1 || loading2 || disabled) {
+      return;
+    }
+    onEditClick();
   }
 
   return (
     <Root>
       <CheckboxCell>
-        {checkLoading ? (
+        {loading2 ? (
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
         ) : (
           <Checkbox
+            disableTouchRipple
             checkedIcon={<Check />}
             sx={{
               color: 'primary.main',
@@ -50,7 +83,7 @@ export default function TodoCardCheck({
                 color: 'text.secondary',
               },
             }}
-            disabled={disabled}
+            disabled={disabledVisible}
             id={checkboxHtmlId}
             checked={checked}
             onChange={handleCheckboxChange}
@@ -64,7 +97,7 @@ export default function TodoCardCheck({
           sx={{
             flex: 1,
             p: 0.5,
-            color: disabled
+            color: disabledVisible
               ? 'text.disabled'
               : done
                 ? 'text.secondary'
@@ -77,11 +110,19 @@ export default function TodoCardCheck({
         </Typography>
       </TextCell>
       <ActionCell>
-        <IconButton disabled={disabled} onClick={onEditClick}>
+        <IconButton disabled={disabledVisible} onClick={handleEditClick}>
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
-      <ActionCell>{DeleteElement}</ActionCell>
+      <ActionCell>
+        {loading1 ? (
+          <IconButton disabled={loading2}>
+            <DeleteOutlined fontSize="small" />
+          </IconButton>
+        ) : (
+          deleteElement
+        )}
+      </ActionCell>
     </Root>
   );
 }
