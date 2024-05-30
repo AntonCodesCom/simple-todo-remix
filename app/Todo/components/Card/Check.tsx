@@ -4,7 +4,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { Check, EditOutlined } from '@mui/icons-material';
+import { Check, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
@@ -36,6 +36,7 @@ export default function TodoCardCheck({
   const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
   const delay2 = 200;
 
+  // whether to show the disabled state visually
   const disabledVisible = disabled || loading2;
 
   useEffect(() => {
@@ -113,7 +114,15 @@ export default function TodoCardCheck({
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
-      <ActionCell>{deleteElement}</ActionCell>
+      <ActionCell>
+        {loading1 ? (
+          <IconButton disabled={loading2}>
+            <DeleteOutlined fontSize="small" />
+          </IconButton>
+        ) : (
+          deleteElement
+        )}
+      </ActionCell>
     </Root>
   );
 }
