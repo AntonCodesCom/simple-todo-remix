@@ -34,7 +34,7 @@ export default function TodoCardCheck({
   // visible loading state (stage 2)
   const [loading2, setLoading2] = useState(false);
   const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
-  const delay2 = 500;
+  const delay2 = 200;
 
   const disabledVisible = disabled || loading2;
 
