@@ -11,7 +11,7 @@ import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
 
 interface Props {
   todo: TodoItem;
-  DeleteElement: ReactElement;
+  deleteElement: ReactElement;
   disabled?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
@@ -19,7 +19,7 @@ interface Props {
 
 export default function TodoCardCheck({
   todo,
-  DeleteElement,
+  deleteElement,
   disabled = false,
   onEditClick = () => {},
   onCheckToggle = () => {},
@@ -113,7 +113,7 @@ export default function TodoCardCheck({
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
-      <ActionCell>{DeleteElement}</ActionCell>
+      <ActionCell>{deleteElement}</ActionCell>
     </Root>
   );
 }
