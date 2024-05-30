@@ -8,6 +8,11 @@ const theme = createTheme({
         maxWidth: 'md',
       },
     },
+    MuiStack: {
+      defaultProps: {
+        direction: 'row', // like native flex
+      },
+    },
   },
   palette: {
     primary: {

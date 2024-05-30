@@ -1,9 +1,9 @@
+import { HelpOutline } from '@mui/icons-material';
 import {
   Box,
   Button,
   ButtonBase,
   Container,
-  Link,
   Popover,
   Stack,
   Tooltip,
@@ -47,17 +47,13 @@ export default function CommonSession({ sessionId }: Props) {
 
   return (
     <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-end"
-        mb={1}
-      >
+      <Stack alignItems="center" justifyContent="flex-end" mb={1}>
         <Typography variant="body2" color="GrayText">
           Your session ID is:{' '}
           <Tooltip open={tooltipOpen} title="Copied" placement="top" arrow>
             <ButtonBase
-              style={{
+              sx={{
+                mb: 0.1,
                 fontWeight: 500,
                 textDecoration: 'underline',
               }}
@@ -66,20 +62,14 @@ export default function CommonSession({ sessionId }: Props) {
               {sessionId}
             </ButtonBase>
           </Tooltip>{' '}
-          <span style={{ whiteSpace: 'nowrap' }}>
-            (
-            <Link
-              variant="button"
-              component="button"
-              sx={{ display: 'inline-block', px: 0.15 }}
-              aria-describedby={id}
-              onClick={handlePopoverOpen}
-            >
-              ?
-            </Link>
-            )
-          </span>
         </Typography>
+        <ButtonBase
+          sx={{ borderRadius: '50%', p: 0.25 }}
+          aria-describedby={id}
+          onClick={handlePopoverOpen}
+        >
+          <HelpOutline color="primary" fontSize="small" />
+        </ButtonBase>
       </Stack>
       <Popover
         id={id}
