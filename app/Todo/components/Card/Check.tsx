@@ -27,26 +27,41 @@ export default function TodoCardCheck({
   const { id, label, done } = todo;
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [checked, setChecked] = useState(done);
+
+  // invisible loading state (stage 1)
   const [loading1, setLoading1] = useState(false);
 
-  const checkLoading = false; // TODO
+  // visible loading state (stage 2)
+  const [loading2, setLoading2] = useState(false);
+  const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
+  const delay2 = 500;
+
+  const disabledVisible = disabled || loading2;
 
   useEffect(() => {
     setChecked(done);
     setLoading1(false);
+    setLoading2(false);
+    clearTimeout(timeout2);
+    setTimeout2(undefined);
   }, [done]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
-    if (loading1) {
+    if (loading1 || loading2 || disabled) {
       return;
     }
     setLoading1(true);
+    setTimeout2(
+      setTimeout(() => {
+        setLoading2(true);
+      }, delay2),
+    );
     const _done = e.target.checked;
     onCheckToggle(_done);
   }
 
   function handleEditClick() {
-    if (loading1) {
+    if (loading1 || loading2 || disabled) {
       return;
     }
     onEditClick();
@@ -55,7 +70,7 @@ export default function TodoCardCheck({
   return (
     <Root>
       <CheckboxCell>
-        {checkLoading ? (
+        {loading2 ? (
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
         ) : (
           <Checkbox
@@ -67,7 +82,7 @@ export default function TodoCardCheck({
                 color: 'text.secondary',
               },
             }}
-            disabled={disabled}
+            disabled={disabledVisible}
             id={checkboxHtmlId}
             checked={checked}
             onChange={handleCheckboxChange}
@@ -81,7 +96,7 @@ export default function TodoCardCheck({
           sx={{
             flex: 1,
             p: 0.5,
-            color: disabled
+            color: disabledVisible
               ? 'text.disabled'
               : done
                 ? 'text.secondary'
@@ -94,7 +109,7 @@ export default function TodoCardCheck({
         </Typography>
       </TextCell>
       <ActionCell>
-        <IconButton disabled={disabled} onClick={handleEditClick}>
+        <IconButton disabled={disabledVisible} onClick={handleEditClick}>
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
