@@ -76,7 +76,7 @@ export default function TodoCard({ todo }: Props) {
         <TodoCardDelete disabled={loading} onDelete={handleDelete} />
       }
       onEditClick={() => setEditingActive(true)}
-      disabled={loading}
+      // disabled={loading}
       onCheckToggle={handleCheckToggle}
     />
   );

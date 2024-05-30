@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { Check, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
-import { ChangeEvent, ReactElement, useState } from 'react';
+import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
 
 interface Props {
@@ -27,13 +27,29 @@ export default function TodoCardCheck({
   const { id, label, done } = todo;
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [checked, setChecked] = useState(done);
+  const [loading1, setLoading1] = useState(false);
 
   const checkLoading = false; // TODO
 
+  useEffect(() => {
+    setChecked(done);
+    setLoading1(false);
+  }, [done]);
+
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+    if (loading1) {
+      return;
+    }
+    setLoading1(true);
     const _done = e.target.checked;
-    setChecked(_done);
     onCheckToggle(_done);
+  }
+
+  function handleEditClick() {
+    if (loading1) {
+      return;
+    }
+    onEditClick();
   }
 
   return (
@@ -43,6 +59,7 @@ export default function TodoCardCheck({
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
         ) : (
           <Checkbox
+            disableTouchRipple
             checkedIcon={<Check />}
             sx={{
               color: 'primary.main',
@@ -77,7 +94,7 @@ export default function TodoCardCheck({
         </Typography>
       </TextCell>
       <ActionCell>
-        <IconButton disabled={disabled} onClick={onEditClick}>
+        <IconButton disabled={disabled} onClick={handleEditClick}>
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
