@@ -27,7 +27,14 @@ test('Todo', async ({ page, request }) => {
   const seedUrl = new URL('seed', apiBaseUrl).toString();
   await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
 
-  // TODO: GET /todo backend request
+  // requesting control data
+  const getTodoUrl = new URL('todo', apiBaseUrl).toString();
+  const res = await request.fetch(getTodoUrl, {
+    headers: {
+      Authorization: `Bearer ${aliceUserId}`,
+    },
+  });
+  const controlTodos = await res.json();
 
   // setting user session (via cookies)
   const sessionCookie = await getSessionCookie(aliceUserId);
