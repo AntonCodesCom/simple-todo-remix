@@ -1,5 +1,6 @@
 import test, { expect } from '@playwright/test';
 import sessions from '../app/sessions';
+import config from '~/config';
 
 // utility
 async function getSessionCookie(userId: string) {
@@ -19,7 +20,7 @@ async function getSessionCookie(userId: string) {
 //
 test('Todo', async ({ page }) => {
   // defining data
-  const url = 'http://localhost:5173/'; // TODO: env
+  const { baseUrl } = config();
   const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
 
   // TODO: data seeding
@@ -27,10 +28,10 @@ test('Todo', async ({ page }) => {
 
   // setting user session (via cookies)
   const sessionCookie = await getSessionCookie(aliceUserId);
-  await page.context().addCookies([{ ...sessionCookie, url }]);
+  await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
 
   // visiting the page
-  await page.goto(url);
+  await page.goto('/');
 
   // asserting todo list is on the page
   const list = page.getByRole('list', { name: 'My Todos' });
