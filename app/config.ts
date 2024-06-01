@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { envModeFactory } from './envMode';
+import envMode from './envMode';
 
 // utility
 const { isURL } = validator;
@@ -51,7 +51,7 @@ const { isURL } = validator;
  * @throws {Error} on invalid configuration of env vars
  */
 export default function config() {
-  const { isDev, isProd } = envModeFactory();
+  const { isDev, isProd } = envMode();
   const errors = [];
   // BASE_URL
   let baseUrl = process.env.BASE_URL;

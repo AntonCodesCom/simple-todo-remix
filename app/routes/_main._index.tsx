@@ -53,7 +53,7 @@ export const meta: MetaFunction = () => {
 // error boundary
 export function ErrorBoundary() {
   const error = useRouteError();
-  const { isDev } = envMode;
+  const { isDev } = envMode();
   return <CommonErrorScreen error={error} isDev={isDev} />;
 }
 
