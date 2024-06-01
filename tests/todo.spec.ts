@@ -18,12 +18,15 @@ async function getSessionCookie(userId: string) {
 //
 // e2e test
 //
-test('Todo', async ({ page }) => {
+test('Todo', async ({ page, request }) => {
   // defining data
-  const { baseUrl } = config();
+  const { baseUrl, apiBaseUrl } = config();
   const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
 
-  // TODO: data seeding
+  // data seeding
+  const seedUrl = new URL('seed', apiBaseUrl).toString();
+  await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
+
   // TODO: GET /todo backend request
 
   // setting user session (via cookies)
