@@ -1,4 +1,4 @@
-import test from '@playwright/test';
+import test, { expect } from '@playwright/test';
 import sessions from '../app/sessions';
 
 // utility
@@ -18,9 +18,11 @@ async function getSessionCookie(userId: string) {
 // e2e test
 //
 test('Todo', async ({ page }) => {
-  const url = 'http://localhost:5173/';
+  const url = 'http://localhost:5173/'; // TODO: env
   const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
   const sessionCookie = await getSessionCookie(aliceUserId);
   await page.context().addCookies([{ ...sessionCookie, url }]);
   await page.goto(url);
+  const list = page.getByRole('list', { name: 'My Todos' });
+  await expect(list).toBeVisible();
 });
