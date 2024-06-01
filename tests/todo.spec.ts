@@ -1,6 +1,7 @@
 import test, { expect } from '@playwright/test';
 import sessions from '../app/sessions';
 import config from '~/config';
+import arrayIdHash from '~/Common/utils/arrayIdHash';
 
 // utility
 async function getSessionCookie(userId: string) {
@@ -43,7 +44,9 @@ test('Todo', async ({ page, request }) => {
   // visiting the page
   await page.goto('/');
 
-  // asserting todo list is on the page
+  // asserting Todo list contains correct Todos
   const list = page.getByRole('list', { name: 'My Todos' });
   await expect(list).toBeVisible();
+  const expectedIdHash = arrayIdHash(controlTodos);
+  await expect(list).toHaveAttribute('data-idhash', expectedIdHash);
 });
