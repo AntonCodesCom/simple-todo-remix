@@ -3,7 +3,7 @@ import config from './config';
 import envMode from './envMode';
 
 export default function sessions() {
-  const { isDev, isProd } = envMode;
+  const { isDev, isProd } = envMode();
   const {
     sessionCookieName,
     sessionCookieSecret,
