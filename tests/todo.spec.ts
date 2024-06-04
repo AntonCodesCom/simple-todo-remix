@@ -4,7 +4,7 @@ import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 
 // utility
-async function getSessionCookie(userId: string) {
+async function generateSessionCookie(userId: string) {
   const { getSession, commitSession, sessionCookieName } = sessions();
   const session = await getSession();
   session.set(sessionCookieName, userId);
@@ -38,7 +38,7 @@ test('Todo', async ({ page, request }) => {
   const controlTodos = await res.json();
 
   // setting user session (via cookies)
-  const sessionCookie = await getSessionCookie(aliceUserId);
+  const sessionCookie = await generateSessionCookie(aliceUserId);
   await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
 
   // visiting the page
