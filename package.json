@@ -11,7 +11,7 @@
     "typecheck": "tsc",
     "prepare": "husky install",
     "test:e2e:dev": "NODE_ENV=development playwright test",
-    "test": "jest ./app --watch"
+    "test": "jest --watch"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
