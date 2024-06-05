@@ -1,5 +1,5 @@
 import { createRemixStub } from '@remix-run/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import todoItemsFixture from '../../fixtures/items';
 import TodoMain from './Main';
 import { json, useFetcher, useLoaderData } from '@remix-run/react';
@@ -38,5 +38,9 @@ test('TodoMain', async () => {
   render(<TodoMain todos={mockTodos} />);
   const list = screen.getByRole('list', { name: 'My Todos' });
   expect(list.getAttribute('data-idhash')).toBe(arrayIdHash(mockTodos));
+  const cards = within(list).getAllByRole('listitem');
+  const actualIds = cards.map((x) => x.getAttribute('id'));
+  const expectedIds = mockTodos.map((x) => x.id);
+  expect(actualIds.sort()).toStrictEqual(expectedIds.sort());
   // render(<RemixStub />)
 });

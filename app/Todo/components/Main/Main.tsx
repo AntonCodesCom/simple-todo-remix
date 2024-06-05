@@ -27,8 +27,9 @@ export default function TodoMain({ todos }: Props) {
               width="100%"
             >
               {todos.map((x) => (
-                // TODO: role listitem
-                <TodoCard key={x.id} todo={x} />
+                <Box key={x.id} role="listitem" id={x.id}>
+                  <TodoCard todo={x} />
+                </Box>
               ))}
             </Box>
           ) : (
