@@ -2,6 +2,8 @@ import test, { expect } from '@playwright/test';
 import sessions from '../app/sessions';
 import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
+import { faker } from '@faker-js/faker';
+import md5 from 'md5';
 
 // utility
 async function generateSessionCookie(userId: string) {
@@ -44,9 +46,24 @@ test('Todo', async ({ page, request }) => {
   // visiting the page
   await page.goto('/');
 
+  // DISPLAYING TODOS
   // asserting Todo list contains correct Todos
   const list = page.getByRole('list', { name: 'My Todos' });
   await expect(list).toBeVisible();
   const expectedIdHash = arrayIdHash(controlTodos);
   await expect(list).toHaveAttribute('data-idhash', expectedIdHash);
+
+  // ADDING TODO
+  const newUniqueLabel = md5(controlTodos.map((x: any) => x.label).join());
+  const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
+  await expect(addTodoForm).toBeVisible();
+  const addTodoFormInput = addTodoForm.getByRole('textbox', {
+    name: 'Something to do...',
+  });
+  await expect(addTodoFormInput).toBeVisible();
+  await addTodoFormInput.fill(newUniqueLabel);
+  // submitting the form; TODO: direct `addTodoForm.submit()` method
+  await addTodoForm.dispatchEvent('submit');
+  const addedTodoCard = list.getByRole('listitem', { name: newUniqueLabel });
+  await expect(addedTodoCard).toBeVisible();
 });
