@@ -70,22 +70,22 @@ test('Todo', async ({ page, request }) => {
   });
   await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
 
-  // // adding newly added todo to control todos
-  // const addedTodoId = await addedTodoCard.getAttribute('id')
-  // controlTodos.push({
-  //   id: addedTodoId,
-  //   label: newUniqueLabel,
-  //   done: false,
-  // });
-
-  // to be used below
+  // to be used in further testing
   const listitems = await list.getByRole('listitem').all();
 
   // TOGGLING TODO
   const todoToToggle = faker.helpers.arrayElement(listitems);
-  // const todoToToggleId = await todoToToggle.getAttribute('id');
-  // const controlTodoToToggle = controlTodos.find((x: any) => x.id === todoToToggleId)
-  // const initiallyChecked = controlTodoToToggle.done;
-  // const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', { name: controlTodoToToggle.label })
-  // await expect(todoToToggleCheckbox).toBeChecked({ checked: initiallyChecked });
+  const todoToToggleId = await todoToToggle.getAttribute('id');
+  const todoToToggleName =
+    controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
+    newUniqueLabel;
+  // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
+  const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
+    name: todoToToggleName,
+  });
+  const initiallyChecked = await todoToToggleCheckbox.isChecked();
+  await todoToToggleCheckbox.click(); // TODO: "change" event
+  await expect(todoToToggleCheckbox).toBeChecked({
+    checked: !initiallyChecked,
+  });
 });
