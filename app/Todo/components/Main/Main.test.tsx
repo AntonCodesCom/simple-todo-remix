@@ -2,9 +2,9 @@ import { faker } from '@faker-js/faker';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
-import todoItemsFixture from '~/Todo/fixtures/items';
 import TodoMain from './Main';
 import fetcherMock from '~/Testing/utils/fetcherMock';
+import { initTodo } from '~/Todo/types/Item';
 
 // breaking dependency: mocking
 vi.mock('@remix-run/react', () => ({
@@ -16,7 +16,9 @@ vi.mock('@remix-run/react', () => ({
 //
 describe('TodoMain', () => {
   test('happy path', async () => {
-    const mockTodos = faker.helpers.arrayElements(todoItemsFixture);
+    const mockTodos = faker.helpers.multiple(() => initTodo({}), {
+      count: { min: 1, max: 5 },
+    });
     render(<TodoMain todos={mockTodos} />);
     const list = screen.getByRole('list', { name: 'My Todos' });
     expect(list.getAttribute('data-idhash')).toBe(arrayIdHash(mockTodos));
