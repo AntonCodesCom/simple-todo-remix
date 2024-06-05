@@ -4,8 +4,11 @@ import todoItemsFixture from '../../fixtures/items';
 import TodoMain from './Main';
 import { json, useFetcher, useLoaderData } from '@remix-run/react';
 import TodoItem from '~/Todo/types/Item';
-import { test, vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
+import arrayIdHash from '~/Common/utils/arrayIdHash';
+import { faker } from '@faker-js/faker';
 
+// breaking dependency: mocking
 vi.mock('@remix-run/react', () => ({
   useFetcher: () => ({
     state: 'idle',
@@ -13,8 +16,6 @@ vi.mock('@remix-run/react', () => ({
     Form: () => null,
   }),
 }));
-
-const mockTodos = todoItemsFixture;
 
 // const RemixStub = createRemixStub([
 //   {
@@ -32,7 +33,10 @@ const mockTodos = todoItemsFixture;
 //
 // integration test
 //
-test('TodoMain', () => {
+test('TodoMain', async () => {
+  const mockTodos = faker.helpers.arrayElements(todoItemsFixture);
   render(<TodoMain todos={mockTodos} />);
+  const list = screen.getByRole('list', { name: 'My Todos' });
+  expect(list.getAttribute('data-idhash')).toBe(arrayIdHash(mockTodos));
   // render(<RemixStub />)
 });

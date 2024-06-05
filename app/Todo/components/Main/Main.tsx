@@ -2,6 +2,7 @@ import { Box, Container, Grid, Typography } from '@mui/material';
 import TodoItem from '~/Todo/types/Item';
 import TodoAdd from '../Add';
 import TodoCard from '../Card';
+import arrayIdHash from '~/Common/utils/arrayIdHash';
 
 interface Props {
   todos: TodoItem[] | null | undefined;
@@ -20,12 +21,11 @@ export default function TodoMain({ todos }: Props) {
           <Box mb={1.5} />
           {todos && todos.length > 0 ? (
             <Box
-              data-idhash="59c77e6c1b8d6c834d3c225b1b968af3"
+              data-idhash={arrayIdHash(todos)}
               role="list"
               aria-labelledby={headingHtmlId}
               width="100%"
             >
-              {/* TODO: fix hard-coded id hash */}
               {todos.map((x) => (
                 // TODO: role listitem
                 <TodoCard key={x.id} todo={x} />
