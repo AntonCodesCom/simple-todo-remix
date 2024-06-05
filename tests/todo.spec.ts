@@ -65,4 +65,27 @@ test('Todo', async ({ page, request }) => {
   await addTodoForm.dispatchEvent('submit');
   const addedTodoCard = list.getByRole('listitem', { name: newUniqueLabel });
   await expect(addedTodoCard).toBeVisible();
+  const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox', {
+    name: newUniqueLabel,
+  });
+  await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
+
+  // // adding newly added todo to control todos
+  // const addedTodoId = await addedTodoCard.getAttribute('id')
+  // controlTodos.push({
+  //   id: addedTodoId,
+  //   label: newUniqueLabel,
+  //   done: false,
+  // });
+
+  // to be used below
+  const listitems = await list.getByRole('listitem').all();
+
+  // TOGGLING TODO
+  const todoToToggle = faker.helpers.arrayElement(listitems);
+  // const todoToToggleId = await todoToToggle.getAttribute('id');
+  // const controlTodoToToggle = controlTodos.find((x: any) => x.id === todoToToggleId)
+  // const initiallyChecked = controlTodoToToggle.done;
+  // const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', { name: controlTodoToToggle.label })
+  // await expect(todoToToggleCheckbox).toBeChecked({ checked: initiallyChecked });
 });
