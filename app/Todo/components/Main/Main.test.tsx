@@ -1,4 +1,4 @@
-// import { createRemixStub } from '@remix-run/testing'
+import { createRemixStub } from '@remix-run/testing';
 import { render, screen } from '@testing-library/react';
 import todoItemsFixture from '../../fixtures/items';
 import TodoMain from './Main';
@@ -16,12 +16,10 @@ vi.mock('@remix-run/react', () => ({
 
 const mockTodos = todoItemsFixture;
 
-// jest.mock('@remix-run/react')
-
 // const RemixStub = createRemixStub([
 //   {
 //     path: "/",
-//     Component: function () {
+//     Component () {
 //       const { todos } = useLoaderData() as { todos: TodoItem[] };
 //       return <TodoMain todos={todos} />
 //     },
@@ -36,4 +34,5 @@ const mockTodos = todoItemsFixture;
 //
 test('TodoMain', () => {
   render(<TodoMain todos={mockTodos} />);
+  // render(<RemixStub />)
 });
