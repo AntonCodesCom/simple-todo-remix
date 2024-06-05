@@ -10,9 +10,7 @@ vi.mock('@remix-run/react', () => ({
   useFetcher: () => ({
     state: 'idle',
     submit: () => {},
-    Form: function () {
-      return <></>;
-    },
+    Form: () => null,
   }),
 }));
 
