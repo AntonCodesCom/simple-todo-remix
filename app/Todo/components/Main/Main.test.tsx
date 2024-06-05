@@ -4,14 +4,11 @@ import { describe, expect, test, vi } from 'vitest';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import todoItemsFixture from '~/Todo/fixtures/items';
 import TodoMain from './Main';
+import fetcherMock from '~/Testing/utils/fetcherMock';
 
 // breaking dependency: mocking
 vi.mock('@remix-run/react', () => ({
-  useFetcher: () => ({
-    state: 'idle',
-    submit: () => {},
-    Form: () => null,
-  }),
+  useFetcher: () => fetcherMock,
 }));
 
 //

@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
 
+// schema
 export const todoItemSchema = z.object({
   id: z.string(),
   label: z.string(),
@@ -8,11 +9,14 @@ export const todoItemSchema = z.object({
   createdAt: z.string().datetime(),
 });
 
+//
+// entity interface
+//
 type TodoItem = z.infer<typeof todoItemSchema>;
-
 export default TodoItem;
 
-function initTodo(partial: Partial<TodoItem>): TodoItem {
+// initializer
+export function initTodo(partial: Partial<TodoItem>): TodoItem {
   return {
     id: partial.id ?? faker.string.sample(),
     label: partial.label ?? faker.lorem.sentence(),
@@ -21,6 +25,7 @@ function initTodo(partial: Partial<TodoItem>): TodoItem {
   };
 }
 
+// batch initializer
 export function initTodos(partials: Partial<TodoItem>[]): TodoItem[] {
   return partials.map(initTodo);
 }

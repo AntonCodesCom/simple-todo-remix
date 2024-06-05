@@ -62,7 +62,6 @@ test('Todo', async ({ page, request }) => {
   });
   await expect(addTodoFormInput).toBeVisible();
   await addTodoFormInput.fill(newUniqueLabel);
-  // submitting the form; TODO: direct `addTodoForm.submit()` method
   await addTodoForm.dispatchEvent('submit');
   const addedTodoCard = list.getByRole('listitem', { name: newUniqueLabel });
   await expect(addedTodoCard).toBeVisible();
