@@ -5,7 +5,7 @@ import TodoCard from '../Card';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 
 interface Props {
-  todos: TodoItem[] | null | undefined;
+  todos: TodoItem[];
 }
 
 export default function TodoMain({ todos }: Props) {

@@ -40,11 +40,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userId = session.get(sessionCookieName);
   const todos = await fetchTodos(userId, apiBaseUrl);
   return json({ todos });
-  // return new Response(JSON.stringify({ todos }), {
-  //   headers: {
-  //     "Content-Type": "application/json; charset=utf-8",
-  //   },
-  // });
 }
 
 // meta
