@@ -1,5 +1,11 @@
 import TodoItem, { initTodos } from '../types/Item';
 
+/**
+ * Todo items fixture.
+ *
+ * The fixture must contain at least 1 element in order for
+ * integration tests to function properly.
+ */
 const todoItemsFixture: TodoItem[] = initTodos([
   {
     id: 'todo-1',

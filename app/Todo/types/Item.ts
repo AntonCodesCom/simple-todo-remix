@@ -17,7 +17,7 @@ function initTodo(partial: Partial<TodoItem>): TodoItem {
     id: partial.id ?? faker.string.sample(),
     label: partial.label ?? faker.lorem.sentence(),
     done: partial.done ?? faker.datatype.boolean(),
-    createdAt: partial.createdAt ?? new Date().toString(),
+    createdAt: partial.createdAt ?? new Date().toISOString(),
   };
 }
 

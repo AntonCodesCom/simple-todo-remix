@@ -1,9 +1,9 @@
+import { faker } from '@faker-js/faker';
 import { render, screen, within } from '@testing-library/react';
-import todoItemsFixture from '../../fixtures/items';
-import TodoMain from './Main';
 import { describe, expect, test, vi } from 'vitest';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
-import { faker } from '@faker-js/faker';
+import todoItemsFixture from '~/Todo/fixtures/items';
+import TodoMain from './Main';
 
 // breaking dependency: mocking
 vi.mock('@remix-run/react', () => ({
