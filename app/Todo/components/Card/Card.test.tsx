@@ -15,5 +15,5 @@ vi.mock('@remix-run/react', () => ({
 test('TodoCard', async () => {
   const mockTodo = initTodo({});
   render(<TodoCard todo={mockTodo} />);
-  // const card = screen.getByRole('listitem', { name: mockTodo.label });
+  const card = screen.getByRole('listitem', { name: mockTodo.label });
 });

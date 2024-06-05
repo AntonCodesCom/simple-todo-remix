@@ -4,6 +4,7 @@ import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
 import TodoCardCheck from './Check';
 import TodoCardEdit from './Edit';
+import { Box } from '@mui/material';
 
 // props
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
  * Todo card component.
  */
 export default function TodoCard({ todo }: Props) {
-  const { id } = todo;
+  const { id, label } = todo;
   const [editingActive, setEditingActive] = useState(false);
   const checkFetcher = useFetcher();
   const checkLoading = ['loading', 'submitting'].includes(checkFetcher.state);
@@ -62,22 +63,26 @@ export default function TodoCard({ todo }: Props) {
     );
   }
 
-  return editingActive ? (
-    <TodoCardEdit
-      todo={todo}
-      disabled={loading}
-      onDeactivate={() => setEditingActive(false)}
-      onEdit={handleEdit}
-    />
-  ) : (
-    <TodoCardCheck
-      todo={todo}
-      deleteElement={
-        <TodoCardDelete disabled={loading} onDelete={handleDelete} />
-      }
-      onEditClick={() => setEditingActive(true)}
-      // disabled={loading}
-      onCheckToggle={handleCheckToggle}
-    />
+  return (
+    <Box role="listitem" aria-label={label} id={id}>
+      {editingActive ? (
+        <TodoCardEdit
+          todo={todo}
+          disabled={loading}
+          onDeactivate={() => setEditingActive(false)}
+          onEdit={handleEdit}
+        />
+      ) : (
+        <TodoCardCheck
+          todo={todo}
+          deleteElement={
+            <TodoCardDelete disabled={loading} onDelete={handleDelete} />
+          }
+          onEditClick={() => setEditingActive(true)}
+          // disabled={loading}
+          onCheckToggle={handleCheckToggle}
+        />
+      )}
+    </Box>
   );
 }
