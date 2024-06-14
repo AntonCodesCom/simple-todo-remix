@@ -55,18 +55,19 @@ test('Todo', async ({ page, request }) => {
 
   // ADDING TODO
   const newUniqueLabel = md5(controlTodos.map((x: any) => x.label).join());
+  const addedTodoLabel = newUniqueLabel;
   const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
   await expect(addTodoForm).toBeVisible();
   const addTodoFormInput = addTodoForm.getByRole('textbox', {
     name: 'Something to do...',
   });
   await expect(addTodoFormInput).toBeVisible();
-  await addTodoFormInput.fill(newUniqueLabel);
+  await addTodoFormInput.fill(addedTodoLabel);
   await addTodoForm.dispatchEvent('submit');
-  const addedTodoCard = list.getByRole('listitem', { name: newUniqueLabel });
+  const addedTodoCard = list.getByRole('listitem', { name: addedTodoLabel });
   await expect(addedTodoCard).toBeVisible();
   const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox', {
-    name: newUniqueLabel,
+    name: addedTodoLabel,
   });
   await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
 
@@ -78,7 +79,7 @@ test('Todo', async ({ page, request }) => {
   const todoToToggleId = await todoToToggle.getAttribute('id');
   const todoToToggleName =
     controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
-    newUniqueLabel;
+    addedTodoLabel;
   // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
   const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
     name: todoToToggleName,
@@ -88,4 +89,19 @@ test('Todo', async ({ page, request }) => {
   await expect(todoToToggleCheckbox).toBeChecked({
     checked: !initiallyChecked,
   });
+
+  // TODO: Todo editing
+  // TODO: Todo deletion
+
+  // BACKEND DATA POST-VERIFICATION
+  const res2 = await request.fetch(getTodoUrl, {
+    headers: {
+      Authorization: `Bearer ${aliceUserId}`,
+    },
+  });
+  const controlTodos2 = await res2.json();
+  // TODO: verify array ID hash
+  const expectedIdHash2 = arrayIdHash(controlTodos2);
+  // TODO: verify added Todo exists
+  // TODO: verify toggled Todo's "done" state is updated
 });
