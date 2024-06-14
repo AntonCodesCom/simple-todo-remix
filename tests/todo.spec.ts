@@ -3,7 +3,6 @@ import sessions from '../app/sessions';
 import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
-import md5 from 'md5';
 
 // utility
 async function generateSessionCookie(userId: string) {
@@ -74,16 +73,9 @@ test('Todo', async ({ page, request }) => {
   const listitems = await list.getByRole('listitem').all();
 
   // TOGGLING A TODO
-  // TODO: simplify checkbox querying
   const todoToToggle = faker.helpers.arrayElement(listitems);
   const todoToToggleId = await todoToToggle.getAttribute('id');
-  const todoToToggleName =
-    controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
-    addedTodoLabel;
-  // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
-  const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
-    name: todoToToggleName,
-  });
+  const todoToToggleCheckbox = todoToToggle.getByRole('checkbox');
   const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
   const todoToToggleExpectedChecked = !todoToToggleInitiallyChecked;
   await todoToToggleCheckbox.click(); // TODO: "change" event
