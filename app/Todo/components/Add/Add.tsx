@@ -28,7 +28,7 @@ export default function TodoAdd() {
   }, [fetcher.state]);
 
   return (
-    <fetcher.Form method="POST" action="add">
+    <fetcher.Form method="POST" action="add" aria-label="Add Todo">
       <Stack direction="row" gap={0.5}>
         <TextField
           name="label"
