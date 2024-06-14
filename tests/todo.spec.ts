@@ -93,6 +93,7 @@ test('Todo', async ({ page, request }) => {
 
   // EDITING A TODO
   const todoToEdit = faker.helpers.arrayElement(listitems);
+  const todoToEditId = await todoToEdit.getAttribute('id');
   const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
   await expect(editButton).toBeVisible();
   await editButton.click();
@@ -105,6 +106,10 @@ test('Todo', async ({ page, request }) => {
   const editedTodoLabel = 'E2E edited Todo label.';
   await editFormInput.fill(editedTodoLabel);
   await editForm.dispatchEvent('submit');
+  const editedTodo = list.getByRole('listitem', { name: editedTodoLabel });
+  await expect(editedTodo).toBeVisible();
+  // asserting `editedTodo` and `todoToEdit` are the same element
+  expect(await editedTodo.getAttribute('id')).toEqual(todoToEditId);
 
   // TODO: Todo deletion
 
