@@ -134,4 +134,9 @@ test('Todo', async ({ page, request }) => {
     (x: any) => (x.id = todoToToggleId),
   );
   expect(controlTodoToToggle.done).toEqual(todoToToggleExpectedChecked);
+  // verifying edited Todo has the new label
+  const controlEditedTodo = controlTodos2.find(
+    (x: any) => x.id === todoToEditId,
+  );
+  expect(controlEditedTodo.label).toEqual(editedTodoLabel);
 });
