@@ -37,6 +37,7 @@ test('Todo', async ({ page, request }) => {
     },
   });
   const controlTodos = await res.json();
+  expect(controlTodos.length).toBeGreaterThanOrEqual(3);
 
   // setting user session (via cookies)
   const sessionCookie = await generateSessionCookie(aliceUserId);
@@ -70,10 +71,14 @@ test('Todo', async ({ page, request }) => {
   await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
 
   // to be used in further testing
-  const listitems = await list.getByRole('listitem').all();
+  const listitems = await list
+    .getByRole('listitem')
+    .filter({ hasNotText: addedTodoLabel })
+    .all();
+  const pickedListItems = faker.helpers.arrayElements(listitems, 3);
 
   // TOGGLING A TODO
-  const todoToToggle = faker.helpers.arrayElement(listitems);
+  const todoToToggle = pickedListItems[0];
   const todoToToggleId = await todoToToggle.getAttribute('id');
   const todoToToggleCheckbox = todoToToggle.getByRole('checkbox');
   const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
@@ -84,7 +89,7 @@ test('Todo', async ({ page, request }) => {
   });
 
   // EDITING A TODO
-  const todoToEdit = faker.helpers.arrayElement(listitems);
+  const todoToEdit = pickedListItems[1];
   const todoToEditId = await todoToEdit.getAttribute('id');
   const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
   await expect(editButton).toBeVisible();
@@ -123,7 +128,7 @@ test('Todo', async ({ page, request }) => {
   expect(controlAddedTodoIndex).not.toEqual(-1);
   // verifying toggled Todo's "done" state is updated
   const controlTodoToToggle = controlTodos2.find(
-    (x: any) => (x.id = todoToToggleId),
+    (x: any) => x.id === todoToToggleId,
   );
   expect(controlTodoToToggle.done).toEqual(todoToToggleExpectedChecked);
   // verifying edited Todo has the new label
