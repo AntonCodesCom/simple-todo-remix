@@ -48,18 +48,17 @@ export default function TodoCardCheck({
   }, [done]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
-    setChecked((x) => !x); // TODO: remove this and uncomment the rest
-    // if (loading1 || loading2 || disabled) {
-    //   return;
-    // }
-    // setLoading1(true);
-    // setTimeout2(
-    //   setTimeout(() => {
-    //     setLoading2(true);
-    //   }, delay2),
-    // );
-    // const _done = e.target.checked;
-    // onCheckToggle(_done);
+    if (loading1 || loading2 || disabled) {
+      return;
+    }
+    setLoading1(true);
+    setTimeout2(
+      setTimeout(() => {
+        setLoading2(true);
+      }, delay2),
+    );
+    const _done = e.target.checked;
+    onCheckToggle(_done);
   }
 
   function handleEditClick() {

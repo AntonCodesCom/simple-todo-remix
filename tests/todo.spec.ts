@@ -74,21 +74,22 @@ test('Todo', async ({ page, request }) => {
   // to be used in further testing
   const listitems = await list.getByRole('listitem').all();
 
-  // // TOGGLING TODO
-  // const todoToToggle = faker.helpers.arrayElement(listitems);
-  // const todoToToggleId = await todoToToggle.getAttribute('id');
-  // const todoToToggleName =
-  //   controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
-  //   addedTodoLabel;
-  // // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
-  // const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
-  //   name: todoToToggleName,
-  // });
-  // const initiallyChecked = await todoToToggleCheckbox.isChecked();
-  // await todoToToggleCheckbox.click(); // TODO: "change" event
-  // await expect(todoToToggleCheckbox).toBeChecked({
-  //   checked: !initiallyChecked,
-  // });
+  // TOGGLING TODO
+  const todoToToggle = faker.helpers.arrayElement(listitems);
+  const todoToToggleId = await todoToToggle.getAttribute('id');
+  const todoToToggleName =
+    controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
+    addedTodoLabel;
+  // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
+  const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
+    name: todoToToggleName,
+  });
+  const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
+  const todoToToggleExpectedChecked = !todoToToggleInitiallyChecked;
+  await todoToToggleCheckbox.click(); // TODO: "change" event
+  await expect(todoToToggleCheckbox).toBeChecked({
+    checked: todoToToggleExpectedChecked,
+  });
 
   // TODO: Todo editing
   // TODO: Todo deletion
@@ -109,5 +110,9 @@ test('Todo', async ({ page, request }) => {
     (x: any) => x.label === addedTodoLabel,
   );
   expect(controlAddedTodoIndex).not.toEqual(-1);
-  // TODO: verify toggled Todo's "done" state is updated
+  // verifying toggled Todo's "done" state is updated
+  const controlTodoToToggle = controlTodos2.find(
+    (x: any) => (x.id = todoToToggleId),
+  );
+  expect(controlTodoToToggle.done).toEqual(todoToToggleExpectedChecked);
 });
