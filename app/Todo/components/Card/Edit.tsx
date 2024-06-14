@@ -46,7 +46,12 @@ export default function TodoCardEdit({
   }
 
   return (
-    <Root ref={ref} component="form" onSubmit={handleSubmit}>
+    <Root
+      ref={ref}
+      component="form"
+      onSubmit={handleSubmit}
+      aria-label="Edit Todo"
+    >
       <CheckboxCell>
         <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
       </CheckboxCell>
@@ -66,6 +71,7 @@ export default function TodoCardEdit({
           }}
           required
           name="label"
+          placeholder="Something to do..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           autoFocus

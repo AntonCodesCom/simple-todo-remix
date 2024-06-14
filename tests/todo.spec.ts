@@ -53,9 +53,8 @@ test('Todo', async ({ page, request }) => {
   const controlIdHash = arrayIdHash(controlTodos);
   await expect(list).toHaveAttribute('data-idhash', controlIdHash);
 
-  // ADDING TODO
-  const newUniqueLabel = md5(controlTodos.map((x: any) => x.label).join());
-  const addedTodoLabel = newUniqueLabel;
+  // ADDING A TODO
+  const addedTodoLabel = 'E2E added Todo label.';
   const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
   await expect(addTodoForm).toBeVisible();
   const addTodoFormInput = addTodoForm.getByRole('textbox', {
@@ -74,7 +73,8 @@ test('Todo', async ({ page, request }) => {
   // to be used in further testing
   const listitems = await list.getByRole('listitem').all();
 
-  // TOGGLING TODO
+  // TOGGLING A TODO
+  // TODO: simplify checkbox querying
   const todoToToggle = faker.helpers.arrayElement(listitems);
   const todoToToggleId = await todoToToggle.getAttribute('id');
   const todoToToggleName =
@@ -91,7 +91,21 @@ test('Todo', async ({ page, request }) => {
     checked: todoToToggleExpectedChecked,
   });
 
-  // TODO: Todo editing
+  // EDITING A TODO
+  const todoToEdit = faker.helpers.arrayElement(listitems);
+  const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
+  await expect(editButton).toBeVisible();
+  await editButton.click();
+  const editForm = todoToEdit.getByRole('form', { name: 'Edit Todo' });
+  await expect(editForm).toBeVisible();
+  const editFormInput = editForm.getByRole('textbox', {
+    name: 'Something to do...',
+  });
+  await expect(editFormInput).toBeVisible();
+  const editedTodoLabel = 'E2E edited Todo label.';
+  await editFormInput.fill(editedTodoLabel);
+  await editForm.dispatchEvent('submit');
+
   // TODO: Todo deletion
 
   // BACKEND DATA POST-VERIFICATION
