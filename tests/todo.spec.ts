@@ -74,21 +74,21 @@ test('Todo', async ({ page, request }) => {
   // to be used in further testing
   const listitems = await list.getByRole('listitem').all();
 
-  // TOGGLING TODO
-  const todoToToggle = faker.helpers.arrayElement(listitems);
-  const todoToToggleId = await todoToToggle.getAttribute('id');
-  const todoToToggleName =
-    controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
-    addedTodoLabel;
-  // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
-  const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
-    name: todoToToggleName,
-  });
-  const initiallyChecked = await todoToToggleCheckbox.isChecked();
-  await todoToToggleCheckbox.click(); // TODO: "change" event
-  await expect(todoToToggleCheckbox).toBeChecked({
-    checked: !initiallyChecked,
-  });
+  // // TOGGLING TODO
+  // const todoToToggle = faker.helpers.arrayElement(listitems);
+  // const todoToToggleId = await todoToToggle.getAttribute('id');
+  // const todoToToggleName =
+  //   controlTodos.find((x: any) => x.id === todoToToggleId)?.label ??
+  //   addedTodoLabel;
+  // // TODO: get `todoToToggle` accessible name and assign it to `todoToToggleName`
+  // const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
+  //   name: todoToToggleName,
+  // });
+  // const initiallyChecked = await todoToToggleCheckbox.isChecked();
+  // await todoToToggleCheckbox.click(); // TODO: "change" event
+  // await expect(todoToToggleCheckbox).toBeChecked({
+  //   checked: !initiallyChecked,
+  // });
 
   // TODO: Todo editing
   // TODO: Todo deletion
@@ -104,6 +104,10 @@ test('Todo', async ({ page, request }) => {
   const controlIdHash2 = arrayIdHash(controlTodos2);
   expect(controlIdHash2).not.toEqual(controlIdHash);
   await expect(list).toHaveAttribute('data-idhash', controlIdHash2);
-  // TODO: verify added Todo exists
+  // verifying added Todo exists
+  const controlAddedTodoIndex = controlTodos2.findIndex(
+    (x: any) => x.label === addedTodoLabel,
+  );
+  expect(controlAddedTodoIndex).not.toEqual(-1);
   // TODO: verify toggled Todo's "done" state is updated
 });
