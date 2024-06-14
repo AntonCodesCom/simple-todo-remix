@@ -50,8 +50,8 @@ test('Todo', async ({ page, request }) => {
   // asserting Todo list contains correct Todos
   const list = page.getByRole('list', { name: 'My Todos' });
   await expect(list).toBeVisible();
-  const expectedIdHash = arrayIdHash(controlTodos);
-  await expect(list).toHaveAttribute('data-idhash', expectedIdHash);
+  const controlIdHash = arrayIdHash(controlTodos);
+  await expect(list).toHaveAttribute('data-idhash', controlIdHash);
 
   // ADDING TODO
   const newUniqueLabel = md5(controlTodos.map((x: any) => x.label).join());
@@ -100,8 +100,10 @@ test('Todo', async ({ page, request }) => {
     },
   });
   const controlTodos2 = await res2.json();
-  // TODO: verify array ID hash
-  const expectedIdHash2 = arrayIdHash(controlTodos2);
+  // verifying updated Todo array
+  const controlIdHash2 = arrayIdHash(controlTodos2);
+  expect(controlIdHash2).not.toEqual(controlIdHash);
+  await expect(list).toHaveAttribute('data-idhash', controlIdHash2);
   // TODO: verify added Todo exists
   // TODO: verify toggled Todo's "done" state is updated
 });
