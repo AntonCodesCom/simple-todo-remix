@@ -110,7 +110,11 @@ export default function TodoCardCheck({
         </Typography>
       </TextCell>
       <ActionCell>
-        <IconButton disabled={disabledVisible} onClick={handleEditClick}>
+        <IconButton
+          disabled={disabledVisible}
+          onClick={handleEditClick}
+          aria-label="Edit"
+        >
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
