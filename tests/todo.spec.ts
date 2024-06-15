@@ -9,9 +9,6 @@ import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
 
-// config
-test.describe.configure({ mode: 'serial' });
-
 // utility
 async function generateSessionCookie(userId: string) {
   const { getSession, commitSession, sessionCookieName } = sessions();
@@ -61,6 +58,16 @@ test.describe('Todo', () => {
   const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
   const accessToken = aliceUserId; // TODO: update when new auth system is introduced
 
+  /**
+   * Setting this timeout for actions like `.click()` will allow us to skip
+   * unnecessary (intermediary) visibility checks on elements that are supposed
+   * to be immediately visible (e.g. a static button).
+   *
+   * Due to our internal convention, if we see a 987 ms timeout error in a test
+   * report, then this would mean that a necessary element is missing.
+   */
+  const actionTimeout = 987;
+
   // before each
   test.beforeEach(async ({ page, request }) => {
     // data seeding
@@ -91,20 +98,27 @@ test.describe('Todo', () => {
 
   // adding
   test('adding', async ({ page, request }) => {
+    const existingListitemIds = await Promise.all(
+      (await getTodoListItems(page)).map(
+        async (x) => await x.getAttribute('id'),
+      ),
+    );
     const addedTodoLabel = faker.lorem.sentence();
     const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
-    await expect(addTodoForm).toBeVisible();
-    const addTodoFormInput = addTodoForm.getByRole('textbox', {
-      name: 'Something to do...',
-    });
-    await expect(addTodoFormInput).toBeVisible();
-    await addTodoFormInput.fill(addedTodoLabel);
+    await addTodoForm
+      .getByRole('textbox', {
+        name: 'Something to do...',
+      })
+      .fill(addedTodoLabel, { timeout: actionTimeout });
     await addTodoForm.dispatchEvent('submit');
     const list = getTodoList(page);
     const addedTodoCard = list.getByRole('listitem', { name: addedTodoLabel });
     await expect(addedTodoCard).toBeVisible();
     const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox');
     await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
+    // ensuring the `addedTodoCard` is a new element
+    const addedTodoId = await addedTodoCard.getAttribute('id');
+    expect(existingListitemIds).not.toContainEqual(addedTodoId);
     // asserting the added Todo exists on the backend
     const backendTodos = await fetchBackendTodos(
       request,
@@ -146,17 +160,16 @@ test.describe('Todo', () => {
     const listitems = await getTodoListItems(page);
     const todoToEdit = faker.helpers.arrayElement(listitems);
     const todoToEditId = await todoToEdit.getAttribute('id');
-    const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
-    await expect(editButton).toBeVisible();
-    await editButton.click();
+    await todoToEdit
+      .getByRole('button', { name: 'Edit' })
+      .click({ timeout: actionTimeout });
     const editForm = todoToEdit.getByRole('form', { name: 'Edit Todo' });
-    await expect(editForm).toBeVisible();
-    const editFormInput = editForm.getByRole('textbox', {
-      name: 'Something to do...',
-    });
-    await expect(editFormInput).toBeVisible();
     const editedTodoLabel = faker.lorem.sentence();
-    await editFormInput.fill(editedTodoLabel);
+    await editForm
+      .getByRole('textbox', {
+        name: 'Something to do...',
+      })
+      .fill(editedTodoLabel, { timeout: actionTimeout });
     await editForm.dispatchEvent('submit');
     await expect(todoToEdit).toHaveAccessibleName(editedTodoLabel);
     // asserting the target Todo has its label updated on the backend
@@ -178,13 +191,13 @@ test.describe('Todo', () => {
     const todoToDeleteId = await todoToDelete.getAttribute('id');
     await todoToDelete
       .getByRole('button', { name: 'Delete' })
-      .click({ timeout: 987 });
+      .click({ timeout: actionTimeout });
     const deleteDialog = page.getByRole('dialog', {
       name: 'Delete this Todo?',
     });
     await deleteDialog
       .getByRole('button', { name: 'Yes' })
-      .click({ timeout: 987 });
+      .click({ timeout: actionTimeout });
     // `controlTodoToDelete` is supposed to be the same element as `todoToDelete`
     const controlTodoToDelete = page.locator(`id=${todoToDeleteId}`);
     await expect(controlTodoToDelete).toBeHidden();
