@@ -20,7 +20,7 @@ export default function TodoCardDelete({
 }: Props) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
-  const dialogLabelHtmlId = 'TodoCardDelete-dialog_h1';
+  const dialogLabelHtmlId = 'TodoCardDelete-dialog_label';
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
