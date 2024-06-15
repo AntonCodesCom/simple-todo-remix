@@ -31,6 +31,12 @@ function getTodoList(page: Page): Locator {
 }
 
 // utility
+async function getTodoListItems(page: Page): Promise<Locator[]> {
+  const list = getTodoList(page);
+  return await list.getByRole('listitem').all();
+}
+
+// utility
 async function fetchBackendTodos(
   request: APIRequestContext,
   apiBaseUrl: string,
@@ -111,9 +117,9 @@ test.describe('Todo', () => {
     expect(backendAddedTodoIndex).not.toEqual(-1);
   });
 
+  // toggling
   test('toggling', async ({ page, request }) => {
-    const list = getTodoList(page);
-    const listitems = await list.getByRole('listitem').all();
+    const listitems = await getTodoListItems(page);
     const todoToToggle = faker.helpers.arrayElement(listitems);
     const todoToToggleId = await todoToToggle.getAttribute('id');
     const todoToToggleCheckbox = todoToToggle.getByRole('checkbox');
@@ -135,7 +141,35 @@ test.describe('Todo', () => {
     expect(controlTodoToToggle.done).toEqual(todoToToggleExpectedChecked);
   });
 
-  test.skip('editing', async () => {});
+  // editing
+  test('editing', async ({ page, request }) => {
+    const listitems = await getTodoListItems(page);
+    const todoToEdit = faker.helpers.arrayElement(listitems);
+    const todoToEditId = await todoToEdit.getAttribute('id');
+    const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
+    await expect(editButton).toBeVisible();
+    await editButton.click();
+    const editForm = todoToEdit.getByRole('form', { name: 'Edit Todo' });
+    await expect(editForm).toBeVisible();
+    const editFormInput = editForm.getByRole('textbox', {
+      name: 'Something to do...',
+    });
+    await expect(editFormInput).toBeVisible();
+    const editedTodoLabel = faker.lorem.sentence();
+    await editFormInput.fill(editedTodoLabel);
+    await editForm.dispatchEvent('submit');
+    await expect(todoToEdit).toHaveAccessibleName(editedTodoLabel);
+    // asserting the target Todo has its label updated on the backend
+    const backendTodos = await fetchBackendTodos(
+      request,
+      apiBaseUrl,
+      accessToken,
+    );
+    const controlEditedTodo = backendTodos.find(
+      (x: any) => x.id === todoToEditId,
+    );
+    expect(controlEditedTodo.label).toEqual(editedTodoLabel);
+  });
 
   test.skip('deletion', async () => {});
 
