@@ -61,6 +61,16 @@ test.describe('Todo', () => {
   const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
   const accessToken = aliceUserId; // TODO: update when new auth system is introduced
 
+  /**
+   * Setting this timeout for actions like `.click()` will allow us to skip
+   * unnecessary (intermediary) visibility checks on elements that are supposed
+   * to be immediately visible (e.g. a static button).
+   *
+   * Due to our internal convention, if we see a 987 ms timeout error in a test
+   * report, then this would mean that a necessary element is missing.
+   */
+  const actionTimeout = 987;
+
   // before each
   test.beforeEach(async ({ page, request }) => {
     // data seeding
@@ -93,12 +103,11 @@ test.describe('Todo', () => {
   test('adding', async ({ page, request }) => {
     const addedTodoLabel = faker.lorem.sentence();
     const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
-    await expect(addTodoForm).toBeVisible();
-    const addTodoFormInput = addTodoForm.getByRole('textbox', {
-      name: 'Something to do...',
-    });
-    await expect(addTodoFormInput).toBeVisible();
-    await addTodoFormInput.fill(addedTodoLabel);
+    await addTodoForm
+      .getByRole('textbox', {
+        name: 'Something to do...',
+      })
+      .fill(addedTodoLabel, { timeout: actionTimeout });
     await addTodoForm.dispatchEvent('submit');
     const list = getTodoList(page);
     const addedTodoCard = list.getByRole('listitem', { name: addedTodoLabel });
@@ -178,13 +187,13 @@ test.describe('Todo', () => {
     const todoToDeleteId = await todoToDelete.getAttribute('id');
     await todoToDelete
       .getByRole('button', { name: 'Delete' })
-      .click({ timeout: 987 });
+      .click({ timeout: actionTimeout });
     const deleteDialog = page.getByRole('dialog', {
       name: 'Delete this Todo?',
     });
     await deleteDialog
       .getByRole('button', { name: 'Yes' })
-      .click({ timeout: 987 });
+      .click({ timeout: actionTimeout });
     // `controlTodoToDelete` is supposed to be the same element as `todoToDelete`
     const controlTodoToDelete = page.locator(`id=${todoToDeleteId}`);
     await expect(controlTodoToDelete).toBeHidden();
