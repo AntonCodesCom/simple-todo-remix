@@ -188,6 +188,15 @@ test.describe('Todo', () => {
     // `controlTodoToDelete` is supposed to be the same element as `todoToDelete`
     const controlTodoToDelete = page.locator(`id=${todoToDeleteId}`);
     await expect(controlTodoToDelete).toBeHidden();
-    // TODO: verify backend data
+    // asserting the deleted Todo does not exist on the backend
+    const backendTodos = await fetchBackendTodos(
+      request,
+      apiBaseUrl,
+      accessToken,
+    );
+    const backendDeletedTodoIndex = backendTodos.findIndex(
+      (x: any) => x.id === todoToDeleteId,
+    );
+    expect(backendDeletedTodoIndex).toEqual(-1);
   });
 });
