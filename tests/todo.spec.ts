@@ -155,17 +155,16 @@ test.describe('Todo', () => {
     const listitems = await getTodoListItems(page);
     const todoToEdit = faker.helpers.arrayElement(listitems);
     const todoToEditId = await todoToEdit.getAttribute('id');
-    const editButton = todoToEdit.getByRole('button', { name: 'Edit' });
-    await expect(editButton).toBeVisible();
-    await editButton.click();
+    await todoToEdit
+      .getByRole('button', { name: 'Edit' })
+      .click({ timeout: actionTimeout });
     const editForm = todoToEdit.getByRole('form', { name: 'Edit Todo' });
-    await expect(editForm).toBeVisible();
-    const editFormInput = editForm.getByRole('textbox', {
-      name: 'Something to do...',
-    });
-    await expect(editFormInput).toBeVisible();
     const editedTodoLabel = faker.lorem.sentence();
-    await editFormInput.fill(editedTodoLabel);
+    await editForm
+      .getByRole('textbox', {
+        name: 'Something to do...',
+      })
+      .fill(editedTodoLabel, { timeout: actionTimeout });
     await editForm.dispatchEvent('submit');
     await expect(todoToEdit).toHaveAccessibleName(editedTodoLabel);
     // asserting the target Todo has its label updated on the backend
