@@ -111,7 +111,29 @@ test.describe('Todo', () => {
     expect(backendAddedTodoIndex).not.toEqual(-1);
   });
 
-  test.skip('toggling', async () => {});
+  test('toggling', async ({ page, request }) => {
+    const list = getTodoList(page);
+    const listitems = await list.getByRole('listitem').all();
+    const todoToToggle = faker.helpers.arrayElement(listitems);
+    const todoToToggleId = await todoToToggle.getAttribute('id');
+    const todoToToggleCheckbox = todoToToggle.getByRole('checkbox');
+    const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
+    const todoToToggleExpectedChecked = !todoToToggleInitiallyChecked;
+    await todoToToggleCheckbox.click(); // TODO: dispatch "change" event instead
+    await expect(todoToToggleCheckbox).toBeChecked({
+      checked: todoToToggleExpectedChecked,
+    });
+    // asserting the target Todo's "done" state has been changed on the backend
+    const backendTodos = await fetchBackendTodos(
+      request,
+      apiBaseUrl,
+      accessToken,
+    );
+    const controlTodoToToggle = backendTodos.find(
+      (x: any) => x.id === todoToToggleId,
+    );
+    expect(controlTodoToToggle.done).toEqual(todoToToggleExpectedChecked);
+  });
 
   test.skip('editing', async () => {});
 
