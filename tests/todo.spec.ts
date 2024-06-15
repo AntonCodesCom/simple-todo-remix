@@ -175,14 +175,15 @@ test.describe('Todo', () => {
   test('deletion', async ({ page, request }) => {
     const listitems = await getTodoListItems(page);
     const todoToDelete = faker.helpers.arrayElement(listitems);
-    const todoToDeleteId = await todoToDelete.getAttribute('id');
-    const deleteButton = todoToDelete.getByRole('button', { name: 'Delete' });
-    await expect(deleteButton).toBeVisible();
-    await deleteButton.click();
+    // const todoToDeleteId = await todoToDelete.getAttribute('id');
+    await todoToDelete
+      .getByRole('button', { name: 'Delete' })
+      .click({ timeout: 987 });
     const deleteDialog = page.getByRole('dialog', {
       name: 'Delete this Todo?',
     });
-    await expect(deleteDialog).toBeVisible();
-    await deleteDialog.getByRole('button', { name: 'Yes' }).click();
+    await deleteDialog
+      .getByRole('button', { name: 'Yes' })
+      .click({ timeout: 987 });
   });
 });
