@@ -185,5 +185,7 @@ test.describe('Todo', () => {
     await deleteDialog
       .getByRole('button', { name: 'Yes' })
       .click({ timeout: 987 });
+    await expect(todoToDelete).not.toBeVisible();
+    // TODO: verify backend data
   });
 });
