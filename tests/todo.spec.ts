@@ -9,9 +9,6 @@ import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
 
-// config
-test.describe.configure({ mode: 'serial' });
-
 // utility
 async function generateSessionCookie(userId: string) {
   const { getSession, commitSession, sessionCookieName } = sessions();
