@@ -101,6 +101,11 @@ test.describe('Todo', () => {
 
   // adding
   test('adding', async ({ page, request }) => {
+    const existingListitemIds = await Promise.all(
+      (await getTodoListItems(page)).map(
+        async (x) => await x.getAttribute('id'),
+      ),
+    );
     const addedTodoLabel = faker.lorem.sentence();
     const addTodoForm = page.getByRole('form', { name: 'Add Todo' });
     await addTodoForm
@@ -114,6 +119,9 @@ test.describe('Todo', () => {
     await expect(addedTodoCard).toBeVisible();
     const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox');
     await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
+    // ensuring the `addedTodoCard` is a new element
+    const addedTodoId = await addedTodoCard.getAttribute('id');
+    expect(existingListitemIds).not.toContainEqual(addedTodoId);
     // asserting the added Todo exists on the backend
     const backendTodos = await fetchBackendTodos(
       request,
