@@ -175,7 +175,7 @@ test.describe('Todo', () => {
   test('deletion', async ({ page, request }) => {
     const listitems = await getTodoListItems(page);
     const todoToDelete = faker.helpers.arrayElement(listitems);
-    // const todoToDeleteId = await todoToDelete.getAttribute('id');
+    const todoToDeleteId = await todoToDelete.getAttribute('id');
     await todoToDelete
       .getByRole('button', { name: 'Delete' })
       .click({ timeout: 987 });
@@ -185,7 +185,9 @@ test.describe('Todo', () => {
     await deleteDialog
       .getByRole('button', { name: 'Yes' })
       .click({ timeout: 987 });
-    await expect(todoToDelete).not.toBeVisible();
+    // `controlTodoToDelete` is supposed to be the same element as `todoToDelete`
+    const controlTodoToDelete = page.locator(`id=${todoToDeleteId}`);
+    await expect(controlTodoToDelete).toBeHidden();
     // TODO: verify backend data
   });
 });
