@@ -75,7 +75,8 @@ test('Todo', async ({ page, request }) => {
     .getByRole('listitem')
     .filter({ hasNotText: addedTodoLabel })
     .all();
-  const pickedListItems = faker.helpers.arrayElements(listitems, 3);
+  // const pickedListItems = faker.helpers.arrayElements(listitems, 3);
+  const pickedListItems = listitems;
 
   // TOGGLING A TODO
   const todoToToggle = pickedListItems[0];
@@ -108,7 +109,15 @@ test('Todo', async ({ page, request }) => {
   // asserting `editedTodo` and `todoToEdit` are the same element
   expect(await editedTodo.getAttribute('id')).toEqual(todoToEditId);
 
-  // TODO: Todo deletion
+  // DELETING A TODO
+  const todoToDelete = pickedListItems[2];
+  const todoToDeleteId = await todoToDelete.getAttribute('id');
+  const deleteButton = todoToEdit.getByRole('button', { name: 'Delete' });
+  await expect(deleteButton).toBeVisible();
+  await deleteButton.click();
+  const deleteDialog = page.getByRole('dialog', { name: 'Delete this Todo?' });
+  await expect(deleteDialog).toBeVisible();
+  await deleteDialog.getByRole('button', { name: 'Yes' }).click();
 
   // BACKEND DATA POST-VERIFICATION
   const res2 = await request.fetch(getTodoUrl, {

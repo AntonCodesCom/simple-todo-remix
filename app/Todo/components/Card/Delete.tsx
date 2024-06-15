@@ -20,6 +20,7 @@ export default function TodoCardDelete({
 }: Props) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
+  const dialogLabelHtmlId = 'TodoCardDelete-dialog_h1';
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(e.currentTarget);
@@ -38,6 +39,7 @@ export default function TodoCardDelete({
             color: 'error.main',
           },
         }}
+        aria-label="Delete"
       >
         <DeleteOutlined fontSize="small" />
       </IconButton>
@@ -50,8 +52,18 @@ export default function TodoCardDelete({
           horizontal: 'center',
         }}
       >
-        <Box maxWidth="20rem" p={1}>
-          <Typography variant="body2" textAlign="center" mb={1}>
+        <Box
+          maxWidth="20rem"
+          p={1}
+          role="dialog"
+          aria-labelledby={dialogLabelHtmlId}
+        >
+          <Typography
+            id={dialogLabelHtmlId}
+            variant="body2"
+            textAlign="center"
+            mb={1}
+          >
             Delete this Todo?
           </Typography>
           <Stack direction="row" gap={0.5}>
