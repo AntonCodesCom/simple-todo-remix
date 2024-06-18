@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { test, vi } from 'vitest';
+import { render, screen, within } from '@testing-library/react';
+import { expect, test, vi } from 'vitest';
 import TodoCard from './Card';
 import { initTodo } from '~/Todo/types/Item';
 import fetcherMock from '~/Testing/utils/fetcherMock';
@@ -16,4 +16,6 @@ test('TodoCard', async () => {
   const mockTodo = initTodo({});
   render(<TodoCard todo={mockTodo} />);
   const card = screen.getByRole('listitem', { name: mockTodo.label });
+  expect(card.getAttribute('id')).toBe(mockTodo.id);
+  // within(card).getByRole('button', { name: 'Edit' }).click()
 });
