@@ -29,17 +29,6 @@ export default function TodoCardCheck({
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [checked, setChecked] = useState(done);
 
-  // invisible loading state (stage 1)
-  const [loading1, setLoading1] = useState(false);
-
-  // visible loading state (stage 2)
-  const [loading2, setLoading2] = useState(false);
-  const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
-  const delay2 = 200;
-
-  // whether to show the disabled state visually
-  const disabledVisible = disabled || loading2;
-
   // whether to show the loading state visually
   const [loadingVisible, setLoadingVisible] = useState(false);
 
@@ -47,64 +36,44 @@ export default function TodoCardCheck({
     setLoadingVisible(false);
   }, [disabled]);
 
-  // useEffect(() => {
-  //   setChecked(done);
-  //   setLoading1(false);
-  //   setLoading2(false);
-  //   clearTimeout(timeout2);
-  //   setTimeout2(undefined);
-  // }, [done]);
-
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
-    if (loading1 || loading2 || disabled) {
+    if (disabled) {
       setLoadingVisible(true);
       return;
     }
-    // setLoading1(true);
-    // setTimeout2(
-    //   setTimeout(() => {
-    //     setLoading2(true);
-    //   }, delay2),
-    // );
     const _done = e.target.checked;
     setChecked(_done);
     onCheckToggle(_done);
   }
 
   function handleEditClick() {
-    if (loading1 || loading2 || disabled) {
+    if (disabled) {
       setLoadingVisible(true);
       return;
     }
     onEditClick();
   }
 
-  // TODO: delete button onClick setLoadingVisible(true)
-
   return (
     <Root className={loadingVisible ? styles.loadingVisible : undefined}>
       <CheckboxCell>
-        {loading2 ? (
-          <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
-        ) : (
-          <Checkbox
-            disableTouchRipple
-            checkedIcon={<Check />}
-            sx={{
-              color: 'primary.main',
-              '&.Mui-checked': {
-                color: 'action.active',
-              },
-              '&.Mui-disabled': {
-                color: checked ? 'action.active' : 'primary.main',
-              },
-            }}
-            // disabled={disabledVisible}
-            id={checkboxHtmlId}
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
-        )}
+        <Checkbox
+          disableTouchRipple
+          checkedIcon={<Check />}
+          sx={{
+            color: 'primary.main',
+            '&.Mui-checked': {
+              color: 'action.active',
+            },
+            '&.Mui-disabled': {
+              color: checked ? 'action.active' : 'primary.main',
+            },
+          }}
+          disabled={loadingVisible}
+          id={checkboxHtmlId}
+          checked={checked}
+          onChange={handleCheckboxChange}
+        />
       </CheckboxCell>
       <TextCell>
         <Typography
@@ -123,11 +92,10 @@ export default function TodoCardCheck({
       </TextCell>
       <ActionCell>
         <IconButton
-          // disabled={disabledVisible}
+          disabled={loadingVisible}
           onClick={handleEditClick}
           aria-label="Edit"
           sx={{
-            cursor: 'pointer',
             '&.Mui-disabled': {
               color: 'action.active',
             },
@@ -138,7 +106,16 @@ export default function TodoCardCheck({
       </ActionCell>
       <ActionCell>
         {disabled ? (
-          <IconButton disabled={loading2}>
+          <IconButton
+            aria-label="Delete"
+            disabled={loadingVisible}
+            onClick={() => setLoadingVisible(true)}
+            sx={{
+              '&.Mui-disabled': {
+                color: 'action.active',
+              },
+            }}
+          >
             <DeleteOutlined fontSize="small" />
           </IconButton>
         ) : (
