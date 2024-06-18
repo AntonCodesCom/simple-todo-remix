@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Stack, TextField } from '@mui/material';
+import { Box, Checkbox, IconButton, TextField } from '@mui/material';
 import { Check, CheckCircle, HighlightOff } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';

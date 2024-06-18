@@ -4,7 +4,6 @@ import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
 import TodoCardCheck from './Check';
 import TodoCardEdit from './Edit';
-import { Box } from '@mui/material';
 
 // props
 interface Props {
