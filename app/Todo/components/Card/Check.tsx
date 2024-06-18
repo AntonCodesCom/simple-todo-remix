@@ -7,7 +7,7 @@ import styles from './Check.module.css';
 
 interface Props {
   todo: TodoItem;
-  deleteElement: ReactElement;
+  deleteElement?: ReactElement | null;
   disabled?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
@@ -15,7 +15,7 @@ interface Props {
 
 export default function TodoCardCheck({
   todo,
-  deleteElement,
+  deleteElement = null,
   disabled = false,
   onEditClick = () => {},
   onCheckToggle = () => {},

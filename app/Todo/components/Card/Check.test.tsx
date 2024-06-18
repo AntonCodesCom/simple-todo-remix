@@ -13,13 +13,7 @@ describe('TodoCardCheck', () => {
       const user = userEvent.setup();
       const mockTodo = initTodo({});
       const mockOnEditClick = vi.fn();
-      render(
-        <TodoCardCheck
-          todo={mockTodo}
-          deleteElement={<></>}
-          onEditClick={mockOnEditClick}
-        />,
-      );
+      render(<TodoCardCheck todo={mockTodo} onEditClick={mockOnEditClick} />);
       const card = screen.getByRole('listitem', { name: mockTodo.label });
       const editButton = within(card).getByRole('button', { name: 'Edit' });
       await user.click(editButton);
@@ -31,11 +25,7 @@ describe('TodoCardCheck', () => {
       const mockTodo = initTodo({});
       const mockOnCheckToggle = vi.fn();
       render(
-        <TodoCardCheck
-          todo={mockTodo}
-          deleteElement={<></>}
-          onCheckToggle={mockOnCheckToggle}
-        />,
+        <TodoCardCheck todo={mockTodo} onCheckToggle={mockOnCheckToggle} />,
       );
       const card = screen.getByRole('listitem', { name: mockTodo.label });
       const checkbox = within(card).getByRole<HTMLInputElement>('checkbox', {
@@ -60,7 +50,22 @@ describe('TodoCardCheck', () => {
   });
 
   describe('disabled', () => {
-    test.todo('"Edit" button click');
+    test('"Edit" button click', async () => {
+      const user = userEvent.setup();
+      const mockTodo = initTodo({});
+      const mockOnEditClick = vi.fn();
+      render(
+        <TodoCardCheck
+          disabled
+          todo={mockTodo}
+          onEditClick={mockOnEditClick}
+        />,
+      );
+      const card = screen.getByRole('listitem', { name: mockTodo.label });
+      const editButton = within(card).getByRole('button', { name: 'Edit' });
+      await user.click(editButton);
+      expect(mockOnEditClick).not.toHaveBeenCalled();
+    });
 
     test.todo('"Done" checkbox toggle');
 
