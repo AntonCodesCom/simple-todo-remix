@@ -46,5 +46,24 @@ describe('TodoCardCheck', () => {
       await user.click(checkbox);
       expect(mockOnCheckToggle).toHaveBeenCalledWith(expectedChecked);
     });
+
+    test('"Delete" element displaying', () => {
+      const testId = '"Delete" element';
+      render(
+        <TodoCardCheck
+          todo={initTodo({})}
+          deleteElement={<div data-testid={testId} />}
+        />,
+      );
+      screen.getByTestId(testId);
+    });
+  });
+
+  describe('disabled', () => {
+    test.todo('"Edit" button click');
+
+    test.todo('"Done" checkbox toggle');
+
+    test.todo('"Delete" element displaying');
   });
 });
