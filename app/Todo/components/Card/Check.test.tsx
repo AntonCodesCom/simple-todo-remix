@@ -39,14 +39,16 @@ describe('TodoCardCheck', () => {
     });
 
     test('"Delete" element displaying', () => {
-      const testId = '"Delete" element';
+      const testId = 'delete-element';
+      const mockTodo = initTodo({});
       render(
         <TodoCardCheck
-          todo={initTodo({})}
+          todo={mockTodo}
           deleteElement={<div data-testid={testId} />}
         />,
       );
-      screen.getByTestId(testId);
+      const card = screen.getByRole('listitem', { name: mockTodo.label });
+      within(card).getByTestId(testId);
     });
   });
 
@@ -89,6 +91,19 @@ describe('TodoCardCheck', () => {
       expect(checkbox.checked).toBe(initialChecked);
     });
 
-    test.todo('"Delete" element displaying');
+    test('"Delete" element displaying', () => {
+      const testId = 'delete-element';
+      const mockTodo = initTodo({});
+      render(
+        <TodoCardCheck
+          disabled
+          todo={mockTodo}
+          deleteElement={<div data-testid={testId} />}
+        />,
+      );
+      const card = screen.getByRole('listitem', { name: mockTodo.label });
+      const deleteElement = within(card).queryByTestId(testId);
+      expect(deleteElement).toBeNull();
+    });
   });
 });
