@@ -23,6 +23,9 @@ export default function TodoCardDelete({
   const dialogLabelHtmlId = 'TodoCardDelete-dialog_label';
 
   function handlePopoverOpen(e: MouseEvent<HTMLButtonElement>) {
+    if (disabled) {
+      return;
+    }
     setAnchorEl(e.currentTarget);
   }
   function handlePopoverClose() {
@@ -32,11 +35,15 @@ export default function TodoCardDelete({
   return (
     <>
       <IconButton
-        disabled={disabled}
+        // disabled={disabled}
         onClick={handlePopoverOpen}
         sx={{
+          cursor: 'pointer',
           '&:hover': {
-            color: 'error.main',
+            color: !disabled ? 'error.main' : undefined,
+          },
+          '&.Mui-disabled': {
+            color: 'action.active',
           },
         }}
         aria-label="Delete"

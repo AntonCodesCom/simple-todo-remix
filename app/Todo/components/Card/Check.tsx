@@ -39,25 +39,26 @@ export default function TodoCardCheck({
   // whether to show the disabled state visually
   const disabledVisible = disabled || loading2;
 
-  useEffect(() => {
-    setChecked(done);
-    setLoading1(false);
-    setLoading2(false);
-    clearTimeout(timeout2);
-    setTimeout2(undefined);
-  }, [done]);
+  // useEffect(() => {
+  //   setChecked(done);
+  //   setLoading1(false);
+  //   setLoading2(false);
+  //   clearTimeout(timeout2);
+  //   setTimeout2(undefined);
+  // }, [done]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     if (loading1 || loading2 || disabled) {
       return;
     }
-    setLoading1(true);
-    setTimeout2(
-      setTimeout(() => {
-        setLoading2(true);
-      }, delay2),
-    );
+    // setLoading1(true);
+    // setTimeout2(
+    //   setTimeout(() => {
+    //     setLoading2(true);
+    //   }, delay2),
+    // );
     const _done = e.target.checked;
+    setChecked(_done);
     onCheckToggle(_done);
   }
 
@@ -80,10 +81,13 @@ export default function TodoCardCheck({
             sx={{
               color: 'primary.main',
               '&.Mui-checked': {
-                color: 'text.secondary',
+                color: 'action.active',
+              },
+              '&.Mui-disabled': {
+                color: checked ? 'action.active' : 'primary.main',
               },
             }}
-            disabled={disabledVisible}
+            // disabled={disabledVisible}
             id={checkboxHtmlId}
             checked={checked}
             onChange={handleCheckboxChange}
@@ -97,11 +101,7 @@ export default function TodoCardCheck({
           sx={{
             flex: 1,
             p: 0.5,
-            color: disabledVisible
-              ? 'text.disabled'
-              : done
-                ? 'text.secondary'
-                : 'text.primary',
+            color: checked ? 'text.secondary' : 'text.primary',
             textDecoration: checked ? 'line-through' : 'none',
             cursor: 'pointer',
           }}
@@ -111,9 +111,15 @@ export default function TodoCardCheck({
       </TextCell>
       <ActionCell>
         <IconButton
-          disabled={disabledVisible}
+          // disabled={disabledVisible}
           onClick={handleEditClick}
           aria-label="Edit"
+          sx={{
+            cursor: 'pointer',
+            '&.Mui-disabled': {
+              color: 'action.active',
+            },
+          }}
         >
           <EditOutlined fontSize="small" />
         </IconButton>
