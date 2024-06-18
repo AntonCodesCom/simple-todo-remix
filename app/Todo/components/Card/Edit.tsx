@@ -46,47 +46,49 @@ export default function TodoCardEdit({
   }
 
   return (
-    <Root
-      ref={ref}
-      component="form"
-      onSubmit={handleSubmit}
-      aria-label="Edit Todo"
-    >
-      <CheckboxCell>
-        <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
-      </CheckboxCell>
-      <TextCell>
-        <TextField
-          size="small"
-          multiline
-          fullWidth
-          InputProps={{
-            sx: {
-              p: 0.5,
-              lineHeight: 1.5,
-            },
-          }}
-          inputProps={{
-            maxLength: 1000,
-          }}
-          required
-          name="label"
-          placeholder="Something to do..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          autoFocus
-        />
-      </TextCell>
-      <ActionCell>
-        <IconButton type="submit" disabled={disabled}>
-          <CheckCircle color="primary" />
-        </IconButton>
-      </ActionCell>
-      <ActionCell>
-        <IconButton disabled={disabled} onClick={onDeactivate}>
-          <HighlightOff />
-        </IconButton>
-      </ActionCell>
-    </Root>
+    <Box role="listitem" aria-label={label}>
+      <Root
+        ref={ref}
+        component="form"
+        onSubmit={handleSubmit}
+        aria-label="Edit Todo"
+      >
+        <CheckboxCell>
+          <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
+        </CheckboxCell>
+        <TextCell>
+          <TextField
+            size="small"
+            multiline
+            fullWidth
+            InputProps={{
+              sx: {
+                p: 0.5,
+                lineHeight: 1.5,
+              },
+            }}
+            inputProps={{
+              maxLength: 1000,
+            }}
+            required
+            name="label"
+            placeholder="Something to do..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            autoFocus
+          />
+        </TextCell>
+        <ActionCell>
+          <IconButton type="submit" disabled={disabled}>
+            <CheckCircle color="primary" />
+          </IconButton>
+        </ActionCell>
+        <ActionCell>
+          <IconButton disabled={disabled} onClick={onDeactivate}>
+            <HighlightOff />
+          </IconButton>
+        </ActionCell>
+      </Root>
+    </Box>
   );
 }

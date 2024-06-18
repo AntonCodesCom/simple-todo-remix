@@ -26,5 +26,5 @@ test('TodoCard', async () => {
   const editButton = within(card).getByRole('button', { name: 'Edit' });
   await user.click(editButton);
   screen.getByRole('form', { name: 'Edit Todo' });
-  // const card2 = screen.getByRole('listitem', { name: mockTodo.label });
+  const card2 = screen.getByRole('listitem', { name: mockTodo.label });
 });
