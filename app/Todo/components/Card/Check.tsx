@@ -1,9 +1,4 @@
-import {
-  Checkbox,
-  CircularProgress,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Checkbox, IconButton, Typography } from '@mui/material';
 import { Check, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
@@ -73,11 +68,15 @@ export default function TodoCardCheck({
           id={checkboxHtmlId}
           checked={checked}
           onChange={handleCheckboxChange}
+          inputProps={{
+            'aria-label': 'Done',
+          }}
         />
       </CheckboxCell>
       <TextCell>
         <Typography
           component="label"
+          role="none"
           htmlFor={checkboxHtmlId}
           sx={{
             flex: 1,

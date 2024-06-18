@@ -17,5 +17,9 @@ test('TodoCard', async () => {
   render(<TodoCard todo={mockTodo} />);
   const card = screen.getByRole('listitem', { name: mockTodo.label });
   expect(card.getAttribute('id')).toBe(mockTodo.id);
+  const checkbox = within(card).getByRole<HTMLInputElement>('checkbox', {
+    name: 'Done',
+  });
+  expect(checkbox.checked).toBe(mockTodo.done);
   // within(card).getByRole('button', { name: 'Edit' }).click()
 });
