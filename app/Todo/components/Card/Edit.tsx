@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Stack, TextField } from '@mui/material';
+import { Box, Checkbox, IconButton, TextField } from '@mui/material';
 import { Check, CheckCircle, HighlightOff } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
@@ -33,7 +33,7 @@ export default function TodoCardEdit({
   onDeactivate = () => {},
   onEdit = () => {},
 }: Props) {
-  const { label, done } = todo;
+  const { id, label, done } = todo;
   const [text, setText] = useState(label);
 
   // deactivating editing mode if clicked outside of the card
@@ -46,47 +46,49 @@ export default function TodoCardEdit({
   }
 
   return (
-    <Root
-      ref={ref}
-      component="form"
-      onSubmit={handleSubmit}
-      aria-label="Edit Todo"
-    >
-      <CheckboxCell>
-        <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
-      </CheckboxCell>
-      <TextCell>
-        <TextField
-          size="small"
-          multiline
-          fullWidth
-          InputProps={{
-            sx: {
-              p: 0.5,
-              lineHeight: 1.5,
-            },
-          }}
-          inputProps={{
-            maxLength: 1000,
-          }}
-          required
-          name="label"
-          placeholder="Something to do..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          autoFocus
-        />
-      </TextCell>
-      <ActionCell>
-        <IconButton type="submit" disabled={disabled}>
-          <CheckCircle color="primary" />
-        </IconButton>
-      </ActionCell>
-      <ActionCell>
-        <IconButton disabled={disabled} onClick={onDeactivate}>
-          <HighlightOff />
-        </IconButton>
-      </ActionCell>
-    </Root>
+    <Box role="listitem" aria-label={label} id={id}>
+      <Root
+        ref={ref}
+        component="form"
+        onSubmit={handleSubmit}
+        aria-label="Edit Todo"
+      >
+        <CheckboxCell>
+          <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
+        </CheckboxCell>
+        <TextCell>
+          <TextField
+            size="small"
+            multiline
+            fullWidth
+            InputProps={{
+              sx: {
+                p: 0.5,
+                lineHeight: 1.5,
+              },
+            }}
+            inputProps={{
+              maxLength: 1000,
+            }}
+            required
+            name="label"
+            placeholder="Something to do..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            autoFocus
+          />
+        </TextCell>
+        <ActionCell>
+          <IconButton type="submit" disabled={disabled}>
+            <CheckCircle color="primary" />
+          </IconButton>
+        </ActionCell>
+        <ActionCell>
+          <IconButton disabled={disabled} onClick={onDeactivate}>
+            <HighlightOff />
+          </IconButton>
+        </ActionCell>
+      </Root>
+    </Box>
   );
 }

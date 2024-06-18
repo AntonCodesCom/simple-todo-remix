@@ -36,7 +36,7 @@ export default function TodoCardDelete({
         onClick={handlePopoverOpen}
         sx={{
           '&:hover': {
-            color: 'error.main',
+            color: !disabled ? 'error.main' : undefined,
           },
         }}
         aria-label="Delete"

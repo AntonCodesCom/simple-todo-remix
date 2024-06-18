@@ -1,17 +1,13 @@
-import {
-  Checkbox,
-  CircularProgress,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Checkbox, IconButton, Typography } from '@mui/material';
 import { Check, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
+import styles from './Check.module.css';
 
 interface Props {
   todo: TodoItem;
-  deleteElement: ReactElement;
+  deleteElement?: ReactElement | null;
   disabled?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
@@ -19,7 +15,7 @@ interface Props {
 
 export default function TodoCardCheck({
   todo,
-  deleteElement,
+  deleteElement = null,
   disabled = false,
   onEditClick = () => {},
   onCheckToggle = () => {},
@@ -28,80 +24,69 @@ export default function TodoCardCheck({
   const checkboxHtmlId = `TodoCard_checkbox-${id}`;
   const [checked, setChecked] = useState(done);
 
-  // invisible loading state (stage 1)
-  const [loading1, setLoading1] = useState(false);
-
-  // visible loading state (stage 2)
-  const [loading2, setLoading2] = useState(false);
-  const [timeout2, setTimeout2] = useState<NodeJS.Timeout>();
-  const delay2 = 200;
-
-  // whether to show the disabled state visually
-  const disabledVisible = disabled || loading2;
+  // whether to show the loading state visually
+  const [loadingVisible, setLoadingVisible] = useState(false);
 
   useEffect(() => {
-    setChecked(done);
-    setLoading1(false);
-    setLoading2(false);
-    clearTimeout(timeout2);
-    setTimeout2(undefined);
-  }, [done]);
+    setLoadingVisible(false);
+  }, [disabled]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
-    if (loading1 || loading2 || disabled) {
+    if (disabled) {
+      setLoadingVisible(true);
       return;
     }
-    setLoading1(true);
-    setTimeout2(
-      setTimeout(() => {
-        setLoading2(true);
-      }, delay2),
-    );
     const _done = e.target.checked;
+    setChecked(_done);
     onCheckToggle(_done);
   }
 
   function handleEditClick() {
-    if (loading1 || loading2 || disabled) {
+    if (disabled) {
+      setLoadingVisible(true);
       return;
     }
     onEditClick();
   }
 
   return (
-    <Root>
+    <Root
+      role="listitem"
+      aria-label={label}
+      id={id}
+      className={loadingVisible ? styles.loadingVisible : undefined}
+    >
       <CheckboxCell>
-        {loading2 ? (
-          <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
-        ) : (
-          <Checkbox
-            disableTouchRipple
-            checkedIcon={<Check />}
-            sx={{
-              color: 'primary.main',
-              '&.Mui-checked': {
-                color: 'text.secondary',
-              },
-            }}
-            disabled={disabledVisible}
-            id={checkboxHtmlId}
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
-        )}
+        <Checkbox
+          disableTouchRipple
+          checkedIcon={<Check />}
+          sx={{
+            color: 'primary.main',
+            '&.Mui-checked': {
+              color: 'action.active',
+            },
+            '&.Mui-disabled': {
+              color: checked ? 'action.active' : 'primary.main',
+            },
+          }}
+          disabled={loadingVisible}
+          id={checkboxHtmlId}
+          checked={checked}
+          onChange={handleCheckboxChange}
+          inputProps={{
+            'aria-label': 'Done',
+          }}
+        />
       </CheckboxCell>
       <TextCell>
         <Typography
           component="label"
+          role="none"
           htmlFor={checkboxHtmlId}
           sx={{
             flex: 1,
             p: 0.5,
-            color: disabledVisible
-              ? 'text.disabled'
-              : done
-                ? 'text.secondary'
-                : 'text.primary',
+            color: checked ? 'text.secondary' : 'text.primary',
             textDecoration: checked ? 'line-through' : 'none',
             cursor: 'pointer',
           }}
@@ -111,16 +96,30 @@ export default function TodoCardCheck({
       </TextCell>
       <ActionCell>
         <IconButton
-          disabled={disabledVisible}
+          disabled={loadingVisible}
           onClick={handleEditClick}
           aria-label="Edit"
+          sx={{
+            '&.Mui-disabled': {
+              color: 'action.active',
+            },
+          }}
         >
           <EditOutlined fontSize="small" />
         </IconButton>
       </ActionCell>
       <ActionCell>
-        {loading1 ? (
-          <IconButton disabled={loading2}>
+        {disabled ? (
+          <IconButton
+            aria-label="Delete"
+            disabled={loadingVisible}
+            onClick={() => setLoadingVisible(true)}
+            sx={{
+              '&.Mui-disabled': {
+                color: 'action.active',
+              },
+            }}
+          >
             <DeleteOutlined fontSize="small" />
           </IconButton>
         ) : (

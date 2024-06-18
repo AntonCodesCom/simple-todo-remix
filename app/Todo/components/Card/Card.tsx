@@ -4,7 +4,6 @@ import { useFetcher } from '@remix-run/react';
 import TodoCardDelete from './Delete';
 import TodoCardCheck from './Check';
 import TodoCardEdit from './Edit';
-import { Box } from '@mui/material';
 
 // props
 interface Props {
@@ -63,26 +62,22 @@ export default function TodoCard({ todo }: Props) {
     );
   }
 
-  return (
-    <Box role="listitem" aria-label={label} id={id}>
-      {editingActive ? (
-        <TodoCardEdit
-          todo={todo}
-          disabled={loading}
-          onDeactivate={() => setEditingActive(false)}
-          onEdit={handleEdit}
-        />
-      ) : (
-        <TodoCardCheck
-          todo={todo}
-          deleteElement={
-            <TodoCardDelete disabled={loading} onDelete={handleDelete} />
-          }
-          onEditClick={() => setEditingActive(true)}
-          // disabled={loading}
-          onCheckToggle={handleCheckToggle}
-        />
-      )}
-    </Box>
+  return editingActive ? (
+    <TodoCardEdit
+      todo={todo}
+      disabled={loading}
+      onDeactivate={() => setEditingActive(false)}
+      onEdit={handleEdit}
+    />
+  ) : (
+    <TodoCardCheck
+      todo={todo}
+      deleteElement={
+        <TodoCardDelete disabled={loading} onDelete={handleDelete} />
+      }
+      onEditClick={() => setEditingActive(true)}
+      disabled={loading}
+      onCheckToggle={handleCheckToggle}
+    />
   );
 }
