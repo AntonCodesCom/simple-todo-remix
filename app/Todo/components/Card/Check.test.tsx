@@ -35,7 +35,7 @@ describe('TodoCardCheck', () => {
       const expectedChecked = !initialChecked;
       await user.click(checkbox);
       expect(mockOnCheckToggle).toHaveBeenCalledWith(expectedChecked);
-      // TODO: assert checkbox state
+      expect(checkbox.checked).toBe(expectedChecked);
     });
 
     test('"Delete" element displaying', () => {
@@ -86,7 +86,7 @@ describe('TodoCardCheck', () => {
       const initialChecked = checkbox.checked;
       await user.click(checkbox);
       expect(mockOnCheckToggle).not.toHaveBeenCalled();
-      // TODO: assert checkbox state
+      expect(checkbox.checked).toBe(initialChecked);
     });
 
     test.todo('"Delete" element displaying');
