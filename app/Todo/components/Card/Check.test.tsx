@@ -35,6 +35,7 @@ describe('TodoCardCheck', () => {
       const expectedChecked = !initialChecked;
       await user.click(checkbox);
       expect(mockOnCheckToggle).toHaveBeenCalledWith(expectedChecked);
+      // TODO: assert checkbox state
     });
 
     test('"Delete" element displaying', () => {
@@ -67,7 +68,26 @@ describe('TodoCardCheck', () => {
       expect(mockOnEditClick).not.toHaveBeenCalled();
     });
 
-    test.todo('"Done" checkbox toggle');
+    test('"Done" checkbox toggle', async () => {
+      const user = userEvent.setup();
+      const mockTodo = initTodo({});
+      const mockOnCheckToggle = vi.fn();
+      render(
+        <TodoCardCheck
+          disabled
+          todo={mockTodo}
+          onCheckToggle={mockOnCheckToggle}
+        />,
+      );
+      const card = screen.getByRole('listitem', { name: mockTodo.label });
+      const checkbox = within(card).getByRole<HTMLInputElement>('checkbox', {
+        name: 'Done',
+      });
+      const initialChecked = checkbox.checked;
+      await user.click(checkbox);
+      expect(mockOnCheckToggle).not.toHaveBeenCalled();
+      // TODO: assert checkbox state
+    });
 
     test.todo('"Delete" element displaying');
   });
