@@ -27,4 +27,5 @@ test('TodoCard', async () => {
   await user.click(editButton);
   screen.getByRole('form', { name: 'Edit Todo' });
   const card2 = screen.getByRole('listitem', { name: mockTodo.label });
+  expect(card2.getAttribute('id')).toBe(mockTodo.id);
 });

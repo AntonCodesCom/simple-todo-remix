@@ -33,7 +33,7 @@ export default function TodoCardEdit({
   onDeactivate = () => {},
   onEdit = () => {},
 }: Props) {
-  const { label, done } = todo;
+  const { id, label, done } = todo;
   const [text, setText] = useState(label);
 
   // deactivating editing mode if clicked outside of the card
@@ -46,7 +46,7 @@ export default function TodoCardEdit({
   }
 
   return (
-    <Box role="listitem" aria-label={label}>
+    <Box role="listitem" aria-label={label} id={id}>
       <Root
         ref={ref}
         component="form"
