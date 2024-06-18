@@ -114,7 +114,9 @@ test.describe('Todo', () => {
     const list = getTodoList(page);
     const addedTodoCard = list.getByRole('listitem', { name: addedTodoLabel });
     await expect(addedTodoCard).toBeVisible();
-    const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox');
+    const addedTodoCardCheckbox = addedTodoCard.getByRole('checkbox', {
+      name: 'Done',
+    });
     await expect(addedTodoCardCheckbox).toBeChecked({ checked: false });
     // ensuring the `addedTodoCard` is a new element
     const addedTodoId = await addedTodoCard.getAttribute('id');
@@ -136,7 +138,9 @@ test.describe('Todo', () => {
     const listitems = await getTodoListItems(page);
     const todoToToggle = faker.helpers.arrayElement(listitems);
     const todoToToggleId = await todoToToggle.getAttribute('id');
-    const todoToToggleCheckbox = todoToToggle.getByRole('checkbox');
+    const todoToToggleCheckbox = todoToToggle.getByRole('checkbox', {
+      name: 'Done',
+    });
     const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
     const todoToToggleExpectedChecked = !todoToToggleInitiallyChecked;
     await todoToToggleCheckbox.click(); // TODO: dispatch "change" event instead
