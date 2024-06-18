@@ -8,6 +8,7 @@ import { Check, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import TodoItem from '~/Todo/types/Item';
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ActionCell, CheckboxCell, Root, TextCell } from './elements';
+import styles from './Check.module.css';
 
 interface Props {
   todo: TodoItem;
@@ -39,6 +40,13 @@ export default function TodoCardCheck({
   // whether to show the disabled state visually
   const disabledVisible = disabled || loading2;
 
+  // whether to show the loading state visually
+  const [loadingVisible, setLoadingVisible] = useState(false);
+
+  useEffect(() => {
+    setLoadingVisible(false);
+  }, [disabled]);
+
   // useEffect(() => {
   //   setChecked(done);
   //   setLoading1(false);
@@ -49,6 +57,7 @@ export default function TodoCardCheck({
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     if (loading1 || loading2 || disabled) {
+      setLoadingVisible(true);
       return;
     }
     // setLoading1(true);
@@ -64,13 +73,16 @@ export default function TodoCardCheck({
 
   function handleEditClick() {
     if (loading1 || loading2 || disabled) {
+      setLoadingVisible(true);
       return;
     }
     onEditClick();
   }
 
+  // TODO: delete button onClick setLoadingVisible(true)
+
   return (
-    <Root>
+    <Root className={loadingVisible ? styles.loadingVisible : undefined}>
       <CheckboxCell>
         {loading2 ? (
           <CircularProgress size="1.2rem" sx={{ color: 'text.disabled' }} />
@@ -125,7 +137,7 @@ export default function TodoCardCheck({
         </IconButton>
       </ActionCell>
       <ActionCell>
-        {loading1 ? (
+        {disabled ? (
           <IconButton disabled={loading2}>
             <DeleteOutlined fontSize="small" />
           </IconButton>
