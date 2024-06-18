@@ -50,7 +50,12 @@ export default function TodoCardCheck({
   }
 
   return (
-    <Root className={loadingVisible ? styles.loadingVisible : undefined}>
+    <Root
+      role="listitem"
+      aria-label={label}
+      id={id}
+      className={loadingVisible ? styles.loadingVisible : undefined}
+    >
       <CheckboxCell>
         <Checkbox
           disableTouchRipple

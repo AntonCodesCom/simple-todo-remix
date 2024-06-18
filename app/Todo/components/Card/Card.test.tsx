@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { expect, test, vi } from 'vitest';
 import TodoCard from './Card';
 import { initTodo } from '~/Todo/types/Item';
@@ -13,6 +14,7 @@ vi.mock('@remix-run/react', () => ({
 // integration test
 //
 test('TodoCard', async () => {
+  const user = userEvent.setup();
   const mockTodo = initTodo({});
   render(<TodoCard todo={mockTodo} />);
   const card = screen.getByRole('listitem', { name: mockTodo.label });
@@ -21,5 +23,8 @@ test('TodoCard', async () => {
     name: 'Done',
   });
   expect(checkbox.checked).toBe(mockTodo.done);
-  // within(card).getByRole('button', { name: 'Edit' }).click()
+  const editButton = within(card).getByRole('button', { name: 'Edit' });
+  await user.click(editButton);
+  screen.getByRole('form', { name: 'Edit Todo' });
+  // const card2 = screen.getByRole('listitem', { name: mockTodo.label });
 });
