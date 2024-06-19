@@ -102,6 +102,7 @@ describe('TodoCard', () => {
     });
     await user.click(checkbox);
     expect(card.ariaDisabled).toBe('true');
-    await detainer.resumeDetained();
+    await detainer.resumeDetained(); // action completes its execution
+    expect(card.ariaDisabled).toBe('false');
   });
 });
