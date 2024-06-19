@@ -24,6 +24,7 @@ export default function TodoCard({ todo }: Props) {
   const deleteLoading = ['loading', 'submitting'].includes(deleteFetcher.state);
   const loading = checkLoading || updateLoading || deleteLoading;
   const [_label, setLabel] = useState(label);
+  const [deleted, setDeleted] = useState(false);
 
   function handleCheckToggle(_done: boolean) {
     if (loading) {
@@ -55,6 +56,7 @@ export default function TodoCard({ todo }: Props) {
     if (loading) {
       return;
     }
+    setDeleted(true);
     deleteFetcher.submit(
       {},
       {
@@ -64,7 +66,7 @@ export default function TodoCard({ todo }: Props) {
     );
   }
 
-  return editingActive ? (
+  return deleted ? null : editingActive ? (
     <TodoCardEdit
       todo={todo}
       disabled={loading}

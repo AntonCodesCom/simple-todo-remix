@@ -61,6 +61,7 @@ describe('TodoCard', () => {
       name: 'Done',
     });
     expect(checkbox.checked).toBe(mockTodo.done);
+    // TODO: assert visual label text
   });
 
   test('edit mode data displaying', async () => {
@@ -110,7 +111,6 @@ describe('TodoCard', () => {
     const user = userEvent.setup();
     const mockTodo = initTodo({
       id: faker.string.uuid(),
-      label: 'old label',
     });
     const detainer = new ExecutionDetainer();
     renderTodoCard(mockTodo, [
@@ -140,5 +140,33 @@ describe('TodoCard', () => {
     expect(cardUpdated.ariaDisabled).toBe('true');
     await detainer.resumeDetained(); // action completes its execution
     expect(cardUpdated.ariaDisabled).toBe('false');
+  });
+
+  test('deletion', async () => {
+    const user = userEvent.setup();
+    const mockTodo = initTodo({
+      id: faker.string.uuid(),
+    });
+    const detainer = new ExecutionDetainer();
+    renderTodoCard(mockTodo, [
+      {
+        path: '/delete/:id',
+        action: async function () {
+          await detainer.detainUntilResuming();
+          return json({});
+        },
+      },
+    ]);
+    const card = await screen.findByRole('listitem', { name: mockTodo.label });
+    const deleteButton = within(card).getByRole('button', { name: 'Delete' });
+    await user.click(deleteButton);
+    const dialog = screen.getByRole('dialog', { name: 'Delete this Todo?' });
+    const confirmButton = within(dialog).getByRole('button', { name: 'Yes' });
+    await user.click(confirmButton);
+    const deletedCard = screen.queryByRole('listitem', {
+      name: mockTodo.label,
+    });
+    expect(deletedCard).toBeNull();
+    await detainer.resumeDetained(); // action completes its execution
   });
 });
