@@ -139,5 +139,6 @@ describe('TodoCard', () => {
     });
     expect(cardUpdated.ariaDisabled).toBe('true');
     await detainer.resumeDetained(); // action completes its execution
+    expect(cardUpdated.ariaDisabled).toBe('false');
   });
 });
