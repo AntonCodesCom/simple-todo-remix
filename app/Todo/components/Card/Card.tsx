@@ -79,6 +79,7 @@ export default function TodoCard({ todo }: Props) {
       }
       onEditClick={() => setEditingActive(true)}
       disabled={loading}
+      deleting={deleteLoading}
       onCheckToggle={handleCheckToggle}
     />
   );
