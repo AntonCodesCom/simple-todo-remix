@@ -49,8 +49,6 @@ async function getTodoListItems(page: Page): Promise<Locator[]> {
   return await list.getByRole('listitem').all();
 }
 
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 //
 // e2e test
 //
