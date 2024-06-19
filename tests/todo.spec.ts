@@ -148,11 +148,11 @@ test.describe('Todo', () => {
     await todoToToggleCheckbox.click(); // TODO: dispatch "change" event instead
     // waiting for loading state to begin
     await page
-      .locator(`[role=listitem][id=${todoToToggleId}][aria-disabled=true]`)
+      .locator(`[role=listitem][id="${todoToToggleId}"][aria-disabled=true]`)
       .waitFor();
     // waiting for loading state to finish
     await page
-      .locator(`[role=listitem][id=${todoToToggleId}][aria-disabled=false]`)
+      .locator(`[role=listitem][id="${todoToToggleId}"][aria-disabled=false]`)
       .waitFor();
     await expect(todoToToggleCheckbox).toBeChecked({
       checked: todoToToggleExpectedChecked,
@@ -187,11 +187,11 @@ test.describe('Todo', () => {
     await editForm.dispatchEvent('submit');
     // waiting for loading state to begin
     await page
-      .locator(`[role=listitem][id=${todoToEditId}][aria-disabled=true]`)
+      .locator(`[role=listitem][id="${todoToEditId}"][aria-disabled=true]`)
       .waitFor();
     // waiting for loading state to finish
     await page
-      .locator(`[role=listitem][id=${todoToEditId}][aria-disabled=false]`)
+      .locator(`[role=listitem][id="${todoToEditId}"][aria-disabled=false]`)
       .waitFor();
     await expect(todoToEdit).toHaveAccessibleName(editedTodoLabel);
     // asserting the target Todo has its label updated on the backend

@@ -32,8 +32,13 @@ async function fetchTodos(
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
+  const { isDev } = envMode();
+  isDev && (await delay(1)); // simulating latency
   const { apiBaseUrl } = config();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));

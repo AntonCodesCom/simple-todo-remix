@@ -1,5 +1,6 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import config from '~/config';
+import envMode from '~/envMode';
 import sessions from '~/sessions';
 
 // utility
@@ -22,8 +23,13 @@ async function addTodo(
   }
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // action
 export async function action({ request }: ActionFunctionArgs) {
+  const { isDev } = envMode();
+  isDev && (await delay(1)); // simulating latency
   const { apiBaseUrl } = config();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
