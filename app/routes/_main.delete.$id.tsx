@@ -1,5 +1,6 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import config from '~/config';
+import envMode from '~/envMode';
 import sessions from '~/sessions';
 
 // utility
@@ -23,8 +24,13 @@ async function deleteTodo(
   }
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // action
 export async function action({ request, params }: ActionFunctionArgs) {
+  const { isDev } = envMode();
+  isDev && (await delay(1)); // simulating latency
   const { id } = params;
   if (!id) {
     throw new Error('`id` parameter missing.');

@@ -103,7 +103,7 @@ describe('TodoCard', () => {
     });
     await user.click(checkbox);
     expect(card.ariaDisabled).toBe('true');
-    await detainer.resumeDetained(); // action completes its execution
+    await detainer.resumeDetained(); // the action completes its execution
     expect(card.ariaDisabled).toBe('false');
   });
 
@@ -138,7 +138,7 @@ describe('TodoCard', () => {
       name: editedTodoLabel,
     });
     expect(cardUpdated.ariaDisabled).toBe('true');
-    await detainer.resumeDetained(); // action completes its execution
+    await detainer.resumeDetained(); // the action completes its execution
     expect(cardUpdated.ariaDisabled).toBe('false');
   });
 
@@ -163,10 +163,7 @@ describe('TodoCard', () => {
     const dialog = screen.getByRole('dialog', { name: 'Delete this Todo?' });
     const confirmButton = within(dialog).getByRole('button', { name: 'Yes' });
     await user.click(confirmButton);
-    const deletedCard = screen.queryByRole('listitem', {
-      name: mockTodo.label,
-    });
-    expect(deletedCard).toBeNull();
-    await detainer.resumeDetained(); // action completes its execution
+    expect(card.ariaDisabled).toBe('true');
+    await detainer.resumeDetained(); // the action completes its execution
   });
 });

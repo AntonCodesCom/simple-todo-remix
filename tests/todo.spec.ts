@@ -144,6 +144,14 @@ test.describe('Todo', () => {
     const todoToToggleInitiallyChecked = await todoToToggleCheckbox.isChecked();
     const todoToToggleExpectedChecked = !todoToToggleInitiallyChecked;
     await todoToToggleCheckbox.click(); // TODO: dispatch "change" event instead
+    // waiting for loading state to begin
+    await page
+      .locator(`[role=listitem][id="${todoToToggleId}"][aria-disabled=true]`)
+      .waitFor();
+    // waiting for loading state to finish
+    await page
+      .locator(`[role=listitem][id="${todoToToggleId}"][aria-disabled=false]`)
+      .waitFor();
     await expect(todoToToggleCheckbox).toBeChecked({
       checked: todoToToggleExpectedChecked,
     });
@@ -175,6 +183,14 @@ test.describe('Todo', () => {
       })
       .fill(editedTodoLabel, { timeout: actionTimeout });
     await editForm.dispatchEvent('submit');
+    // waiting for loading state to begin
+    await page
+      .locator(`[role=listitem][id="${todoToEditId}"][aria-disabled=true]`)
+      .waitFor();
+    // waiting for loading state to finish
+    await page
+      .locator(`[role=listitem][id="${todoToEditId}"][aria-disabled=false]`)
+      .waitFor();
     await expect(todoToEdit).toHaveAccessibleName(editedTodoLabel);
     // asserting the target Todo has its label updated on the backend
     const backendTodos = await fetchBackendTodos(

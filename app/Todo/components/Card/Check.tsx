@@ -9,6 +9,7 @@ interface Props {
   todo: TodoItem;
   deleteElement?: ReactElement | null;
   disabled?: boolean;
+  deleting?: boolean;
   onEditClick?: () => void;
   onCheckToggle?: (done: boolean) => void;
 }
@@ -17,6 +18,7 @@ export default function TodoCardCheck({
   todo,
   deleteElement = null,
   disabled = false,
+  deleting = false,
   onEditClick = () => {},
   onCheckToggle = () => {},
 }: Props) {
@@ -31,6 +33,10 @@ export default function TodoCardCheck({
   useEffect(() => {
     setLoadingVisible(false);
   }, [disabled]);
+
+  useEffect(() => {
+    deleting && setLoadingVisible(true);
+  }, [deleting]);
 
   function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     if (disabled) {
