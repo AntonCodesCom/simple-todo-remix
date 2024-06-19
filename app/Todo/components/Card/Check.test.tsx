@@ -105,5 +105,12 @@ describe('TodoCardCheck', () => {
       const deleteElement = within(card).queryByTestId(testId);
       expect(deleteElement).toBeNull();
     });
+
+    test('aria-disabled', () => {
+      const mockTodo = initTodo({});
+      render(<TodoCardCheck disabled todo={mockTodo} />);
+      const card = screen.getByRole('listitem', { name: mockTodo.label });
+      expect(card.getAttribute('aria-disabled')).toBe('true');
+    });
   });
 });
