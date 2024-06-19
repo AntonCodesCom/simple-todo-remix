@@ -83,6 +83,12 @@ export default function TodoCardEdit({
             value={text}
             onChange={(e) => setText(e.target.value)}
             autoFocus
+            onFocus={(e) =>
+              e.currentTarget.setSelectionRange(
+                e.currentTarget.value.length,
+                e.currentTarget.value.length,
+              )
+            }
           />
         </TextCell>
         <ActionCell>
