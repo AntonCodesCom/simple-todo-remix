@@ -55,6 +55,7 @@ export default function TodoCardCheck({
       aria-label={label}
       id={id}
       className={loadingVisible ? styles.loadingVisible : undefined}
+      aria-disabled={disabled ? 'true' : 'false'}
     >
       <CheckboxCell>
         <Checkbox
