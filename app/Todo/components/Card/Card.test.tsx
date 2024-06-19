@@ -1,23 +1,30 @@
+import { createRemixStub } from '@remix-run/testing';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect, test, vi } from 'vitest';
 import TodoCard from './Card';
 import { initTodo } from '~/Todo/types/Item';
-import fetcherMock from '~/Testing/utils/fetcherMock';
-
-// mocking breaking dependency
-vi.mock('@remix-run/react', () => ({
-  useFetcher: () => fetcherMock,
-}));
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
 //
-// integration test
+// high-level integration test
 //
 test('TodoCard', async () => {
-  const user = userEvent.setup();
   const mockTodo = initTodo({});
-  render(<TodoCard todo={mockTodo} />);
-  const card = screen.getByRole('listitem', { name: mockTodo.label });
+  const RemixStub = createRemixStub([
+    {
+      path: '/',
+      loader: () => json({ todo: mockTodo }),
+      Component: function () {
+        const { todo } = useLoaderData<typeof this.loader>();
+        return <TodoCard todo={todo} />;
+      },
+    },
+  ]);
+  const user = userEvent.setup();
+  render(<RemixStub />);
+  const card = await screen.findByRole('listitem', { name: mockTodo.label });
   expect(card.getAttribute('id')).toBe(mockTodo.id);
   const checkbox = within(card).getByRole<HTMLInputElement>('checkbox', {
     name: 'Done',
