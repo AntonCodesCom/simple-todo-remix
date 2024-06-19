@@ -61,7 +61,7 @@ describe('TodoCard', () => {
       name: 'Done',
     });
     expect(checkbox.checked).toBe(mockTodo.done);
-    // TODO: assert visual label text
+    within(card).getByText(mockTodo.label);
   });
 
   test('edit mode data displaying', async () => {
