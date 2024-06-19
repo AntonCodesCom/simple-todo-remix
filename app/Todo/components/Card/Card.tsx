@@ -23,6 +23,7 @@ export default function TodoCard({ todo }: Props) {
   const deleteFetcher = useFetcher();
   const deleteLoading = ['loading', 'submitting'].includes(deleteFetcher.state);
   const loading = checkLoading || updateLoading || deleteLoading;
+  const [_label, setLabel] = useState(label);
 
   function handleCheckToggle(_done: boolean) {
     if (loading) {
@@ -36,14 +37,15 @@ export default function TodoCard({ todo }: Props) {
     );
   }
 
-  function handleEdit(_label: string) {
+  function handleEdit(updatedLabel: string) {
     if (loading) {
       return;
     }
     setEditingActive(false);
+    setLabel(updatedLabel);
     updateFetcher.submit(
       {
-        label: _label,
+        label: updatedLabel,
       },
       { action: `update/${id}`, method: 'POST' },
     );
@@ -71,7 +73,7 @@ export default function TodoCard({ todo }: Props) {
     />
   ) : (
     <TodoCardCheck
-      todo={todo}
+      todo={{ ...todo, label: _label }}
       deleteElement={
         <TodoCardDelete disabled={loading} onDelete={handleDelete} />
       }

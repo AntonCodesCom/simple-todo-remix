@@ -21,7 +21,8 @@ export default function TodoCardCheck({
   onCheckToggle = () => {},
 }: Props) {
   const { id, label, done } = todo;
-  const checkboxHtmlId = `TodoCard_checkbox-${id}`;
+  const checkboxHtmlId = `TodoCard-checkbox_${id}`;
+  const labelHtmlId = `TodoCard-label_${id}`;
   const [checked, setChecked] = useState(done);
 
   // whether to show the loading state visually
@@ -52,7 +53,7 @@ export default function TodoCardCheck({
   return (
     <Root
       role="listitem"
-      aria-label={label}
+      aria-labelledby={labelHtmlId}
       id={id}
       className={loadingVisible ? styles.loadingVisible : undefined}
       aria-disabled={disabled ? 'true' : 'false'}
@@ -83,6 +84,7 @@ export default function TodoCardCheck({
         <Typography
           component="label"
           role="none"
+          id={labelHtmlId}
           htmlFor={checkboxHtmlId}
           sx={{
             flex: 1,

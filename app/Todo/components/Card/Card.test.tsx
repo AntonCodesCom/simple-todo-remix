@@ -1,5 +1,5 @@
 import { createRemixStub } from '@remix-run/testing';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test } from 'vitest';
 import TodoCard from './Card';
@@ -104,5 +104,40 @@ describe('TodoCard', () => {
     expect(card.ariaDisabled).toBe('true');
     await detainer.resumeDetained(); // action completes its execution
     expect(card.ariaDisabled).toBe('false');
+  });
+
+  test('editing', async () => {
+    const user = userEvent.setup();
+    const mockTodo = initTodo({
+      id: faker.string.uuid(),
+      label: 'old label',
+    });
+    const detainer = new ExecutionDetainer();
+    renderTodoCard(mockTodo, [
+      {
+        path: '/update/:id',
+        action: async function () {
+          await detainer.detainUntilResuming();
+          return json({});
+        },
+      },
+    ]);
+    const card = await screen.findByRole('listitem', { name: mockTodo.label });
+    const editButton = within(card).getByRole('button', { name: 'Edit' });
+    await user.click(editButton);
+    const cardEditMode = screen.getByRole('listitem', { name: mockTodo.label });
+    const editForm = within(cardEditMode).getByRole('form', {
+      name: 'Edit Todo',
+    });
+    const input = within(editForm).getByPlaceholderText('Something to do...');
+    const editedTodoLabel = faker.lorem.sentence();
+    await user.clear(input);
+    await user.type(input, editedTodoLabel);
+    fireEvent.submit(editForm);
+    const cardUpdated = await screen.findByRole('listitem', {
+      name: editedTodoLabel,
+    });
+    expect(cardUpdated.ariaDisabled).toBe('true');
+    await detainer.resumeDetained(); // action completes its execution
   });
 });

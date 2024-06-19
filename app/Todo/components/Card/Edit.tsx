@@ -86,12 +86,16 @@ export default function TodoCardEdit({
           />
         </TextCell>
         <ActionCell>
-          <IconButton type="submit" disabled={disabled}>
+          <IconButton type="submit" disabled={disabled} aria-label="Edit">
             <CheckCircle color="primary" />
           </IconButton>
         </ActionCell>
         <ActionCell>
-          <IconButton disabled={disabled} onClick={onDeactivate}>
+          <IconButton
+            disabled={disabled}
+            onClick={onDeactivate}
+            aria-label="Cancel"
+          >
             <HighlightOff />
           </IconButton>
         </ActionCell>
