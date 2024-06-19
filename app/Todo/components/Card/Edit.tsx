@@ -54,7 +54,14 @@ export default function TodoCardEdit({
         aria-label="Edit Todo"
       >
         <CheckboxCell>
-          <Checkbox checkedIcon={<Check />} disabled defaultChecked={done} />
+          <Checkbox
+            checkedIcon={<Check />}
+            disabled
+            defaultChecked={done}
+            inputProps={{
+              'aria-label': 'Done',
+            }}
+          />
         </CheckboxCell>
         <TextCell>
           <TextField

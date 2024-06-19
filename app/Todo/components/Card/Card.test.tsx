@@ -51,6 +51,12 @@ describe('TodoCard', () => {
     await user.click(editButton);
     const cardEditMode = screen.getByRole('listitem', { name: mockTodo.label });
     expect(cardEditMode.getAttribute('id')).toBe(mockTodo.id);
-    // TODO: "Done" checkbox value
+    const checkbox = within(cardEditMode).getByRole<HTMLInputElement>(
+      'checkbox',
+      {
+        name: 'Done',
+      },
+    );
+    expect(checkbox.checked).toBe(mockTodo.done);
   });
 });
