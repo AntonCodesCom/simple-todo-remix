@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { ActionFunctionArgs, redirect } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import config from '~/config';
