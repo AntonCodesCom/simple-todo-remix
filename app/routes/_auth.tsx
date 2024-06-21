@@ -1,7 +1,6 @@
 import { LoaderFunctionArgs, json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
-import CommonSession from '~/Common/components/Session';
 import config from '~/config';
 import sessions from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
@@ -26,7 +25,6 @@ export default function LayoutAuth() {
   const { username } = useLoaderData<typeof loader>();
   return (
     <CommonLayout>
-      <CommonSession sessionId={username} /> {/* TODO: remove */}
       <Outlet />
     </CommonLayout>
   );

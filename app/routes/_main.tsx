@@ -3,7 +3,6 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import CommonLayout from '~/Common/components/Layout';
-import CommonSession from '~/Common/components/Session';
 import config from '~/config';
 import sessions from '~/sessions';
 
@@ -37,7 +36,6 @@ export default function LayoutMain() {
   const { username } = useLoaderData<typeof loader>();
   return (
     <CommonLayout username={username}>
-      <CommonSession sessionId={username} /> {/* TODO: remove */}
       <Outlet />
     </CommonLayout>
   );
