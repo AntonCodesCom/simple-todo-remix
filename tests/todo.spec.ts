@@ -4,23 +4,13 @@ import test, {
   Page,
   expect,
 } from '@playwright/test';
-import sessions from '../app/sessions';
 import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
-
-// utility
-async function generateSessionCookie(userId: string) {
-  const { getSession, commitSession, sessionCookieName } = sessions();
-  const session = await getSession();
-  session.set(sessionCookieName, userId);
-  const rawCookie = await commitSession(session);
-  const parts = rawCookie.split(';')[0].split('=');
-  return {
-    name: parts[0],
-    value: parts[1],
-  };
-}
+import generateSessionCookie from './utils/generateSessionCookie';
+import fetchAccessToken from './utils/fetchAccessToken';
+import { alice } from './fixtures/users';
+import e2eConfig from './config';
 
 // utility
 async function fetchBackendTodos(
@@ -34,6 +24,7 @@ async function fetchBackendTodos(
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    failOnStatusCode: true,
   });
   return (await res.json()) as any[];
 }
@@ -55,24 +46,23 @@ async function getTodoListItems(page: Page): Promise<Locator[]> {
 test.describe('Todo', () => {
   // values used throughout the test suite
   const { baseUrl, apiBaseUrl } = config();
-  const aliceUserId = '878664be-1926-44ab-9c77-eb5d803369be'; // fixture
-  const accessToken = aliceUserId; // TODO: update when new auth system is introduced
+  let accessToken: string;
 
-  /**
-   * Setting this timeout for actions like `.click()` will allow us to skip
-   * unnecessary (intermediary) visibility checks on elements that are supposed
-   * to be immediately visible (e.g. a static button).
-   *
-   * Due to our internal convention, if we see a 987 ms timeout error in a test
-   * report, then this would mean that a necessary element is missing.
-   */
-  const actionTimeout = 987;
+  const { actionTimeout } = e2eConfig;
 
   // before each
   test.beforeEach(async ({ page, request }) => {
     // data seeding
     const seedUrl = new URL('seed', apiBaseUrl).toString();
     await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
+    // logging in (getting access token)
+    const { username, password } = alice;
+    accessToken = await fetchAccessToken({
+      request,
+      username,
+      password,
+      apiBaseUrl,
+    });
     // setting user session (via cookies)
     const sessionCookie = await generateSessionCookie(accessToken);
     await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);

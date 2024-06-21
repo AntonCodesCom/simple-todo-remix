@@ -1,10 +1,10 @@
-import { LoaderFunctionArgs, json, redirect } from '@remix-run/node';
-import { Outlet, useLoaderData } from '@remix-run/react';
-import { UnauthorizedException } from '~/Auth/exceptions';
-import fetchMe from '~/Auth/utils/fetchMe';
+import { LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { Outlet } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
 import config from '~/config';
 import sessions from '~/sessions';
+import fetchMe from '~/Auth/utils/fetchMe';
+import { UnauthorizedException } from '~/Auth/exceptions';
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -12,15 +12,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get('Cookie'));
   const accessToken = session.get(sessionCookieName);
   if (!accessToken) {
-    return redirect('/login');
+    return null;
   }
   const { apiBaseUrl } = config();
   try {
-    const { username } = await fetchMe(accessToken, apiBaseUrl);
-    return json({ username });
+    await fetchMe(accessToken, apiBaseUrl);
+    return redirect('/');
   } catch (err) {
     if (err instanceof UnauthorizedException) {
-      return redirect('/login');
+      return null;
     } else {
       throw err;
     }
@@ -30,12 +30,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 // TODO: error boundary
 
 /**
- * Main route layout component.
+ * Auth route layout component.
  */
-export default function LayoutMain() {
-  const { username } = useLoaderData<typeof loader>();
+export default function LayoutAuth() {
   return (
-    <CommonLayout username={username}>
+    <CommonLayout>
       <Outlet />
     </CommonLayout>
   );
