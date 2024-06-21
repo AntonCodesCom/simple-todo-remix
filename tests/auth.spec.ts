@@ -15,7 +15,6 @@ test.describe('Auth', () => {
 
   // data seeding
   test.beforeEach(async ({ request }) => {
-    // data seeding
     const seedUrl = new URL('seed', apiBaseUrl).toString();
     await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
   });
@@ -50,7 +49,8 @@ test.describe('Auth', () => {
     });
   });
 
-  test('login', async ({ page }) => {
+  // login flow
+  test('login flow', async ({ page }) => {
     await page.goto('/login');
     const loginForm = page.getByRole('form', { name: 'Login' });
     const { username, password } = alice;
@@ -59,6 +59,10 @@ test.describe('Auth', () => {
       .fill(username, { timeout: actionTimeout });
     await loginForm
       .getByRole('textbox', { name: 'Password' })
-      .fill(username, { timeout: actionTimeout });
+      .fill(password, { timeout: actionTimeout });
+    await loginForm
+      .getByRole('button', { name: 'Login' })
+      .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+    await expect(page).toHaveURL('/');
   });
 });
