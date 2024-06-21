@@ -2,7 +2,7 @@ import test, { expect } from '@playwright/test';
 import config from '~/config';
 import generateSessionCookie from './utils/generateSessionCookie';
 import { alice } from './fixtures/users';
-import login from './utils/login';
+import fetchAccessToken from './utils/fetchAccessToken';
 
 //
 // e2e test
@@ -35,7 +35,12 @@ test.describe('Auth', () => {
   test.describe('user logged in', () => {
     test('/login', async ({ page, request }) => {
       const { username, password } = alice;
-      const accessToken = await login(request, username, password, apiBaseUrl);
+      const accessToken = await fetchAccessToken({
+        request,
+        username,
+        password,
+        apiBaseUrl,
+      });
       const sessionCookie = await generateSessionCookie(accessToken);
       await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
       await page.goto('/login');

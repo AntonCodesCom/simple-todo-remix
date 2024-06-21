@@ -8,7 +8,7 @@ import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
 import generateSessionCookie from './utils/generateSessionCookie';
-import login from './utils/login';
+import fetchAccessToken from './utils/fetchAccessToken';
 import { alice } from './fixtures/users';
 
 // utility
@@ -64,7 +64,12 @@ test.describe('Todo', () => {
     await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
     // logging in (getting access token)
     const { username, password } = alice;
-    accessToken = await login(request, username, password, apiBaseUrl);
+    accessToken = await fetchAccessToken({
+      request,
+      username,
+      password,
+      apiBaseUrl,
+    });
     // setting user session (via cookies)
     const sessionCookie = await generateSessionCookie(accessToken);
     await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
