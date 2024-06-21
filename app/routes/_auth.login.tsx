@@ -11,7 +11,7 @@ import { Form } from '@remix-run/react';
 import config from '~/config';
 import sessions from '~/sessions';
 
-export default function RouteMainLogin() {
+export default function RouteAuthLogin() {
   return (
     <Container>
       <Typography variant="h4" component="h1" mb={2}>

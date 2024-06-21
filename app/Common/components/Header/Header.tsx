@@ -1,7 +1,11 @@
 import { AppBar, Button, Container, Toolbar, Typography } from '@mui/material';
 import { Link } from '@remix-run/react';
 
-export default function CommonHeader() {
+interface Props {
+  username?: string | null;
+}
+
+export default function CommonHeader({ username }: Props) {
   return (
     <AppBar position="static">
       <Toolbar component={Container}>
@@ -17,9 +21,11 @@ export default function CommonHeader() {
         >
           Remix Todo
         </Typography>
-        <Button component={Link} to="/about" color="inherit">
-          About
-        </Button>
+        {username && (
+          <Button color="inherit" component={Link} to="/logout">
+            Logout ({username})
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

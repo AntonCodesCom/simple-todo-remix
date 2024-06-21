@@ -15,6 +15,9 @@ interface Props {
   sessionId: string;
 }
 
+/**
+ * @deprecated
+ */
 export default function CommonSession({ sessionId }: Props) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
