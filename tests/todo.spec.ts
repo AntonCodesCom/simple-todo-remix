@@ -27,17 +27,19 @@ async function generateSessionCookie(userId: string) {
  * @returns access token
  */
 async function login(
+  request: APIRequestContext,
   username: string,
   password: string,
   apiBaseUrl: string,
 ): Promise<string> {
   const url = new URL('auth/login', apiBaseUrl).toString();
-  const res = await fetch(url, {
+  const res = await request.fetch(url, {
     method: 'POST',
-    body: JSON.stringify({ username, password }),
+    data: JSON.stringify({ username, password }),
     headers: {
       'Content-Type': 'application/json',
     },
+    failOnStatusCode: true,
   });
   return (await res.json()).accessToken;
 }
@@ -54,6 +56,7 @@ async function fetchBackendTodos(
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    failOnStatusCode: true,
   });
   return (await res.json()) as any[];
 }
@@ -75,7 +78,7 @@ async function getTodoListItems(page: Page): Promise<Locator[]> {
 test.describe('Todo', () => {
   // values used throughout the test suite
   const { baseUrl, apiBaseUrl } = config();
-  let accessToken: string; // TODO: update when new auth system is introduced
+  let accessToken: string;
 
   /**
    * Setting this timeout for actions like `.click()` will allow us to skip
@@ -95,7 +98,7 @@ test.describe('Todo', () => {
     // logging in (getting access token)
     const username = 'alice';
     const password = 'Alice1111$';
-    accessToken = await login(username, password, apiBaseUrl);
+    accessToken = await login(request, username, password, apiBaseUrl);
     // setting user session (via cookies)
     const sessionCookie = await generateSessionCookie(accessToken);
     await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
