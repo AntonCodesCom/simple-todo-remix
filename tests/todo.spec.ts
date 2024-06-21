@@ -8,28 +8,8 @@ import config from '~/config';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
 import generateSessionCookie from './utils/generateSessionCookie';
-
-/**
- * Login utility.
- * @returns access token
- */
-async function login(
-  request: APIRequestContext,
-  username: string,
-  password: string,
-  apiBaseUrl: string,
-): Promise<string> {
-  const url = new URL('auth/login', apiBaseUrl).toString();
-  const res = await request.fetch(url, {
-    method: 'POST',
-    data: JSON.stringify({ username, password }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    failOnStatusCode: true,
-  });
-  return (await res.json()).accessToken;
-}
+import login from './utils/login';
+import { alice } from './fixtures/users';
 
 // utility
 async function fetchBackendTodos(
@@ -83,8 +63,7 @@ test.describe('Todo', () => {
     const seedUrl = new URL('seed', apiBaseUrl).toString();
     await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
     // logging in (getting access token)
-    const username = 'alice';
-    const password = 'Alice1111$';
+    const { username, password } = alice;
     accessToken = await login(request, username, password, apiBaseUrl);
     // setting user session (via cookies)
     const sessionCookie = await generateSessionCookie(accessToken);
