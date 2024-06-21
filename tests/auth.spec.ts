@@ -3,6 +3,7 @@ import config from '~/config';
 import generateSessionCookie from './utils/generateSessionCookie';
 import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
+import e2eConfig from './config';
 
 //
 // e2e test
@@ -10,6 +11,7 @@ import fetchAccessToken from './utils/fetchAccessToken';
 test.describe('Auth', () => {
   // config
   const { baseUrl, apiBaseUrl } = config();
+  const { actionTimeout } = e2eConfig;
 
   // data seeding
   test.beforeEach(async ({ request }) => {
@@ -48,7 +50,15 @@ test.describe('Auth', () => {
     });
   });
 
-  test('login', () => {
-    test.fixme();
+  test('login', async ({ page }) => {
+    await page.goto('/login');
+    const loginForm = page.getByRole('form', { name: 'Login' });
+    const { username, password } = alice;
+    await loginForm
+      .getByRole('textbox', { name: 'Username' })
+      .fill(username, { timeout: actionTimeout });
+    await loginForm
+      .getByRole('textbox', { name: 'Password' })
+      .fill(username, { timeout: actionTimeout });
   });
 });

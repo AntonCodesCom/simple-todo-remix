@@ -63,12 +63,13 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function RouteAuthLogin() {
+  const headingHtmlId = 'AuthLogin_h1';
   return (
     <Container>
-      <Typography variant="h4" component="h1" mb={2}>
+      <Typography id={headingHtmlId} variant="h4" component="h1" mb={2}>
         Login
       </Typography>
-      <Form method="post" reloadDocument>
+      <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
         <Box mb={0.5}>
           <TextField name="username" label="Username" size="small" required />
         </Box>

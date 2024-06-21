@@ -10,6 +10,7 @@ import { faker } from '@faker-js/faker';
 import generateSessionCookie from './utils/generateSessionCookie';
 import fetchAccessToken from './utils/fetchAccessToken';
 import { alice } from './fixtures/users';
+import e2eConfig from './config';
 
 // utility
 async function fetchBackendTodos(
@@ -47,15 +48,7 @@ test.describe('Todo', () => {
   const { baseUrl, apiBaseUrl } = config();
   let accessToken: string;
 
-  /**
-   * Setting this timeout for actions like `.click()` will allow us to skip
-   * unnecessary (intermediary) visibility checks on elements that are supposed
-   * to be immediately visible (e.g. a static button).
-   *
-   * Due to our internal convention, if we see a 987 ms timeout error in a test
-   * report, then this would mean that a necessary element is missing.
-   */
-  const actionTimeout = 987;
+  const { actionTimeout } = e2eConfig;
 
   // before each
   test.beforeEach(async ({ page, request }) => {
