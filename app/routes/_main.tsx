@@ -1,55 +1,43 @@
-import { LoaderFunctionArgs, json } from '@remix-run/node';
+import { LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { v4 } from 'uuid';
-import validator from 'validator';
+import { UnauthorizedException } from '~/Auth/exceptions';
+import fetchMe from '~/Auth/utils/fetchMe';
 import CommonLayout from '~/Common/components/Layout';
 import CommonSession from '~/Common/components/Session';
+import config from '~/config';
 import sessions from '~/sessions';
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { getSession, commitSession, sessionCookieName } = sessions();
+  const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
-  const url = new URL(request.url);
-  const sessionIdParam = url.searchParams.get('sessionId');
-  if (sessionIdParam && validator.isUUID(sessionIdParam)) {
-    // if session ID is set via search params
-    // then overriding existing session ID if any
-    session.set(sessionCookieName, sessionIdParam);
-    return json(
-      { sessionId: sessionIdParam },
-      {
-        headers: {
-          'Set-Cookie': await commitSession(session),
-        },
-      },
-    );
+  const accessToken = session.get(sessionCookieName);
+  if (!accessToken) {
+    return redirect('/login');
   }
-  let sessionId = session.get(sessionCookieName) as string;
-  if (sessionId) {
-    // if session ID has already been set
-    return json({ sessionId });
+  const { apiBaseUrl } = config();
+  try {
+    const { username } = await fetchMe(accessToken, apiBaseUrl);
+    return json({ username });
+  } catch (err) {
+    if (err instanceof UnauthorizedException) {
+      return redirect('/login');
+    } else {
+      throw err;
+    }
   }
-  sessionId = v4();
-  session.set(sessionCookieName, sessionId);
-  return json(
-    { sessionId },
-    {
-      headers: {
-        'Set-Cookie': await commitSession(session),
-      },
-    },
-  );
 }
+
+// TODO: error boundary
 
 /**
  * Main route layout component.
  */
 export default function LayoutMain() {
-  const { sessionId } = useLoaderData<typeof loader>();
+  const { username } = useLoaderData<typeof loader>();
   return (
-    <CommonLayout>
-      <CommonSession sessionId={sessionId} />
+    <CommonLayout username={username}>
+      <CommonSession sessionId={username} /> {/* TODO: remove */}
       <Outlet />
     </CommonLayout>
   );

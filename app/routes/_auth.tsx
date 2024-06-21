@@ -6,6 +6,7 @@ import config from '~/config';
 import sessions from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
 
+// loader
 export async function loader({ request }: LoaderFunctionArgs) {
   const { apiBaseUrl } = config();
   const { getSession, sessionCookieName } = sessions();
@@ -15,6 +16,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ username });
   // TODO: redirect to '/' if user is already authenticated
 }
+
+// TODO: error boundary
 
 /**
  * Auth route layout component.
