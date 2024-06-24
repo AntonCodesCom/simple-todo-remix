@@ -78,5 +78,29 @@ test.describe('Auth', () => {
       .getByRole('button', { name: 'Login' })
       .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
     await expect(page).toHaveURL('/');
+    // TODO: assert logout button
+  });
+
+  // signup flow
+  test('signup flow', async ({ page, request }) => {
+    // clearing database
+    const seedUrl = new URL('seed', apiBaseUrl).toString();
+    await request.fetch(seedUrl, { method: 'DELETE', failOnStatusCode: true });
+    // visiting the page
+    await page.goto('/signup');
+    const signupForm = page.getByRole('form', { name: 'Sign Up' });
+    const username = 'newuser';
+    const password = 'User1111$';
+    await signupForm
+      .getByRole('textbox', { name: 'Username' })
+      .fill(username, { timeout: actionTimeout });
+    await signupForm
+      .getByRole('textbox', { name: 'Password' })
+      .fill(password, { timeout: actionTimeout });
+    await signupForm
+      .getByRole('button', { name: 'Sign Up' })
+      .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+    await expect(page).toHaveURL('/');
+    // TODO: assert logout button
   });
 });
