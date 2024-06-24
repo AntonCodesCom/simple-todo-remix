@@ -32,8 +32,8 @@ test.describe('Auth', () => {
     });
   });
 
-  // guest only routes
-  test.describe('user logged in', () => {
+  // when user has already logged in
+  test.describe('guest-only routes', () => {
     test('/login', async ({ page, request }) => {
       const { username, password } = alice;
       const accessToken = await fetchAccessToken({
@@ -45,6 +45,20 @@ test.describe('Auth', () => {
       const sessionCookie = await generateSessionCookie(accessToken);
       await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
       await page.goto('/login');
+      await expect(page).toHaveURL('/');
+    });
+
+    test('/signup', async ({ page, request }) => {
+      const { username, password } = alice;
+      const accessToken = await fetchAccessToken({
+        request,
+        username,
+        password,
+        apiBaseUrl,
+      });
+      const sessionCookie = await generateSessionCookie(accessToken);
+      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.goto('/signup');
       await expect(page).toHaveURL('/');
     });
   });
