@@ -4,6 +4,7 @@ import generateSessionCookie from './utils/generateSessionCookie';
 import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
 import e2eConfig from './config';
+import { faker } from '@faker-js/faker';
 
 //
 // e2e test
@@ -19,8 +20,8 @@ test.describe('Auth', () => {
     await request.fetch(seedUrl, { method: 'POST', failOnStatusCode: true });
   });
 
-  // restricted routes
-  test.describe('invalid access token', () => {
+  // when the auth session (access token) is invalid
+  test.describe('auth-restricted routes', () => {
     test('/', async ({ page }) => {
       // setting auth session (via cookies)
       const invalidAccessToken = 'INVALID_ACCESS_TOKEN';
@@ -89,7 +90,7 @@ test.describe('Auth', () => {
     // visiting the page
     await page.goto('/signup');
     const signupForm = page.getByRole('form', { name: 'Sign Up' });
-    const username = 'newuser';
+    const username = faker.person.firstName().toLowerCase();
     const password = 'User1111$';
     await signupForm
       .getByRole('textbox', { name: 'Username' })
@@ -101,6 +102,9 @@ test.describe('Auth', () => {
       .getByRole('button', { name: 'Sign Up' })
       .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
     await expect(page).toHaveURL('/');
-    // TODO: assert logout button
+    const logoutButton = page.getByRole('link', {
+      name: `Logout (${username})`,
+    });
+    await expect(logoutButton).toBeVisible();
   });
 });
