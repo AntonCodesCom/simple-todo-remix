@@ -65,7 +65,7 @@ test.describe('Auth', () => {
   });
 
   // login flow
-  test('login flow', async ({ page }) => {
+  test.only('login flow', async ({ page }) => {
     await page.goto('/login');
     const loginForm = page.getByRole('form', { name: 'Login' });
     const { username, password } = alice;
@@ -79,7 +79,10 @@ test.describe('Auth', () => {
       .getByRole('button', { name: 'Login' })
       .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
     await expect(page).toHaveURL('/');
-    // TODO: assert logout button
+    const logoutButton = page.getByRole('link', {
+      name: `Logout (${username})`,
+    });
+    await expect(logoutButton).toBeVisible();
   });
 
   // signup flow
