@@ -87,6 +87,7 @@ test.describe('Auth', () => {
 
   // signup flow
   test('signup flow', async ({ page, request }) => {
+    // TODO: disable database seeding for this test
     // clearing database
     const seedUrl = new URL('seed', apiBaseUrl).toString();
     await request.fetch(seedUrl, { method: 'DELETE', failOnStatusCode: true });

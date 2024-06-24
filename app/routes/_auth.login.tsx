@@ -1,6 +1,13 @@
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Link as MuiLink,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import { Form } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import AuthLoggedInSchema, {
   authLoggedInSchema,
@@ -88,6 +95,16 @@ export default function RouteAuthLogin() {
           </Button>
         </Box>
       </Form>
+      <Box mb={2} />
+      <Box>
+        <Typography>
+          Don't have an account?{' '}
+          <MuiLink component={Link} to="../signup">
+            Sign up
+          </MuiLink>{' '}
+          now!
+        </Typography>
+      </Box>
     </Container>
   );
 }
