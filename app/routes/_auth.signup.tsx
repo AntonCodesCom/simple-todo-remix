@@ -8,22 +8,22 @@ import {
 } from '@mui/material';
 import { ActionFunctionArgs, redirect } from '@remix-run/node';
 import { Form, Link } from '@remix-run/react';
-import { UnauthorizedException } from '~/Auth/exceptions';
+import { ConflictException, UnauthorizedException } from '~/Auth/exceptions';
 import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
-import { authLoginSchema } from '~/Auth/types/LoginSchema';
+import { authSignupSchema } from '~/Auth/types/SignupSchema';
 import config from '~/config';
 import sessions from '~/sessions';
 
 // utility
-async function fetchLogin(
+async function fetchSignup(
   username: string,
   password: string,
   apiBaseUrl: string,
 ): Promise<AuthLoggedInSchema> {
   const body = JSON.stringify({ username, password });
-  const url = new URL('auth/login', apiBaseUrl);
+  const url = new URL('auth/signup', apiBaseUrl);
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -32,8 +32,8 @@ async function fetchLogin(
     body,
   });
   if (!res.ok) {
-    if (res.status === 401) {
-      throw new UnauthorizedException();
+    if (res.status === 409) {
+      throw new ConflictException();
     }
     throw new Error('HTTP error occurred while fetching `POST /auth/login`.');
   }
@@ -44,14 +44,14 @@ async function fetchLogin(
 // action
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
-  const data = authLoginSchema.parse({
+  const data = authSignupSchema.parse({
     username: form.get('username'),
     password: form.get('password'),
   });
   const { username, password } = data;
   const { apiBaseUrl } = config();
   try {
-    const { accessToken } = await fetchLogin(username, password, apiBaseUrl);
+    const { accessToken } = await fetchSignup(username, password, apiBaseUrl);
     const { getSession, commitSession, sessionCookieName } = sessions();
     const session = await getSession(request.headers.get('Cookie'));
     session.set(sessionCookieName, accessToken);
@@ -69,16 +69,25 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function RouteAuthLogin() {
-  const headingHtmlId = 'AuthLogin_h1';
+/**
+ * Signup route component.
+ */
+export default function RouteSignup() {
+  const headingHtmlId = 'RouteSignup_h1';
   return (
     <Container>
       <Typography id={headingHtmlId} variant="h4" component="h1" mb={2}>
-        Login
+        Sign Up
       </Typography>
       <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
         <Box mb={0.5}>
-          <TextField name="username" label="Username" size="small" required />
+          <TextField
+            name="username"
+            label="Username"
+            size="small"
+            required
+            helperText="Lowercase Latin letters and numbers, starting from a letter."
+          />
         </Box>
         <Box mb={0.5}>
           <TextField
@@ -87,22 +96,23 @@ export default function RouteAuthLogin() {
             label="Password"
             size="small"
             required
+            helperText="Minimum 8 characters, a lowercase, an uppercase and a special character."
           />
         </Box>
         <Box>
           <Button type="submit" variant="contained">
-            Login
+            Sign Up
           </Button>
         </Box>
       </Form>
       <Box mb={2} />
       <Box>
         <Typography>
-          Don't have an account?{' '}
-          <MuiLink component={Link} to="../signup">
-            Sign up
-          </MuiLink>{' '}
-          now!
+          Already have an account?{' '}
+          <MuiLink component={Link} to="../login">
+            Log in
+          </MuiLink>
+          !
         </Typography>
       </Box>
     </Container>
