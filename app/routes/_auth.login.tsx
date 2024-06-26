@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -6,8 +7,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import { Form, Link } from '@remix-run/react';
+import { ActionFunctionArgs, json, redirect } from '@remix-run/node';
+import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import AuthLoggedInSchema, {
   authLoggedInSchema,
@@ -62,23 +63,24 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch (err) {
     if (err instanceof UnauthorizedException) {
-      // TODO: error flash message
-      return redirect('.');
+      return json({ incorrectCredentials: true });
     }
     throw err;
   }
 }
 
 export default function RouteAuthLogin() {
+  const actionData = useActionData<typeof action>();
   const headingHtmlId = 'AuthLogin_h1';
   return (
     <Container>
-      <Typography id={headingHtmlId} variant="h4" component="h1" mb={2}>
+      <Typography id={headingHtmlId} variant="h4" component="h1" mb={1}>
         Login
       </Typography>
-      {/* <Box>
-        <Typography>Incorrect username or password.</Typography>
-      </Box> */}
+      {actionData?.incorrectCredentials && (
+        <Alert severity="error">Incorrect username or password.</Alert>
+      )}
+      <Box pb={1} />
       <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
         <Box mb={0.5}>
           <TextField name="username" label="Username" size="small" required />
