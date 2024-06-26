@@ -7,6 +7,7 @@ import AuthLoggedInSchema, {
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
 import config from '~/config';
+import envMode from '~/envMode';
 import sessions from '~/sessions';
 
 // utility
@@ -34,8 +35,13 @@ async function fetchLogin(
   return authLoggedInSchema.parse(data);
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // action
 export async function action({ request }: ActionFunctionArgs) {
+  const { isDev } = envMode();
+  isDev && (await delay(1)); // simulating latency
   const form = await request.formData();
   const data = authLoginSchema.parse({
     username: form.get('username'),
