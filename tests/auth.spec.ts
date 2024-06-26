@@ -22,7 +22,7 @@ test.describe('Auth', () => {
 
   // when the auth session (access token) is invalid
   test.describe('auth-restricted routes', () => {
-    test('/', async ({ page }) => {
+    test('index route `/`', async ({ page }) => {
       // setting auth session (via cookies)
       const invalidAccessToken = 'INVALID_ACCESS_TOKEN';
       const sessionCookie = await generateSessionCookie(invalidAccessToken);
@@ -65,7 +65,7 @@ test.describe('Auth', () => {
   });
 
   // login flow
-  test.only('login flow', async ({ page }) => {
+  test('login flow', async ({ page }) => {
     await page.goto('/login');
     const loginForm = page.getByRole('form', { name: 'Login' });
     const { username, password } = alice;

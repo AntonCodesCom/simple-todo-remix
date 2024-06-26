@@ -8,9 +8,13 @@ import config from '~/config';
 import sessions from '~/sessions';
 
 // utility
-function getAccessTokenExp(accessToken: string): number | undefined {
-  const decoded = jwtDecode(accessToken);
-  return decoded.exp;
+function getAccessTokenExp(accessToken: string): number | null {
+  try {
+    const decoded = jwtDecode(accessToken);
+    return decoded.exp ?? null;
+  } catch (err) {
+    return null;
+  }
 }
 
 // loader
@@ -18,9 +22,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { getSession, destroySession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
   const accessToken = session.get(sessionCookieName);
-  if (!accessToken) {
-    return redirect('/login');
-  }
   const exp = getAccessTokenExp(accessToken);
   if (!exp || exp - Date.now() / 1000 < 86400) {
     // if access token will expire in less than 1 day
