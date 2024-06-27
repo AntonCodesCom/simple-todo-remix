@@ -1,5 +1,5 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
-import config from '~/config';
+import env from '~/env';
 import envMode from '~/envMode';
 import sessions from '~/sessions';
 
@@ -35,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!id) {
     throw new Error('`id` parameter missing.');
   }
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
   const userId = session.get(sessionCookieName);

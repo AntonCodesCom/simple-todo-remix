@@ -1,5 +1,5 @@
-import test, { Locator, expect } from '@playwright/test';
-import config from '~/config';
+import test, { expect } from '@playwright/test';
+import env from '~/env';
 import generateSessionCookie from './utils/generateSessionCookie';
 import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 //
 test.describe('Auth', () => {
   // config
-  const { baseUrl, apiBaseUrl } = config();
+  const { baseUrl, apiBaseUrl } = env();
   const { actionTimeout } = e2eConfig;
 
   // data seeding

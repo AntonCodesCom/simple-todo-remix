@@ -6,7 +6,7 @@ import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
-import config from '~/config';
+import env from '~/env';
 import envMode from '~/envMode';
 import sessions from '~/sessions';
 
@@ -48,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
     password: form.get('password'),
   });
   const { username, password } = data;
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     const { accessToken } = await fetchLogin(username, password, apiBaseUrl);
     const { getSession, commitSession, sessionCookieName } = sessions();

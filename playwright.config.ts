@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { config } from 'dotenv';
-import appConfig from './app/config';
+import appConfig from './app/env';
 
 // dotenv
 config();

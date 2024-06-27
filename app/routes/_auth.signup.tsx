@@ -13,7 +13,7 @@ import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authSignupSchema } from '~/Auth/types/SignupSchema';
-import config from '~/config';
+import env from '~/env';
 import sessions from '~/sessions';
 
 // utility
@@ -49,7 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
     password: form.get('password'),
   });
   const { username, password } = data;
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     const { accessToken } = await fetchSignup(username, password, apiBaseUrl);
     const { getSession, commitSession, sessionCookieName } = sessions();

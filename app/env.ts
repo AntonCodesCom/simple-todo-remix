@@ -37,9 +37,9 @@ const { isURL } = validator;
 // ];
 
 /**
- * Returns an object containing global app configuration values.
+ * Returns an object containing global app configuration based on
+ * environment variables.
  *
- * The configuration values come mostly from environment variables.
  * We don't want the app to crash when env vars are not set correctly.
  * Therefore, we make this as a function to handle errors via error boundaries
  * (e.g. within loaders or actions).
@@ -50,7 +50,7 @@ const { isURL } = validator;
  * @returns global app configuration values
  * @throws {Error} on invalid configuration of env vars
  */
-export default function config() {
+export default function env() {
   const { isDev, isProd } = envMode();
   const errors = [];
   // BASE_URL

@@ -4,7 +4,7 @@ import test, {
   Page,
   expect,
 } from '@playwright/test';
-import config from '~/config';
+import env from '~/env';
 import arrayIdHash from '~/Common/utils/arrayIdHash';
 import { faker } from '@faker-js/faker';
 import generateSessionCookie from './utils/generateSessionCookie';
@@ -45,7 +45,7 @@ async function getTodoListItems(page: Page): Promise<Locator[]> {
 //
 test.describe('Todo', () => {
   // values used throughout the test suite
-  const { baseUrl, apiBaseUrl } = config();
+  const { baseUrl, apiBaseUrl } = env();
   let accessToken: string;
 
   const { actionTimeout } = e2eConfig;

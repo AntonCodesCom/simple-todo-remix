@@ -1,5 +1,5 @@
 import { createCookieSessionStorage } from '@remix-run/node';
-import config from './config';
+import env from './env';
 import envMode from './envMode';
 
 export default function sessions() {
@@ -8,7 +8,7 @@ export default function sessions() {
     sessionCookieName,
     sessionCookieSecret,
     allowSessionCookieWithoutHttps,
-  } = config();
+  } = env();
   const { getSession, commitSession, destroySession } =
     createCookieSessionStorage({
       cookie: {

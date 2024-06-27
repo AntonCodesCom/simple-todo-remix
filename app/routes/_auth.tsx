@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { Outlet, useRouteError } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
-import config from '~/config';
+import env from '~/env';
 import sessions from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import { UnauthorizedException } from '~/Auth/exceptions';
@@ -16,7 +16,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!accessToken) {
     return null;
   }
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     await fetchMe(accessToken, apiBaseUrl);
     return redirect('/');

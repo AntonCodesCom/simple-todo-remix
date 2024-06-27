@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import CommonLayout from '~/Common/components/Layout';
-import config from '~/config';
+import env from '~/env';
 import sessions from '~/sessions';
 
 // utility
@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     });
   }
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     const { username } = await fetchMe(accessToken, apiBaseUrl);
     return json({ username });

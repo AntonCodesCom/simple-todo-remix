@@ -7,7 +7,7 @@ import { useLoaderData, useRouteError } from '@remix-run/react';
 import CommonErrorScreen from '~/Common/components/ErrorScreen';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
-import config from '~/config';
+import env from '~/env';
 import envMode from '~/envMode';
 import sessions from '~/sessions';
 
@@ -39,7 +39,7 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export async function loader({ request }: LoaderFunctionArgs) {
   const { isDev } = envMode();
   isDev && (await delay(1)); // simulating latency
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
   const userId = session.get(sessionCookieName);
