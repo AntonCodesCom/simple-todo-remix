@@ -5,14 +5,14 @@ import sessions from '~/sessions';
 // utility
 async function deleteTodo(
   id: string,
-  userId: string,
+  accessToken: string,
   apiBaseUrl: string,
 ): Promise<void> {
   const url = new URL(`todo/${id}`, apiBaseUrl);
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${userId}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   });
@@ -37,7 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { apiBaseUrl } = env();
   const { getSession, sessionCookieName } = sessions();
   const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get(sessionCookieName);
-  await deleteTodo(id, userId, apiBaseUrl);
+  const accessToken = session.get(sessionCookieName);
+  await deleteTodo(id, accessToken, apiBaseUrl);
   return redirect('/');
 }

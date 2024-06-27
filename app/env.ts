@@ -123,7 +123,6 @@ export default function env() {
   return {
     baseUrl: baseUrl!, // TODO: handle `undefined` better
     apiBaseUrl: apiBaseUrl!, // TODO: handle `undefined` better
-    sessionCookieName: 'session',
     sessionCookieSecret: sessionCookieSecret!, // TODO: handle `undefined` better
     allowSessionCookieWithoutHttps,
   };
