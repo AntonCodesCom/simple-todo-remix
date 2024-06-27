@@ -5,14 +5,14 @@ import { authSession } from '~/sessions';
 // utility
 async function addTodo(
   label: string,
-  userId: string,
+  accessToken: string,
   apiBaseUrl: string,
 ): Promise<void> {
   const url = new URL('todo', apiBaseUrl);
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${userId}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ label }),
@@ -32,12 +32,12 @@ export async function action({ request }: ActionFunctionArgs) {
   const { apiBaseUrl } = env();
   const { getAuthSession, authSessionName } = authSession();
   const session = await getAuthSession(request.headers.get('Cookie'));
-  const userId = session.get(authSessionName);
+  const accessToken = session.get(authSessionName);
   const formData = await request.formData();
   const label = formData.get('label');
   if (!label || typeof label !== 'string') {
     throw new Error('`label` must be a non-empty string.');
   }
-  await addTodo(label, userId, apiBaseUrl);
+  await addTodo(label, accessToken, apiBaseUrl);
   return redirect('/');
 }

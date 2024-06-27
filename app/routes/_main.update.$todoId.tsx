@@ -5,14 +5,14 @@ import { authSession } from '~/sessions';
 // utility
 interface Params {
   id: string;
-  userId: string;
+  accessToken: string;
   apiBaseUrl: string;
   label?: string;
   done?: boolean;
 }
 async function updateTodo({
   id,
-  userId,
+  accessToken,
   label,
   done,
   apiBaseUrl,
@@ -21,7 +21,7 @@ async function updateTodo({
   const res = await fetch(url, {
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${userId}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ label, done }),
@@ -47,7 +47,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const { apiBaseUrl } = env();
   const { getAuthSession, authSessionName } = authSession();
   const session = await getAuthSession(request.headers.get('Cookie'));
-  const userId = session.get(authSessionName);
+  const accessToken = session.get(authSessionName);
   const formData = await request.formData();
   const label = formData.get('label') ?? undefined;
   if (label && typeof label !== 'string') {
@@ -59,7 +59,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
   await updateTodo({
     apiBaseUrl,
-    userId,
+    accessToken,
     id: todoId,
     label,
     done: done ? done === 'true' : undefined,
