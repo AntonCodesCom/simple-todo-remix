@@ -61,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch (err) {
     if (err instanceof UnauthorizedException) {
-      return json({ incorrectCredentials: true });
+      return json({ incorrectCredentials: true, lastSubmittedAt: Date.now() });
     }
     throw err;
   }
@@ -72,5 +72,5 @@ export async function action({ request }: ActionFunctionArgs) {
  */
 export default function RouteLogin() {
   const actionData = useActionData<typeof action>();
-  return <AuthLogin incorrectCredentials={actionData?.incorrectCredentials} />;
+  return <AuthLogin {...actionData} />;
 }

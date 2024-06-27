@@ -8,25 +8,54 @@ import {
   Typography,
 } from '@mui/material';
 import { Form, Link } from '@remix-run/react';
+import { FormEvent, useEffect, useState } from 'react';
 
 interface Props {
   incorrectCredentials?: boolean;
+  lastSubmittedAt?: number;
 }
 
-export default function AuthLogin({ incorrectCredentials }: Props) {
+export default function AuthLogin({
+  incorrectCredentials,
+  lastSubmittedAt,
+}: Props) {
   const headingHtmlId = 'AuthLogin_h1';
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [lastSubmittedAt]);
+
+  function handleSubmit(e: FormEvent) {
+    if (loading) {
+      e.preventDefault();
+      return;
+    }
+    setLoading(true);
+  }
+
   return (
     <Container>
       <Typography id={headingHtmlId} variant="h4" component="h1" mb={1}>
         Login
       </Typography>
-      {incorrectCredentials && (
+      {incorrectCredentials && !loading && (
         <Alert severity="error">Incorrect username or password.</Alert>
       )}
       <Box pb={1} />
-      <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
+      <Form
+        method="post"
+        aria-labelledby={headingHtmlId}
+        onSubmit={handleSubmit}
+      >
         <Box mb={0.5}>
-          <TextField name="username" label="Username" size="small" required />
+          <TextField
+            name="username"
+            label="Username"
+            size="small"
+            required
+            disabled={loading}
+          />
         </Box>
         <Box mb={0.5}>
           <TextField
@@ -35,10 +64,11 @@ export default function AuthLogin({ incorrectCredentials }: Props) {
             label="Password"
             size="small"
             required
+            disabled={loading}
           />
         </Box>
         <Box>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" disabled={loading}>
             Login
           </Button>
         </Box>
