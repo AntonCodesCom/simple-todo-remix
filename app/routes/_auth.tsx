@@ -2,16 +2,16 @@ import { LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { Outlet, useRouteError } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
 import env, { mode } from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import CommonErrorScreen from '~/Common/components/ErrorScreen';
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get(sessionCookieName);
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const accessToken = session.get(authSessionName);
   if (!accessToken) {
     return null;
   }

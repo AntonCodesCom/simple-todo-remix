@@ -7,7 +7,7 @@ import AuthLoggedInSchema, {
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
 import env, { mode } from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 // utility
 async function fetchLogin(
@@ -50,12 +50,13 @@ export async function action({ request }: ActionFunctionArgs) {
   const { apiBaseUrl } = env();
   try {
     const { accessToken } = await fetchLogin(username, password, apiBaseUrl);
-    const { getSession, commitSession, sessionCookieName } = sessions();
-    const session = await getSession(request.headers.get('Cookie'));
-    session.set(sessionCookieName, accessToken);
+    const { getAuthSession, commitAuthSession, authSessionName } =
+      authSession();
+    const session = await getAuthSession(request.headers.get('Cookie'));
+    session.set(authSessionName, accessToken);
     return redirect('/', {
       headers: {
-        'Set-Cookie': await commitSession(session),
+        'Set-Cookie': await commitAuthSession(session),
       },
     });
   } catch (err) {
