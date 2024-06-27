@@ -6,8 +6,7 @@ import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
-import env from '~/env';
-import envMode from '~/envMode';
+import env, { mode } from '~/env';
 import sessions from '~/sessions';
 
 // utility
@@ -40,7 +39,7 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // action
 export async function action({ request }: ActionFunctionArgs) {
-  const { isDev } = envMode();
+  const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
   const form = await request.formData();
   const data = authLoginSchema.parse({

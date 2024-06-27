@@ -7,8 +7,7 @@ import { useLoaderData, useRouteError } from '@remix-run/react';
 import CommonErrorScreen from '~/Common/components/ErrorScreen';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
-import env from '~/env';
-import envMode from '~/envMode';
+import env, { mode } from '~/env';
 import sessions from '~/sessions';
 
 // utility
@@ -37,7 +36,7 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { isDev } = envMode();
+  const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
   const { apiBaseUrl } = env();
   const { getSession, sessionCookieName } = sessions();
@@ -58,7 +57,7 @@ export const meta: MetaFunction = () => {
 // error boundary
 export function ErrorBoundary() {
   const error = useRouteError();
-  const { isDev } = envMode();
+  const { isDev } = mode();
   return <CommonErrorScreen error={error} isDev={isDev} />;
 }
 

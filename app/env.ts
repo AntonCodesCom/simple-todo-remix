@@ -1,5 +1,4 @@
 import validator from 'validator';
-import envMode from './envMode';
 
 // utility
 const { isURL } = validator;
@@ -37,6 +36,20 @@ const { isURL } = validator;
 // ];
 
 /**
+ * Encapsulates environment mode for the rest of the app.
+ * Can be accessed on both server and client.
+ *
+ * Must be implemented as a function in order for end-to-end
+ * tests to handle the environment mode correctly.
+ */
+export function mode() {
+  return {
+    isDev: process.env.NODE_ENV === 'development',
+    isProd: process.env.NODE_ENV === 'production',
+  };
+}
+
+/**
  * Returns an object containing global app configuration based on
  * environment variables.
  *
@@ -45,13 +58,13 @@ const { isURL } = validator;
  * (e.g. within loaders or actions).
  *
  * This should be the only place across the application where env vars are
- * accessed directly (except `./envMode.ts`).
+ * accessed directly (except the `mode` from above).
  *
  * @returns global app configuration values
  * @throws {Error} on invalid configuration of env vars
  */
 export default function env() {
-  const { isDev, isProd } = envMode();
+  const { isDev, isProd } = mode();
   const errors = [];
   // BASE_URL
   let baseUrl = process.env.BASE_URL;

@@ -1,9 +1,8 @@
 import { createCookieSessionStorage } from '@remix-run/node';
-import env from './env';
-import envMode from './envMode';
+import env, { mode } from './env';
 
 export default function sessions() {
-  const { isDev, isProd } = envMode();
+  const { isDev, isProd } = mode();
   const {
     sessionCookieName,
     sessionCookieSecret,
