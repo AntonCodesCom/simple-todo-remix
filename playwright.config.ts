@@ -1,12 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import { config } from 'dotenv';
-import appConfig from './app/config';
+import env from './app/env';
 
 // dotenv
 config();
 
 // app config (env)
-const { baseUrl } = appConfig();
+const { baseUrl } = env();
 
 /**
  * See https://playwright.dev/docs/test-configuration.

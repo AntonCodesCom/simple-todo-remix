@@ -13,8 +13,8 @@ import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authSignupSchema } from '~/Auth/types/SignupSchema';
-import config from '~/config';
-import sessions from '~/sessions';
+import env from '~/env';
+import { authSession } from '~/sessions';
 
 // utility
 async function fetchSignup(
@@ -49,15 +49,16 @@ export async function action({ request }: ActionFunctionArgs) {
     password: form.get('password'),
   });
   const { username, password } = data;
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     const { accessToken } = await fetchSignup(username, password, apiBaseUrl);
-    const { getSession, commitSession, sessionCookieName } = sessions();
-    const session = await getSession(request.headers.get('Cookie'));
-    session.set(sessionCookieName, accessToken);
+    const { getAuthSession, commitAuthSession, authSessionName } =
+      authSession();
+    const session = await getAuthSession(request.headers.get('Cookie'));
+    session.set(authSessionName, accessToken);
     return redirect('/', {
       headers: {
-        'Set-Cookie': await commitSession(session),
+        'Set-Cookie': await commitAuthSession(session),
       },
     });
   } catch (err) {

@@ -7,9 +7,8 @@ import { useLoaderData, useRouteError } from '@remix-run/react';
 import CommonErrorScreen from '~/Common/components/ErrorScreen';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
-import config from '~/config';
-import envMode from '~/envMode';
-import sessions from '~/sessions';
+import env, { mode } from '~/env';
+import { authSession } from '~/sessions';
 
 // utility
 async function fetchTodos(
@@ -37,12 +36,12 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { isDev } = envMode();
+  const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
-  const { apiBaseUrl } = config();
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get(sessionCookieName);
+  const { apiBaseUrl } = env();
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const userId = session.get(authSessionName);
   const todos = await fetchTodos(userId, apiBaseUrl);
   return json({ todos });
 }
@@ -58,7 +57,7 @@ export const meta: MetaFunction = () => {
 // error boundary
 export function ErrorBoundary() {
   const error = useRouteError();
-  const { isDev } = envMode();
+  const { isDev } = mode();
   return <CommonErrorScreen error={error} isDev={isDev} />;
 }
 

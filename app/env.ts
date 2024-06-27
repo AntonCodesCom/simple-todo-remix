@@ -1,5 +1,4 @@
 import validator from 'validator';
-import envMode from './envMode';
 
 // utility
 const { isURL } = validator;
@@ -37,21 +36,35 @@ const { isURL } = validator;
 // ];
 
 /**
- * Returns an object containing global app configuration values.
+ * Encapsulates environment mode for the rest of the app.
+ * Can be accessed on both server and client.
  *
- * The configuration values come mostly from environment variables.
+ * Must be implemented as a function in order for end-to-end
+ * tests to handle the environment mode correctly.
+ */
+export function mode() {
+  return {
+    isDev: process.env.NODE_ENV === 'development',
+    isProd: process.env.NODE_ENV === 'production',
+  };
+}
+
+/**
+ * Returns an object containing global app configuration based on
+ * environment variables.
+ *
  * We don't want the app to crash when env vars are not set correctly.
  * Therefore, we make this as a function to handle errors via error boundaries
  * (e.g. within loaders or actions).
  *
  * This should be the only place across the application where env vars are
- * accessed directly (except `./envMode.ts`).
+ * accessed directly (except the `mode` from above).
  *
  * @returns global app configuration values
  * @throws {Error} on invalid configuration of env vars
  */
-export default function config() {
-  const { isDev, isProd } = envMode();
+export default function env() {
+  const { isDev, isProd } = mode();
   const errors = [];
   // BASE_URL
   let baseUrl = process.env.BASE_URL;
@@ -110,7 +123,6 @@ export default function config() {
   return {
     baseUrl: baseUrl!, // TODO: handle `undefined` better
     apiBaseUrl: apiBaseUrl!, // TODO: handle `undefined` better
-    sessionCookieName: 'session',
     sessionCookieSecret: sessionCookieSecret!, // TODO: handle `undefined` better
     allowSessionCookieWithoutHttps,
   };

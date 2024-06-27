@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import config from '~/config';
+import env from '~/env';
 import generateSessionCookie from './utils/generateSessionCookie';
 import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 //
 test.describe('Auth', () => {
   // config
-  const { baseUrl, apiBaseUrl } = config();
+  const { baseUrl, apiBaseUrl } = env();
   const { actionTimeout } = e2eConfig;
 
   // data seeding
@@ -22,7 +22,7 @@ test.describe('Auth', () => {
 
   // when the auth session (access token) is invalid
   test.describe('auth-restricted routes', () => {
-    test('index route `/`', async ({ page }) => {
+    test('index route "/"', async ({ page }) => {
       // setting auth session (via cookies)
       const invalidAccessToken = 'INVALID_ACCESS_TOKEN';
       const sessionCookie = await generateSessionCookie(invalidAccessToken);
@@ -65,24 +65,47 @@ test.describe('Auth', () => {
   });
 
   // login flow
-  test('login flow', async ({ page }) => {
-    await page.goto('/login');
-    const loginForm = page.getByRole('form', { name: 'Login' });
-    const { username, password } = alice;
-    await loginForm
-      .getByRole('textbox', { name: 'Username' })
-      .fill(username, { timeout: actionTimeout });
-    await loginForm
-      .getByRole('textbox', { name: 'Password' })
-      .fill(password, { timeout: actionTimeout });
-    await loginForm
-      .getByRole('button', { name: 'Login' })
-      .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
-    await expect(page).toHaveURL('/');
-    const logoutButton = page.getByRole('link', {
-      name: `Logout (${username})`,
+  test.describe('login flow', () => {
+    test('happy path', async ({ page }) => {
+      await page.goto('/login');
+      const loginForm = page.getByRole('form', { name: 'Login' });
+      const { username, password } = alice;
+      await loginForm
+        .getByRole('textbox', { name: 'Username' })
+        .fill(username, { timeout: actionTimeout });
+      await loginForm
+        .getByRole('textbox', { name: 'Password' })
+        .fill(password, { timeout: actionTimeout });
+      await loginForm
+        .getByRole('button', { name: 'Login' })
+        .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+      await expect(page).toHaveURL('/');
+      const logoutButton = page.getByRole('link', {
+        name: `Logout (${username})`,
+      });
+      await expect(logoutButton).toBeVisible();
     });
-    await expect(logoutButton).toBeVisible();
+
+    test('incorrect credentials', async ({ page }) => {
+      await page.goto('/login');
+      const loginForm = page.getByRole('form', { name: 'Login' });
+      const { username } = alice;
+      const password = 'IncorrectPassword1111$';
+      await loginForm
+        .getByRole('textbox', { name: 'Username' })
+        .fill(username, { timeout: actionTimeout });
+      await loginForm
+        .getByRole('textbox', { name: 'Password' })
+        .fill(password, { timeout: actionTimeout });
+      const errorMessageElement = page.getByText(
+        'Incorrect username or password.',
+      );
+      await expect(errorMessageElement).toBeHidden();
+      await loginForm
+        .getByRole('button', { name: 'Login' })
+        .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+      await expect(errorMessageElement).toBeVisible();
+    });
   });
 
   // signup flow

@@ -1,19 +1,18 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
-import config from '~/config';
-import envMode from '~/envMode';
-import sessions from '~/sessions';
+import env, { mode } from '~/env';
+import { authSession } from '~/sessions';
 
 // utility
 async function deleteTodo(
   id: string,
-  userId: string,
+  accessToken: string,
   apiBaseUrl: string,
 ): Promise<void> {
   const url = new URL(`todo/${id}`, apiBaseUrl);
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${userId}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   });
@@ -29,16 +28,16 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // action
 export async function action({ request, params }: ActionFunctionArgs) {
-  const { isDev } = envMode();
+  const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
   const { id } = params;
   if (!id) {
     throw new Error('`id` parameter missing.');
   }
-  const { apiBaseUrl } = config();
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get(sessionCookieName);
-  await deleteTodo(id, userId, apiBaseUrl);
+  const { apiBaseUrl } = env();
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const accessToken = session.get(authSessionName);
+  await deleteTodo(id, accessToken, apiBaseUrl);
   return redirect('/');
 }

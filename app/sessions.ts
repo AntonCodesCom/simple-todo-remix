@@ -1,25 +1,26 @@
 import { createCookieSessionStorage } from '@remix-run/node';
-import config from './config';
-import envMode from './envMode';
+import env, { mode } from './env';
 
-export default function sessions() {
-  const { isDev, isProd } = envMode();
-  const {
-    sessionCookieName,
-    sessionCookieSecret,
-    allowSessionCookieWithoutHttps,
-  } = config();
+export function authSession() {
+  const { isDev, isProd } = mode();
+  const { sessionCookieSecret, allowSessionCookieWithoutHttps } = env();
+  const authSessionName = 'session';
   const { getSession, commitSession, destroySession } =
     createCookieSessionStorage({
       cookie: {
-        name: sessionCookieName,
+        name: authSessionName,
         httpOnly: true,
         path: '/',
         sameSite: isDev ? 'strict' : 'lax', // TODO: env var
         secrets: [sessionCookieSecret],
         secure: isProd || !allowSessionCookieWithoutHttps,
-        maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
+        maxAge: 60 * 60 * 24 * 7, // 7 days
       },
     });
-  return { getSession, commitSession, destroySession, sessionCookieName };
+  return {
+    getAuthSession: getSession,
+    commitAuthSession: commitSession,
+    destroyAuthSession: destroySession,
+    authSessionName,
+  };
 }

@@ -1,12 +1,12 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { getSession, destroySession } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
+  const { getAuthSession, destroyAuthSession } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
   return redirect('/login', {
     headers: {
-      'Set-Cookie': await destroySession(session),
+      'Set-Cookie': await destroyAuthSession(session),
     },
   });
 }

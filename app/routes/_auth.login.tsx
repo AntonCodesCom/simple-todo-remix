@@ -1,20 +1,13 @@
-import {
-  Box,
-  Button,
-  Container,
-  Link as MuiLink,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import { Form, Link } from '@remix-run/react';
+import { ActionFunctionArgs, json, redirect } from '@remix-run/node';
+import { useActionData } from '@remix-run/react';
+import AuthLogin from '~/Auth/components/Login';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
-import config from '~/config';
-import sessions from '~/sessions';
+import env, { mode } from '~/env';
+import { authSession } from '~/sessions';
 
 // utility
 async function fetchLogin(
@@ -41,70 +34,43 @@ async function fetchLogin(
   return authLoggedInSchema.parse(data);
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // action
 export async function action({ request }: ActionFunctionArgs) {
+  const { isDev } = mode();
+  isDev && (await delay(1)); // simulating latency
   const form = await request.formData();
   const data = authLoginSchema.parse({
     username: form.get('username'),
     password: form.get('password'),
   });
   const { username, password } = data;
-  const { apiBaseUrl } = config();
+  const { apiBaseUrl } = env();
   try {
     const { accessToken } = await fetchLogin(username, password, apiBaseUrl);
-    const { getSession, commitSession, sessionCookieName } = sessions();
-    const session = await getSession(request.headers.get('Cookie'));
-    session.set(sessionCookieName, accessToken);
+    const { getAuthSession, commitAuthSession, authSessionName } =
+      authSession();
+    const session = await getAuthSession(request.headers.get('Cookie'));
+    session.set(authSessionName, accessToken);
     return redirect('/', {
       headers: {
-        'Set-Cookie': await commitSession(session),
+        'Set-Cookie': await commitAuthSession(session),
       },
     });
   } catch (err) {
     if (err instanceof UnauthorizedException) {
-      // TODO: error flash message
-      return redirect('.');
+      return json({ incorrectCredentials: true, lastSubmittedAt: Date.now() });
     }
     throw err;
   }
 }
 
-export default function RouteAuthLogin() {
-  const headingHtmlId = 'AuthLogin_h1';
-  return (
-    <Container>
-      <Typography id={headingHtmlId} variant="h4" component="h1" mb={2}>
-        Login
-      </Typography>
-      <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
-        <Box mb={0.5}>
-          <TextField name="username" label="Username" size="small" required />
-        </Box>
-        <Box mb={0.5}>
-          <TextField
-            name="password"
-            type="password"
-            label="Password"
-            size="small"
-            required
-          />
-        </Box>
-        <Box>
-          <Button type="submit" variant="contained">
-            Login
-          </Button>
-        </Box>
-      </Form>
-      <Box mb={2} />
-      <Box>
-        <Typography>
-          Don't have an account?{' '}
-          <MuiLink component={Link} to="../signup">
-            Sign up
-          </MuiLink>{' '}
-          now!
-        </Typography>
-      </Box>
-    </Container>
-  );
+/**
+ * `/login` route component.
+ */
+export default function RouteLogin() {
+  const actionData = useActionData<typeof action>();
+  return <AuthLogin {...actionData} />;
 }
