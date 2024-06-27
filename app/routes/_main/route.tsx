@@ -5,7 +5,7 @@ import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import CommonLayout from '~/Common/components/Layout';
 import env from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 // utility
 function getAccessTokenExp(accessToken: string): number | null {
@@ -19,16 +19,16 @@ function getAccessTokenExp(accessToken: string): number | null {
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { getSession, destroySession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get(sessionCookieName);
+  const { getAuthSession, destroyAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const accessToken = session.get(authSessionName);
   const exp = getAccessTokenExp(accessToken);
   if (!exp || exp - Date.now() / 1000 < 86400) {
     // if access token will expire in less than 1 day
     // TODO: automatic session closing info alert
     return redirect('/login', {
       headers: {
-        'Set-Cookie': await destroySession(session),
+        'Set-Cookie': await destroyAuthSession(session),
       },
     });
   }
@@ -40,7 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (err instanceof UnauthorizedException) {
       return redirect('/login', {
         headers: {
-          'Set-Cookie': await destroySession(session),
+          'Set-Cookie': await destroyAuthSession(session),
         },
       });
     } else {

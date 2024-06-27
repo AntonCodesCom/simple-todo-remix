@@ -1,6 +1,6 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import env, { mode } from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 // utility
 async function deleteTodo(
@@ -35,9 +35,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
     throw new Error('`id` parameter missing.');
   }
   const { apiBaseUrl } = env();
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get(sessionCookieName);
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const accessToken = session.get(authSessionName);
   await deleteTodo(id, accessToken, apiBaseUrl);
   return redirect('/');
 }

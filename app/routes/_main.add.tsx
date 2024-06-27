@@ -1,6 +1,6 @@
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import env, { mode } from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 // utility
 async function addTodo(
@@ -30,9 +30,9 @@ export async function action({ request }: ActionFunctionArgs) {
   const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
   const { apiBaseUrl } = env();
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get(sessionCookieName);
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const userId = session.get(authSessionName);
   const formData = await request.formData();
   const label = formData.get('label');
   if (!label || typeof label !== 'string') {

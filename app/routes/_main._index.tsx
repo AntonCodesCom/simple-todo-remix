@@ -8,7 +8,7 @@ import CommonErrorScreen from '~/Common/components/ErrorScreen';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
 import env, { mode } from '~/env';
-import sessions from '~/sessions';
+import { authSession } from '~/sessions';
 
 // utility
 async function fetchTodos(
@@ -39,9 +39,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { isDev } = mode();
   isDev && (await delay(1)); // simulating latency
   const { apiBaseUrl } = env();
-  const { getSession, sessionCookieName } = sessions();
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get(sessionCookieName);
+  const { getAuthSession, authSessionName } = authSession();
+  const session = await getAuthSession(request.headers.get('Cookie'));
+  const userId = session.get(authSessionName);
   const todos = await fetchTodos(userId, apiBaseUrl);
   return json({ todos });
 }

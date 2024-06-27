@@ -24,27 +24,3 @@ export function authSession() {
     authSessionName,
   };
 }
-
-/**
- *
- * @deprecated
- * @use `authSession`
- */
-export default function sessions() {
-  const { isDev, isProd } = mode();
-  const { sessionCookieSecret, allowSessionCookieWithoutHttps } = env();
-  const sessionCookieName = 'session';
-  const { getSession, commitSession, destroySession } =
-    createCookieSessionStorage({
-      cookie: {
-        name: sessionCookieName,
-        httpOnly: true,
-        path: '/',
-        sameSite: isDev ? 'strict' : 'lax', // TODO: env var
-        secrets: [sessionCookieSecret],
-        secure: isProd || !allowSessionCookieWithoutHttps,
-        maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
-      },
-    });
-  return { getSession, commitSession, destroySession, sessionCookieName };
-}
