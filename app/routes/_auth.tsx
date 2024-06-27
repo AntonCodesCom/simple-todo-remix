@@ -1,10 +1,12 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { Outlet } from '@remix-run/react';
+import { Outlet, useRouteError } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
 import config from '~/config';
 import sessions from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import { UnauthorizedException } from '~/Auth/exceptions';
+import envMode from '~/envMode';
+import CommonErrorScreen from '~/Common/components/ErrorScreen';
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -27,7 +29,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-// TODO: error boundary
+// error boundary
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { isDev } = envMode();
+  return (
+    <CommonLayout>
+      <CommonErrorScreen error={error} isDev={isDev} />
+    </CommonLayout>
+  );
+}
 
 /**
  * Auth route layout component.
