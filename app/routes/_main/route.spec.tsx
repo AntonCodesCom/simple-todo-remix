@@ -6,12 +6,13 @@ import AuthMe from '~/Auth/types/Me';
 
 // mocking session
 const mockAccessToken = mockJWT();
+const mockGetAuthSessionGetFn = vi.fn().mockReturnValue(mockAccessToken);
 vi.mock('~/sessions', async (importOriginal) => {
   return {
     ...(await importOriginal<typeof import('~/sessions')>()),
     authSession: () => ({
       getAuthSession: async () => ({
-        get: () => mockAccessToken,
+        get: mockGetAuthSessionGetFn,
       }),
       commitAuthSession: async () => {},
       destroyAuthSession: async () => {},
@@ -35,21 +36,29 @@ describe('LayoutMain loader', () => {
   const mockAuthMe: AuthMe = {
     username: faker.string.sample(),
   };
+  const mockLoaderFunctionArgs = {
+    request: {
+      headers: {
+        get: () => 'mockHeader',
+      },
+    },
+  } as any;
 
   test('access token verification', async () => {
     mockFetchMeFn.mockResolvedValueOnce(mockAuthMe);
-    const mockLoaderFunctionArgs = {
-      request: {
-        headers: {
-          get: () => 'mockHeader',
-        },
-      },
-    } as any;
+    mockFetchMeFn.mockClear();
     await loader(mockLoaderFunctionArgs); // act
     expect(mockFetchMeFn.mock.lastCall[0]).toBe(mockAccessToken);
   });
 
   test.todo('skipping access token revalidation');
 
-  test.todo('access token about to expire');
+  test('access token about to expire', async () => {
+    mockFetchMeFn.mockResolvedValueOnce(mockAuthMe);
+    mockFetchMeFn.mockClear();
+    const _mockAccessToken = mockJWT(Date.now() / 1000 + 60); // expires in 1 minute
+    mockGetAuthSessionGetFn.mockReturnValueOnce(_mockAccessToken);
+    await loader(mockLoaderFunctionArgs); // act
+    expect(mockFetchMeFn).not.toHaveBeenCalled();
+  });
 });

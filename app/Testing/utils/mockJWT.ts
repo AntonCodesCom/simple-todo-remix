@@ -5,7 +5,7 @@ function toBase64(x: string): string {
   return buffer.toString('base64');
 }
 
-export default function mockJWT(): string {
+export default function mockJWT(exp?: number): string {
   const header = toBase64(
     JSON.stringify({
       typ: 'JWT',
@@ -15,7 +15,7 @@ export default function mockJWT(): string {
   const payload = toBase64(
     JSON.stringify({
       sub: faker.string.uuid(),
-      exp: Date.now() + 86400 * 7,
+      exp: exp ?? Date.now() / 1000 + 86400 * 7,
     }),
   );
   const signature = toBase64(faker.string.sample());
