@@ -45,6 +45,7 @@ const { isURL } = validator;
 export function mode() {
   return {
     isDev: process.env.NODE_ENV === 'development',
+    isTest: process.env.NODE_ENV === 'test', // for vitest
     isProd: process.env.NODE_ENV === 'production',
   };
 }
@@ -64,25 +65,29 @@ export function mode() {
  * @throws {Error} on invalid configuration of env vars
  */
 export default function env() {
-  const { isDev, isProd } = mode();
+  const { isDev, isTest, isProd } = mode();
   const errors = [];
   // APP_BASE_URL
-  let baseUrl = process.env.APP_BASE_URL;
-  if (!baseUrl) {
-    if (isDev) {
-      baseUrl = 'http://localhost:5173';
+  let appBaseUrl = process.env.APP_BASE_URL;
+  if (!appBaseUrl) {
+    if (isTest) {
+      appBaseUrl = 'mockAppBaseUrl';
+    } else if (isDev) {
+      appBaseUrl = 'http://localhost:5173';
     } else {
       errors.push('`APP_BASE_URL` environment variable is missing.');
     }
   } else {
-    if (!isURL(baseUrl, { require_tld: false })) {
+    if (!isURL(appBaseUrl, { require_tld: false })) {
       errors.push('`APP_BASE_URL` environment variable must be a valid URL.');
     } // TODO: remove `require_tld` when `isURL` supports "localhost"
   }
   // API_BASE_URL
   let apiBaseUrl = process.env.API_BASE_URL;
   if (!apiBaseUrl) {
-    if (isDev) {
+    if (isTest) {
+      apiBaseUrl = 'mockApiBaseUrl';
+    } else if (isDev) {
       apiBaseUrl = 'http://localhost:3000';
     } else {
       errors.push('`API_BASE_URL` environment variable is missing.');
@@ -121,7 +126,7 @@ export default function env() {
   }
   // returning
   return {
-    appBaseUrl: baseUrl!, // TODO: handle `undefined` better
+    appBaseUrl: appBaseUrl!, // TODO: handle `undefined` better
     apiBaseUrl: apiBaseUrl!, // TODO: handle `undefined` better
     sessionCookieSecret: sessionCookieSecret!, // TODO: handle `undefined` better
     allowSessionCookieWithoutHttps,

@@ -1,6 +1,8 @@
 import { describe, expect, test, vi } from 'vitest';
 import mockJWT from '~/Testing/utils/mockJWT';
 import { loader } from './route';
+import { faker } from '@faker-js/faker';
+import AuthMe from '~/Auth/types/Me';
 
 // mocking session
 const mockAccessToken = mockJWT();
@@ -30,7 +32,12 @@ vi.mock('~/Auth/utils/fetchMe', () => ({
 // unit test
 //
 describe('LayoutMain loader', () => {
+  const mockAuthMe: AuthMe = {
+    username: faker.string.sample(),
+  };
+
   test('access token verification', async () => {
+    mockFetchMeFn.mockResolvedValueOnce(mockAuthMe);
     const mockLoaderFunctionArgs = {
       request: {
         headers: {
@@ -39,7 +46,7 @@ describe('LayoutMain loader', () => {
       },
     } as any;
     await loader(mockLoaderFunctionArgs); // act
-    expect(mockFetchMeFn).toHaveBeenCalledWith(mockAccessToken);
+    expect(mockFetchMeFn.mock.lastCall[0]).toBe(mockAccessToken);
   });
 
   test.todo('skipping access token revalidation');
