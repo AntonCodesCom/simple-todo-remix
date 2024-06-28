@@ -85,6 +85,7 @@ test.describe('Auth', () => {
         name: `Logout (${username})`,
       });
       await expect(logoutButton).toBeVisible();
+      // asserting "me" cookie
       const cookies = await page.context().cookies(appBaseUrl);
       const meCookie = cookies.find((x) => x.name === 'me');
       expect(meCookie).toBeDefined();
@@ -143,6 +144,16 @@ test.describe('Auth', () => {
       name: `Logout (${username})`,
     });
     await expect(logoutButton).toBeVisible();
+    // asserting "me" cookie
+    const cookies = await page.context().cookies(appBaseUrl);
+    const meCookie = cookies.find((x) => x.name === 'me');
+    expect(meCookie).toBeDefined();
+    const { getMeSession } = meSession();
+    const _meSession = await getMeSession(
+      `${meCookie!.name}=${meCookie!.value}`,
+    );
+    const me = _meSession.get('me');
+    expect(me?.username).toBe(username);
   });
 
   // logout
