@@ -7,6 +7,7 @@ import AuthMe from '~/Auth/types/Me';
 // mocking session
 const mockAccessToken = mockJWT();
 const mockGetAuthSessionGetFn = vi.fn().mockReturnValue(mockAccessToken);
+const mockGetMeSessionGetFn = vi.fn();
 vi.mock('~/sessions', async (importOriginal) => {
   return {
     ...(await importOriginal<typeof import('~/sessions')>()),
@@ -17,6 +18,14 @@ vi.mock('~/sessions', async (importOriginal) => {
       commitAuthSession: async () => {},
       destroyAuthSession: async () => {},
       authSessionName: 'mockAuthSession',
+    }),
+    meSession: () => ({
+      getMeSession: async () => ({
+        get: mockGetMeSessionGetFn,
+      }),
+      // // for future mocking
+      // commitMeSession: async () => {},
+      // destroyMeSession: async () => {},
     }),
   };
 });
@@ -51,7 +60,13 @@ describe('LayoutMain loader', () => {
     expect(mockFetchMeFn.mock.lastCall[0]).toBe(mockAccessToken);
   });
 
-  test.todo('skipping access token revalidation');
+  test('skipping access token revalidation', async () => {
+    mockFetchMeFn.mockResolvedValueOnce(mockAuthMe);
+    mockFetchMeFn.mockClear();
+    mockGetMeSessionGetFn.mockReturnValueOnce(mockAuthMe);
+    await loader(mockLoaderFunctionArgs); // act
+    expect(mockFetchMeFn).not.toHaveBeenCalled();
+  });
 
   test('access token about to expire', async () => {
     mockFetchMeFn.mockResolvedValueOnce(mockAuthMe);
