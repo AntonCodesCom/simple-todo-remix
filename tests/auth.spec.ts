@@ -84,6 +84,9 @@ test.describe('Auth', () => {
         name: `Logout (${username})`,
       });
       await expect(logoutButton).toBeVisible();
+      const cookies = await page.context().cookies(appBaseUrl);
+      const meCookie = cookies.find((x) => x.name === 'me');
+      expect(meCookie).toBeDefined();
     });
 
     test('incorrect credentials', async ({ page }) => {

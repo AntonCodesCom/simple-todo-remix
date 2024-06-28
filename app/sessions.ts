@@ -12,6 +12,9 @@ interface MeSessionProps {
  *
  * Provides utilities for storing and managing temporary user
  * information in cookies (valid during browser session).
+ *
+ * This session cookie will allow us to avoid unnecessary access token
+ * revalidations when the user navigates between auth-restricted pages.
  */
 export function meSession() {
   const { isDev, isProd } = mode();
