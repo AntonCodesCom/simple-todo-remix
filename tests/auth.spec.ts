@@ -5,6 +5,7 @@ import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
 import e2eConfig from './config';
 import { faker } from '@faker-js/faker';
+import { meSession } from '~/sessions';
 
 //
 // e2e test
@@ -87,6 +88,12 @@ test.describe('Auth', () => {
       const cookies = await page.context().cookies(appBaseUrl);
       const meCookie = cookies.find((x) => x.name === 'me');
       expect(meCookie).toBeDefined();
+      const { getMeSession } = meSession();
+      const _meSession = await getMeSession(
+        `${meCookie!.name}=${meCookie!.value}`,
+      );
+      const me = _meSession.get('me');
+      expect(me?.username).toBe(username);
     });
 
     test('incorrect credentials', async ({ page }) => {
