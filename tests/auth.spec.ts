@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 //
 test.describe('Auth', () => {
   // config
-  const { baseUrl, apiBaseUrl } = env();
+  const { appBaseUrl, apiBaseUrl } = env();
   const { actionTimeout } = e2eConfig;
 
   // data seeding
@@ -26,7 +26,7 @@ test.describe('Auth', () => {
       // setting auth session (via cookies)
       const invalidAccessToken = 'INVALID_ACCESS_TOKEN';
       const sessionCookie = await generateSessionCookie(invalidAccessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       // visiting the page
       await page.goto('/');
       await expect(page).toHaveURL('/login');
@@ -44,7 +44,7 @@ test.describe('Auth', () => {
         apiBaseUrl,
       });
       const sessionCookie = await generateSessionCookie(accessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       await page.goto('/login');
       await expect(page).toHaveURL('/');
     });
@@ -58,7 +58,7 @@ test.describe('Auth', () => {
         apiBaseUrl,
       });
       const sessionCookie = await generateSessionCookie(accessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       await page.goto('/signup');
       await expect(page).toHaveURL('/');
     });
