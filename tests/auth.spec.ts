@@ -135,8 +135,7 @@ test.describe('Auth', () => {
     await expect(logoutButton).toBeVisible();
   });
 
-  // TODO: remove `.only`
-  test.only('logout', async ({ page, request }) => {
+  test('logout', async ({ page, request }) => {
     const { username, password } = alice;
     const accessToken = await fetchAccessToken({
       request,
