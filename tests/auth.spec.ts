@@ -134,4 +134,25 @@ test.describe('Auth', () => {
     });
     await expect(logoutButton).toBeVisible();
   });
+
+  // TODO: remove `.only`
+  test.only('logout', async ({ page, request }) => {
+    const { username, password } = alice;
+    const accessToken = await fetchAccessToken({
+      request,
+      username,
+      password,
+      apiBaseUrl,
+    });
+    const sessionCookie = await generateSessionCookie(accessToken);
+    await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
+    await page.goto('/');
+    await page
+      .getByRole('link', {
+        name: `Logout (${username})`,
+      })
+      .click({ timeout: actionTimeout });
+    await expect(page).toHaveURL('/login');
+    // TODO: figure out whether we should assert the auth session cookie absence
+  });
 });
