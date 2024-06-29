@@ -10,19 +10,27 @@ import {
 import { Form, Link } from '@remix-run/react';
 import { authSignupSchema } from '~/Auth/types/SignupSchema';
 
+interface Props {
+  takenUsername?: string;
+}
+
 /**
  * Signup component.
  */
-export default function AuthSignup() {
+export default function AuthSignup({ takenUsername }: Props) {
   const headingHtmlId = 'RouteSignup_h1';
   return (
     <Container>
       <Typography id={headingHtmlId} variant="h4" component="h1" mb={1}>
         Sign Up
       </Typography>
-      <Alert severity="error">Username "alice" is already taken.</Alert>
+      {takenUsername && (
+        <Alert severity="error">
+          Username "{takenUsername}" is already taken.
+        </Alert>
+      )}
       <Box pb={1} />
-      <Form method="post" reloadDocument aria-labelledby={headingHtmlId}>
+      <Form method="post" aria-labelledby={headingHtmlId}>
         <Box mb={0.5}>
           <TextField
             name="username"
