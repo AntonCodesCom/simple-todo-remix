@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { Outlet, useRouteError } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
-import env, { mode } from '~/env';
+import env from '~/env';
 import { authSession } from '~/sessions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import { UnauthorizedException } from '~/Auth/exceptions';
-import CommonErrorScreen from '~/Common/components/ErrorScreen';
+import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -30,11 +30,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 // error boundary
 export function ErrorBoundary() {
-  const error = useRouteError();
-  const { isDev } = mode();
   return (
     <CommonLayout>
-      <CommonErrorScreen error={error} isDev={isDev} />
+      <CommonErrorBoundary />
     </CommonLayout>
   );
 }

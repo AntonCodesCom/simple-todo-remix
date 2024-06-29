@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs, json, redirect } from '@remix-run/node';
-import { Outlet, useLoaderData, useRouteError } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import { jwtDecode } from 'jwt-decode';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
-import CommonErrorScreen from '~/Common/components/ErrorScreen';
+import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 import CommonLayout from '~/Common/components/Layout';
-import env, { mode } from '~/env';
+import env from '~/env';
 import { authSession, meSession } from '~/sessions';
 
 // utility
@@ -59,11 +59,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 // error boundary
 export function ErrorBoundary() {
-  const error = useRouteError();
-  const { isDev } = mode();
   return (
     <CommonLayout>
-      <CommonErrorScreen error={error} isDev={isDev} />
+      <CommonErrorBoundary />
     </CommonLayout>
   );
 }
