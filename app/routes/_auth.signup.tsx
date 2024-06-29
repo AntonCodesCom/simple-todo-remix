@@ -10,7 +10,7 @@ import AuthLoggedInSchema, {
   authLoggedInSchema,
 } from '~/Auth/types/LoggedInSchema';
 import { authSignupSchema } from '~/Auth/types/SignupSchema';
-import env from '~/env';
+import env, { mode } from '~/env';
 import { authSession, meSession } from '~/sessions';
 
 // exception
@@ -41,6 +41,9 @@ async function fetchSignup(
   return authLoggedInSchema.parse(data);
 }
 
+// utility
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie');
@@ -59,6 +62,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 // action
 export async function action({ request }: ActionFunctionArgs) {
+  const { isDev } = mode();
+  isDev && (await delay(1)); // simulating latency
   const form = await request.formData();
   const data = authSignupSchema.parse({
     username: form.get('username'),
