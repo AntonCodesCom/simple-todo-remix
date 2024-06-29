@@ -49,7 +49,7 @@ export default function TodoAdd() {
           disabled={loading}
           sx={{
             display: { xs: 'inherit', sm: 'none' },
-            minWidth: 0,
+            minWidth: '2.75rem',
             paddingX: 0.75,
           }}
         >
