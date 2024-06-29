@@ -10,6 +10,7 @@ import {
 import { Form, Link } from '@remix-run/react';
 import { authSignupSchema } from '~/Auth/types/SignupSchema';
 
+// props
 interface Props {
   takenUsername?: string;
 }

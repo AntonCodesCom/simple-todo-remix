@@ -77,7 +77,6 @@ export async function action({ request }: ActionFunctionArgs) {
     );
     const { getAuthSession, commitAuthSession, authSessionName } =
       authSession();
-
     const session = await getAuthSession(cookieHeader);
     session.set(authSessionName, accessToken);
     _meSession.set('me', { username: fetchedUsername });

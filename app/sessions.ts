@@ -7,6 +7,7 @@ interface MeSessionProps {
   me: AuthMe;
 }
 
+// type
 interface MeSessionFlashProps {
   takenUsername: string;
 }
