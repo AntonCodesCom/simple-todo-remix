@@ -120,40 +120,66 @@ test.describe('Auth', () => {
   });
 
   // signup flow
-  test('signup flow', async ({ page, request }) => {
-    // TODO: disable database seeding for this test
-    // clearing database
-    const seedUrl = new URL('seed', apiBaseUrl).toString();
-    await request.fetch(seedUrl, { method: 'DELETE', failOnStatusCode: true });
-    // visiting the page
-    await page.goto('/signup');
-    const signupForm = page.getByRole('form', { name: 'Sign Up' });
-    const username = faker.person.firstName().toLowerCase();
-    const password = 'User1111$';
-    await signupForm
-      .getByRole('textbox', { name: 'Username' })
-      .fill(username, { timeout: actionTimeout });
-    await signupForm
-      .getByRole('textbox', { name: 'Password' })
-      .fill(password, { timeout: actionTimeout });
-    await signupForm
-      .getByRole('button', { name: 'Sign Up' })
-      .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
-    await expect(page).toHaveURL('/');
-    const logoutButton = page.getByRole('link', {
-      name: `Logout (${username})`,
+  test.describe('signup flow', () => {
+    test('happy path', async ({ page, request }) => {
+      // TODO: disable database seeding for this test
+      // clearing database
+      const seedUrl = new URL('seed', apiBaseUrl).toString();
+      await request.fetch(seedUrl, {
+        method: 'DELETE',
+        failOnStatusCode: true,
+      });
+      // visiting the page
+      await page.goto('/signup');
+      const signupForm = page.getByRole('form', { name: 'Sign Up' });
+      const username = faker.person.firstName().toLowerCase();
+      const password = 'User123$';
+      await signupForm
+        .getByRole('textbox', { name: 'Username' })
+        .fill(username, { timeout: actionTimeout });
+      await signupForm
+        .getByRole('textbox', { name: 'Password' })
+        .fill(password, { timeout: actionTimeout });
+      await signupForm
+        .getByRole('button', { name: 'Sign Up' })
+        .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+      await expect(page).toHaveURL('/');
+      const logoutButton = page.getByRole('link', {
+        name: `Logout (${username})`,
+      });
+      await expect(logoutButton).toBeVisible();
+      // asserting "me" cookie
+      const cookies = await page.context().cookies(appBaseUrl);
+      const meCookie = cookies.find((x) => x.name === 'me');
+      expect(meCookie).toBeDefined();
+      const { getMeSession } = meSession();
+      const _meSession = await getMeSession(
+        `${meCookie!.name}=${meCookie!.value}`,
+      );
+      const me = _meSession.get('me');
+      expect(me?.username).toBe(username);
     });
-    await expect(logoutButton).toBeVisible();
-    // asserting "me" cookie
-    const cookies = await page.context().cookies(appBaseUrl);
-    const meCookie = cookies.find((x) => x.name === 'me');
-    expect(meCookie).toBeDefined();
-    const { getMeSession } = meSession();
-    const _meSession = await getMeSession(
-      `${meCookie!.name}=${meCookie!.value}`,
-    );
-    const me = _meSession.get('me');
-    expect(me?.username).toBe(username);
+
+    test('username taken', async ({ page }) => {
+      await page.goto('/signup');
+      const signupForm = page.getByRole('form', { name: 'Sign Up' });
+      const username = 'alice'; // matters
+      const password = 'User123$';
+      await signupForm
+        .getByRole('textbox', { name: 'Username' })
+        .fill(username, { timeout: actionTimeout });
+      await signupForm
+        .getByRole('textbox', { name: 'Password' })
+        .fill(password, { timeout: actionTimeout });
+      const errorMessageElement = page.getByText(
+        `Username "${username}" is already taken.`,
+      );
+      await expect(errorMessageElement).toBeHidden();
+      await signupForm
+        .getByRole('button', { name: 'Sign Up' })
+        .click({ timeout: actionTimeout }); // TODO: dispatch "submit" event instead
+      await expect(errorMessageElement).toBeVisible();
+    });
   });
 
   // logout

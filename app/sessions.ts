@@ -7,6 +7,11 @@ interface MeSessionProps {
   me: AuthMe;
 }
 
+// type
+interface MeSessionFlashProps {
+  takenUsername: string;
+}
+
 /**
  * User state session factory.
  *
@@ -21,7 +26,7 @@ export function meSession() {
   const { sessionCookieSecret, allowSessionCookieWithoutHttps } = env();
   const meSessionName = 'me';
   const { getSession, commitSession, destroySession } =
-    createCookieSessionStorage<MeSessionProps>({
+    createCookieSessionStorage<MeSessionProps, MeSessionFlashProps>({
       cookie: {
         name: meSessionName,
         httpOnly: true,
