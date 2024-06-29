@@ -19,6 +19,11 @@ interface Props {
 
 /**
  * Signup component.
+ *
+ * Implemented as a simple `<form>` with `useFetcher()` for submitting and
+ * `react-hook-form` for client side validation. The `react-hook-form` logic
+ * is straightforward but switching to `useFetcher()` has been necessary
+ * and the route logic has become a bit more complex.
  */
 export default function AuthSignup({ takenUsername }: Props) {
   const headingHtmlId = 'RouteSignup_h1';
