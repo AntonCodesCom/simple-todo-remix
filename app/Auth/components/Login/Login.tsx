@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Link as MuiLink,
   TextField,
   Typography,
@@ -68,44 +69,52 @@ export default function AuthLogin({
         Login
       </Typography>
       {incorrectCredentials && !loading && (
-        <Alert severity="error">Incorrect username or password.</Alert>
+        <Alert severity="error" sx={{ display: 'inline-flex' }}>
+          Incorrect username or password.
+        </Alert>
       )}
       <Box pb={1} />
-      <Form
-        method="post"
-        aria-labelledby={headingHtmlId}
-        onSubmit={handleSubmit}
-        noValidate
-      >
-        <Box mb={0.5}>
-          <TextField
-            {...register('username')}
-            label="Username"
-            size="small"
-            required
-            disabled={loading}
-            error={dirty && !!errors.username}
-            helperText={dirty && errors.username?.message}
-          />
-        </Box>
-        <Box mb={0.5}>
-          <TextField
-            {...register('password')}
-            type="password"
-            label="Password"
-            size="small"
-            required
-            disabled={loading}
-            error={dirty && !!errors.password}
-            helperText={dirty && errors.password?.message}
-          />
-        </Box>
-        <Box>
-          <Button type="submit" variant="contained" disabled={loading}>
-            Login
-          </Button>
-        </Box>
-      </Form>
+      <Grid container>
+        <Grid item xs={12} sm={6} md={4}>
+          <Form
+            method="post"
+            aria-labelledby={headingHtmlId}
+            onSubmit={handleSubmit}
+            noValidate
+          >
+            <Box mb={0.5}>
+              <TextField
+                {...register('username')}
+                label="Username"
+                size="small"
+                required
+                disabled={loading}
+                error={dirty && !!errors.username}
+                helperText={dirty && errors.username?.message}
+                fullWidth
+              />
+            </Box>
+            <Box mb={0.5}>
+              <TextField
+                {...register('password')}
+                type="password"
+                label="Password"
+                size="small"
+                required
+                disabled={loading}
+                error={dirty && !!errors.password}
+                helperText={dirty && errors.password?.message}
+                fullWidth
+              />
+            </Box>
+            <Box>
+              <Button type="submit" variant="contained" disabled={loading}>
+                Login
+              </Button>
+            </Box>
+          </Form>
+        </Grid>
+      </Grid>
       <Box mb={2} />
       <Box>
         <Typography>

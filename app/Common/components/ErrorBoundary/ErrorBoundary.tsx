@@ -1,4 +1,5 @@
-import { ArrowDropDown } from '@mui/icons-material';
+import { Link, useRouteError } from '@remix-run/react';
+import { mode } from '~/env';
 import {
   Alert,
   Box,
@@ -8,17 +9,16 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Link } from '@remix-run/react';
 import { useState } from 'react';
+import { ArrowDropDown } from '@mui/icons-material';
 
-interface Props {
-  error: unknown;
-  isDev?: boolean;
-}
-
-export default function CommonErrorScreen({ error, isDev = false }: Props) {
+/**
+ * Error boundary component without a layout.
+ */
+export default function CommonErrorBoundary() {
+  const error = useRouteError();
+  const { isDev } = mode();
   const [errorStackOpen, setErrorStackOpen] = useState(false);
-  // TODO: route error
   return (
     <Container>
       <Typography variant="h3" sx={{ color: 'error.main' }} mb={2}>

@@ -1,10 +1,6 @@
-import {
-  json,
-  type LoaderFunctionArgs,
-  type MetaFunction,
-} from '@remix-run/node';
-import { useLoaderData, useRouteError } from '@remix-run/react';
-import CommonErrorScreen from '~/Common/components/ErrorScreen';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 import TodoMain from '~/Todo/components/Main';
 import TodoItem, { todoItemSchema } from '~/Todo/types/Item';
 import env, { mode } from '~/env';
@@ -46,20 +42,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ todos });
 }
 
-// meta
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'Remix Todo' },
-    { name: 'description', content: 'Remix Todo app.' },
-  ];
-};
-
 // error boundary
-export function ErrorBoundary() {
-  const error = useRouteError();
-  const { isDev } = mode();
-  return <CommonErrorScreen error={error} isDev={isDev} />;
-}
+export const ErrorBoundary = CommonErrorBoundary;
 
 /**
  * Index (root) route component.

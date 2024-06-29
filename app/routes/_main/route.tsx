@@ -1,8 +1,14 @@
-import { LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import {
+  LoaderFunctionArgs,
+  MetaFunction,
+  json,
+  redirect,
+} from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import { jwtDecode } from 'jwt-decode';
 import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
+import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 import CommonLayout from '~/Common/components/Layout';
 import env from '~/env';
 import { authSession, meSession } from '~/sessions';
@@ -56,7 +62,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-// TODO: error boundary
+// meta
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Remix Todo' },
+    { name: 'description', content: 'Remix Todo app.' },
+  ];
+};
+
+// error boundary
+export function ErrorBoundary() {
+  return (
+    <CommonLayout>
+      <CommonErrorBoundary />
+    </CommonLayout>
+  );
+}
 
 /**
  * Main route layout component.

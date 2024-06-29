@@ -27,9 +27,11 @@ export default function TodoAdd() {
     }
   }, [fetcher.state]);
 
+  const Icon = () => (loading ? <LoadingIcon /> : <Add />);
+
   return (
     <fetcher.Form method="POST" action="add" aria-label="Add Todo">
-      <Stack direction="row" gap={0.5}>
+      <Stack direction="row" gap={{ xs: 0.25, sm: 0.5 }}>
         <TextField
           name="label"
           placeholder="Something to do..."
@@ -44,8 +46,23 @@ export default function TodoAdd() {
         <Button
           type="submit"
           variant="contained"
-          startIcon={loading ? <LoadingIcon /> : <Add />}
           disabled={loading}
+          sx={{
+            display: { xs: 'inherit', sm: 'none' },
+            minWidth: '2.75rem',
+            paddingX: 0.75,
+          }}
+        >
+          <Icon />
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          startIcon={<Icon />}
+          disabled={loading}
+          sx={{
+            display: { xs: 'none', sm: 'inherit' },
+          }}
         >
           Add
         </Button>

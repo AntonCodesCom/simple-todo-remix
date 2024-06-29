@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs, redirect } from '@remix-run/node';
+import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 import { authSession, meSession } from '~/sessions';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -12,3 +13,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   headers.append('Set-Cookie', await destroyMeSession(_meSession));
   return redirect('/login', { headers });
 }
+
+// error boundary
+export const ErrorBoundary = CommonErrorBoundary;
