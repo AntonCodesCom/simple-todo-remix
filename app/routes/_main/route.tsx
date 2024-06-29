@@ -1,4 +1,9 @@
-import { LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import {
+  LoaderFunctionArgs,
+  MetaFunction,
+  json,
+  redirect,
+} from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import { jwtDecode } from 'jwt-decode';
 import { UnauthorizedException } from '~/Auth/exceptions';
@@ -56,6 +61,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 }
+
+// meta
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Remix Todo' },
+    { name: 'description', content: 'Remix Todo app.' },
+  ];
+};
 
 // error boundary
 export function ErrorBoundary() {

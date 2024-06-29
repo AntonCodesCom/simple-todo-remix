@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { LoaderFunctionArgs, MetaFunction, redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import CommonLayout from '~/Common/components/Layout';
 import env from '~/env';
@@ -27,6 +27,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
   }
 }
+
+// meta
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Remix Todo' },
+    { name: 'description', content: 'Remix Todo app.' },
+  ];
+};
 
 // error boundary
 export function ErrorBoundary() {

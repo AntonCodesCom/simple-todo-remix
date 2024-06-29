@@ -1,8 +1,4 @@
-import {
-  json,
-  type LoaderFunctionArgs,
-  type MetaFunction,
-} from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import CommonErrorBoundary from '~/Common/components/ErrorBoundary';
 import TodoMain from '~/Todo/components/Main';
@@ -45,14 +41,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const todos = await fetchTodos(accessToken, apiBaseUrl);
   return json({ todos });
 }
-
-// meta
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'Remix Todo' },
-    { name: 'description', content: 'Remix Todo app.' },
-  ];
-};
 
 // error boundary
 export const ErrorBoundary = CommonErrorBoundary;
