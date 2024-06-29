@@ -10,8 +10,17 @@ export const authSignupSchema = z.object({
       /^[a-z]+[a-z0-9]*$/,
       'Lowercase Latin letters and digits, starting from a letter',
     ),
-  password: z.string().min(1, 'Password is required'),
-  // TODO: password validation rules
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .regex(/.{8,}/, 'At least 8 characters')
+    .regex(/[A-Z]+/, 'At least 1 uppercase character')
+    .regex(/[a-z]+/, 'At least 1 lowercase character')
+    .regex(/[0-9]+/, 'At least 1 digit')
+    .regex(
+      /[-#!$@£%^&*()_+|~=`{}\[\]:";'<>?,.\/\\ ]/,
+      'At least 1 special character',
+    ),
 });
 
 //
