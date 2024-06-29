@@ -15,6 +15,7 @@ export const authSignupSchema = z.object({
     .string()
     .min(1, 'Password is required')
     .regex(/.{8,}/, 'At least 8 characters')
+    .max(256, 'Up to 256 characters long')
     .regex(/[A-Z]+/, 'At least 1 uppercase character')
     .regex(/[a-z]+/, 'At least 1 lowercase character')
     .regex(/[0-9]+/, 'At least 1 digit')
