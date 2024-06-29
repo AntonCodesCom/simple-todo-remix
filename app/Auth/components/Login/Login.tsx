@@ -13,6 +13,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthLoginSchema, { authLoginSchema } from '~/Auth/types/LoginSchema';
 
+// props
 interface Props {
   incorrectCredentials?: boolean;
   lastSubmittedAt?: number;
@@ -37,6 +38,7 @@ export default function AuthLogin({
     register,
     trigger,
     formState: { errors },
+    getValues,
   } = useForm<AuthLoginSchema>({
     resolver: zodResolver(authLoginSchema),
     mode: 'onChange',
@@ -57,7 +59,7 @@ export default function AuthLogin({
       return;
     }
     setLoading(true);
-    submit(e.currentTarget);
+    submit(getValues(), { method: 'POST' });
   }
 
   return (
