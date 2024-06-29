@@ -6,6 +6,7 @@ export const authSignupSchema = z.object({
     .string()
     .min(1, 'Username is required')
     .min(4, 'At least 4 characters')
+    .max(64, 'Up to 64 characters long')
     .regex(
       /^[a-z]+[a-z0-9]*$/,
       'Lowercase Latin letters and digits, starting from a letter',
