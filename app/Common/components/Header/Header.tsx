@@ -40,6 +40,7 @@ export default function CommonHeader({ username }: Props) {
           </Typography>
           {username && (
             <Button
+              aria-label={`Logout (${username})`}
               color="inherit"
               component={Link}
               to="/logout"
