@@ -7,7 +7,7 @@ import AuthLoggedInSchema, {
 } from '~/Auth/types/LoggedInSchema';
 import { authLoginSchema } from '~/Auth/types/LoginSchema';
 import env, { mode } from '~/env';
-import { authSession } from '~/sessions';
+import { authSession, meSession } from '~/sessions';
 
 // utility
 async function fetchLogin(
@@ -49,15 +49,24 @@ export async function action({ request }: ActionFunctionArgs) {
   const { username, password } = data;
   const { apiBaseUrl } = env();
   try {
-    const { accessToken } = await fetchLogin(username, password, apiBaseUrl);
+    const { accessToken, username: fetchedUsername } = await fetchLogin(
+      username,
+      password,
+      apiBaseUrl,
+    );
+    const cookieHeader = request.headers.get('Cookie');
     const { getAuthSession, commitAuthSession, authSessionName } =
       authSession();
-    const session = await getAuthSession(request.headers.get('Cookie'));
+    const session = await getAuthSession(cookieHeader);
     session.set(authSessionName, accessToken);
+    const { getMeSession, commitMeSession } = meSession();
+    const _meSession = await getMeSession(cookieHeader);
+    _meSession.set('me', { username: fetchedUsername });
+    const headers = new Headers();
+    headers.append('Set-Cookie', await commitAuthSession(session));
+    headers.append('Set-Cookie', await commitMeSession(_meSession));
     return redirect('/', {
-      headers: {
-        'Set-Cookie': await commitAuthSession(session),
-      },
+      headers,
     });
   } catch (err) {
     if (err instanceof UnauthorizedException) {

@@ -5,7 +5,7 @@ import { UnauthorizedException } from '~/Auth/exceptions';
 import fetchMe from '~/Auth/utils/fetchMe';
 import CommonLayout from '~/Common/components/Layout';
 import env from '~/env';
-import { authSession } from '~/sessions';
+import { authSession, meSession } from '~/sessions';
 
 // utility
 function getAccessTokenExp(accessToken: string): number | null {
@@ -19,8 +19,15 @@ function getAccessTokenExp(accessToken: string): number | null {
 
 // loader
 export async function loader({ request }: LoaderFunctionArgs) {
+  const cookieHeader = request.headers.get('Cookie');
+  const { getMeSession } = meSession();
+  const _meSession = await getMeSession(cookieHeader);
+  const me = _meSession.get('me');
+  if (me) {
+    return json({ username: me.username });
+  }
   const { getAuthSession, destroyAuthSession, authSessionName } = authSession();
-  const session = await getAuthSession(request.headers.get('Cookie'));
+  const session = await getAuthSession(cookieHeader);
   const accessToken = session.get(authSessionName);
   const exp = getAccessTokenExp(accessToken);
   if (!exp || exp - Date.now() / 1000 < 86400) {

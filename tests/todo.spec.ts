@@ -45,7 +45,7 @@ async function getTodoListItems(page: Page): Promise<Locator[]> {
 //
 test.describe('Todo', () => {
   // values used throughout the test suite
-  const { baseUrl, apiBaseUrl } = env();
+  const { appBaseUrl, apiBaseUrl } = env();
   let accessToken: string;
 
   const { actionTimeout } = e2eConfig;
@@ -65,7 +65,7 @@ test.describe('Todo', () => {
     });
     // setting user session (via cookies)
     const sessionCookie = await generateSessionCookie(accessToken);
-    await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+    await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
     // visiting the page
     await page.goto('/');
   });

@@ -5,13 +5,14 @@ import { alice } from './fixtures/users';
 import fetchAccessToken from './utils/fetchAccessToken';
 import e2eConfig from './config';
 import { faker } from '@faker-js/faker';
+import { meSession } from '~/sessions';
 
 //
 // e2e test
 //
 test.describe('Auth', () => {
   // config
-  const { baseUrl, apiBaseUrl } = env();
+  const { appBaseUrl, apiBaseUrl } = env();
   const { actionTimeout } = e2eConfig;
 
   // data seeding
@@ -26,7 +27,7 @@ test.describe('Auth', () => {
       // setting auth session (via cookies)
       const invalidAccessToken = 'INVALID_ACCESS_TOKEN';
       const sessionCookie = await generateSessionCookie(invalidAccessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       // visiting the page
       await page.goto('/');
       await expect(page).toHaveURL('/login');
@@ -44,7 +45,7 @@ test.describe('Auth', () => {
         apiBaseUrl,
       });
       const sessionCookie = await generateSessionCookie(accessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       await page.goto('/login');
       await expect(page).toHaveURL('/');
     });
@@ -58,7 +59,7 @@ test.describe('Auth', () => {
         apiBaseUrl,
       });
       const sessionCookie = await generateSessionCookie(accessToken);
-      await page.context().addCookies([{ ...sessionCookie, url: baseUrl }]);
+      await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
       await page.goto('/signup');
       await expect(page).toHaveURL('/');
     });
@@ -84,6 +85,16 @@ test.describe('Auth', () => {
         name: `Logout (${username})`,
       });
       await expect(logoutButton).toBeVisible();
+      // asserting "me" cookie
+      const cookies = await page.context().cookies(appBaseUrl);
+      const meCookie = cookies.find((x) => x.name === 'me');
+      expect(meCookie).toBeDefined();
+      const { getMeSession } = meSession();
+      const _meSession = await getMeSession(
+        `${meCookie!.name}=${meCookie!.value}`,
+      );
+      const me = _meSession.get('me');
+      expect(me?.username).toBe(username);
     });
 
     test('incorrect credentials', async ({ page }) => {
@@ -133,5 +144,50 @@ test.describe('Auth', () => {
       name: `Logout (${username})`,
     });
     await expect(logoutButton).toBeVisible();
+    // asserting "me" cookie
+    const cookies = await page.context().cookies(appBaseUrl);
+    const meCookie = cookies.find((x) => x.name === 'me');
+    expect(meCookie).toBeDefined();
+    const { getMeSession } = meSession();
+    const _meSession = await getMeSession(
+      `${meCookie!.name}=${meCookie!.value}`,
+    );
+    const me = _meSession.get('me');
+    expect(me?.username).toBe(username);
+  });
+
+  // logout
+  test('logout', async ({ page, request }) => {
+    const { username, password } = alice;
+    const accessToken = await fetchAccessToken({
+      request,
+      username,
+      password,
+      apiBaseUrl,
+    });
+    const sessionCookie = await generateSessionCookie(accessToken);
+    // generating "me" cookie
+    const { getMeSession, commitMeSession } = meSession();
+    const _meSession = await getMeSession();
+    _meSession.set('me', { username });
+    const rawMeCookie = await commitMeSession(_meSession);
+    const parts = rawMeCookie.split(';')[0].split('=');
+    const mockMeCookie = {
+      name: parts[0],
+      value: parts[1],
+    };
+    await page.context().addCookies([{ ...sessionCookie, url: appBaseUrl }]);
+    await page.context().addCookies([{ ...mockMeCookie, url: appBaseUrl }]);
+    await page.goto('/');
+    await page
+      .getByRole('link', {
+        name: `Logout (${username})`,
+      })
+      .click({ timeout: actionTimeout });
+    await expect(page).toHaveURL('/login');
+    // TODO: figure out whether we should assert the auth session cookie absence
+    const cookies = await page.context().cookies(appBaseUrl);
+    const actualMeCookie = cookies.find((x) => x.name === 'me');
+    expect(actualMeCookie).toBeUndefined();
   });
 });

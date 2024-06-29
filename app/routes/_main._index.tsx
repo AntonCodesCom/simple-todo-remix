@@ -12,13 +12,13 @@ import { authSession } from '~/sessions';
 
 // utility
 async function fetchTodos(
-  userId: string,
+  accessToken: string,
   apiBaseUrl: string,
 ): Promise<TodoItem[]> {
   const url = new URL('todo', apiBaseUrl);
   const res = await fetch(url, {
     headers: {
-      authorization: `Bearer ${userId}`,
+      authorization: `Bearer ${accessToken}`,
     },
   });
   if (!res.ok) {
@@ -41,8 +41,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { apiBaseUrl } = env();
   const { getAuthSession, authSessionName } = authSession();
   const session = await getAuthSession(request.headers.get('Cookie'));
-  const userId = session.get(authSessionName);
-  const todos = await fetchTodos(userId, apiBaseUrl);
+  const accessToken = session.get(authSessionName);
+  const todos = await fetchTodos(accessToken, apiBaseUrl);
   return json({ todos });
 }
 

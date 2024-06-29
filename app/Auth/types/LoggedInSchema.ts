@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const authLoggedInSchema = z.object({
   accessToken: z.string(),
+  username: z.string(),
 });
 
 /**
