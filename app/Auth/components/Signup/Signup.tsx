@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Link as MuiLink,
   TextField,
   Typography,
@@ -50,48 +51,54 @@ export default function AuthSignup({ takenUsername }: Props) {
         Sign Up
       </Typography>
       {takenUsername && (
-        <Alert severity="error">
+        <Alert severity="error" sx={{ display: 'inline-flex' }}>
           Username "{takenUsername}" is already taken.
         </Alert>
       )}
       <Box pb={1} />
-      <form
-        method="post"
-        noValidate
-        aria-labelledby={headingHtmlId}
-        onSubmit={handleSubmit(handleSubmitSuccess)}
-      >
-        <Box mb={0.5}>
-          <TextField
-            {...register('username')}
-            label="Username"
-            size="small"
-            required
-            error={!!errors.username}
-            helperText={errors.username?.message}
-            // helperText="Lowercase Latin letters and numbers, starting from a letter."
-            disabled={loading}
-          />
-        </Box>
-        <Box mb={0.5}>
-          <TextField
-            {...register('password')}
-            type="password"
-            label="Password"
-            size="small"
-            required
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            // helperText="Minimum 8 characters, a lowercase, an uppercase and a special character."
-            disabled={loading}
-          />
-        </Box>
-        <Box>
-          <Button type="submit" variant="contained" disabled={loading}>
-            Sign Up
-          </Button>
-        </Box>
-      </form>
+      <Grid container>
+        <Grid item xs={12} sm={6} md={4}>
+          <form
+            method="post"
+            noValidate
+            aria-labelledby={headingHtmlId}
+            onSubmit={handleSubmit(handleSubmitSuccess)}
+          >
+            <Box mb={0.5}>
+              <TextField
+                {...register('username')}
+                label="Username"
+                size="small"
+                required
+                error={!!errors.username}
+                helperText={errors.username?.message}
+                // helperText="Lowercase Latin letters and numbers, starting from a letter."
+                disabled={loading}
+                fullWidth
+              />
+            </Box>
+            <Box mb={0.5}>
+              <TextField
+                {...register('password')}
+                type="password"
+                label="Password"
+                size="small"
+                required
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                // helperText="Minimum 8 characters, a lowercase, an uppercase and a special character."
+                disabled={loading}
+                fullWidth
+              />
+            </Box>
+            <Box>
+              <Button type="submit" variant="contained" disabled={loading}>
+                Sign Up
+              </Button>
+            </Box>
+          </form>
+        </Grid>
+      </Grid>
       <Box mb={2} />
       <Box>
         <Typography>
