@@ -5,6 +5,8 @@ import {
   Stack,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { Link } from '@remix-run/react';
 
@@ -13,6 +15,8 @@ interface Props {
 }
 
 export default function CommonHeader({ username }: Props) {
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.up('sm'));
   return (
     <AppBar position="static">
       <Toolbar component={Container}>
@@ -41,7 +45,20 @@ export default function CommonHeader({ username }: Props) {
               to="/logout"
               sx={{ whiteSpace: 'nowrap' }}
             >
-              Logout ({username})
+              Logout&nbsp;
+              {sm && (
+                <Typography
+                  variant="button"
+                  sx={{
+                    maxWidth: { sm: '18rem', md: '30rem' },
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                  }}
+                >
+                  ({username}
+                </Typography>
+              )}
+              {sm && ')'}
             </Button>
           )}
         </Stack>
