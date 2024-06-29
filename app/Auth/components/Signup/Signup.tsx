@@ -30,8 +30,12 @@ export default function AuthSignup({ takenUsername }: Props) {
   } = useForm<AuthSignupSchema>({
     resolver: zodResolver(authSignupSchema),
   });
+  const loading = fetcher.state === 'submitting' || fetcher.state === 'loading';
 
   function handleSubmitSuccess(data: AuthSignupSchema) {
+    if (loading) {
+      return;
+    }
     fetcher.submit(data, { method: 'POST' });
   }
 
@@ -61,6 +65,7 @@ export default function AuthSignup({ takenUsername }: Props) {
             error={!!errors.username}
             helperText={errors.username?.message}
             // helperText="Lowercase Latin letters and numbers, starting from a letter."
+            disabled={loading}
           />
         </Box>
         <Box mb={0.5}>
@@ -73,10 +78,11 @@ export default function AuthSignup({ takenUsername }: Props) {
             error={!!errors.password}
             helperText={errors.password?.message}
             // helperText="Minimum 8 characters, a lowercase, an uppercase and a special character."
+            disabled={loading}
           />
         </Box>
         <Box>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" disabled={loading}>
             Sign Up
           </Button>
         </Box>
