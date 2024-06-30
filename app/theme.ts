@@ -16,7 +16,7 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: colors.cyan[600],
+      main: colors.blue[400],
       contrastText: 'white',
     },
   },

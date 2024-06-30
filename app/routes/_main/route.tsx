@@ -65,8 +65,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 // meta
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Remix Todo' },
-    { name: 'description', content: 'Remix Todo app.' },
+    { title: 'Simple Todo' },
+    {
+      name: 'description',
+      content: 'A Todo application built with Remix and NestJS.',
+    },
   ];
 };
 
