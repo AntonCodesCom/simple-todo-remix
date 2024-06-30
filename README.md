@@ -18,7 +18,7 @@ A Todo app frontend built with Remix and Material UI with focus on usability and
 
 ## Installation
 
-1.  Set up the API backend.
+1.  Set up the [API backend](https://github.com/AntonCodesCom/simple-todo-nest).
 
 1.  Clone this repository.
 
@@ -28,7 +28,7 @@ A Todo app frontend built with Remix and Material UI with focus on usability and
 
 ## Development
 
-Run the dev server:
+Running the dev server:
 
 ```shellscript
 npm run dev
@@ -44,13 +44,18 @@ npm test
 
 Running Playwright end-to-end tests:
 
-- launch the API backend in non-production mode on `localhost:3000`;
+- launch the API backend in non-production mode on `localhost:3000` (see [here](https://github.com/AntonCodesCom/simple-todo-nest?tab=readme-ov-file#running-the-app));
 - launch this app in development mode;
+
+        npm run dev
+
 - run the e2e tests:
 
         npm run test:e2e:dev
 
 ## Deployment
+
+(Copied from official docs.)
 
 First, build your app for production:
 
@@ -67,6 +72,8 @@ npm start
 Now you'll need to pick a host to deploy it to.
 
 ### DIY
+
+(Copied from official docs.)
 
 If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
 

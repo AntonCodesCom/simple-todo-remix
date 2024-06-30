@@ -1,6 +1,8 @@
 {
   "name": "remix-todo",
   "private": true,
+  "description": "A Todo app frontend built with Remix and Material UI.",
+  "author": "AntonCodes",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
