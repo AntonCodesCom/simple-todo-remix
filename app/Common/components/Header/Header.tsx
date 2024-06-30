@@ -36,7 +36,7 @@ export default function CommonHeader({ username }: Props) {
             component={Link}
             to="/"
           >
-            Remix Todo
+            Simple Todo
           </Typography>
           {username && (
             <Button
