@@ -9,7 +9,7 @@ export const authSignupSchema = z.object({
     .max(64, 'Up to 64 characters long')
     .regex(
       /^[a-z]+[a-z0-9_]*$/,
-      'Lowercase Latin letters and digits, starting from a letter',
+      'Lowercase Latin letters, digits and underscores, starting from a letter',
     ),
   password: z
     .string()
