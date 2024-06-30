@@ -1,14 +1,54 @@
-# Welcome to Remix + Vite!
+# Simple Todo (Remix)
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+A Todo app frontend built with Remix and Material UI with focus on usability and reliability.
+
+## Features
+
+- Creating, toggling, editing and deleting Todos
+- Simple but nice & convenient design based on Material UI
+- Sophisticated user interface made simple
+- Neat form validation
+- User authentication
+- Integration with RESTful API (NestJS)
+- Loading and empty states
+- Server response data type safety
+- Graceful error handling
+- Graceful environment variables handling
+- Covered with automated tests
+
+## Installation
+
+1.  Set up the API backend.
+
+1.  Clone this repository.
+
+1.  Install dependencies:
+
+        npm install
 
 ## Development
 
-Run the Vite dev server:
+Run the dev server:
 
 ```shellscript
 npm run dev
 ```
+
+## Testing
+
+Running internal integration tests:
+
+```sh
+npm test
+```
+
+Running Playwright end-to-end tests:
+
+- launch the API backend in non-production mode on localhost:3000
+- launch this app in development mode
+- run the e2e tests:
+
+        npm run test:e2e:dev
 
 ## Deployment
 
