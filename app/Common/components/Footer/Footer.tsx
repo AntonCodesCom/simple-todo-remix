@@ -10,14 +10,15 @@ export default function CommonFooter() {
       >
         <Typography color="GrayText">Made by AntonCodes</Typography>
         <Box>
-          <Link mr={1}>GitHub</Link>
           <Link
-            href="https://www.linkedin.com/in/antoncodes/"
+            mr={1}
+            href="https://github.com/AntonCodesCom/simple-todo-remix"
             target="_blank"
             rel="noreferrer"
           >
-            LinkedIn
+            GitHub
           </Link>
+          <Link href="https://www.linkedin.com/in/antoncodes">LinkedIn</Link>
         </Box>
       </Stack>
     </Container>

@@ -22,6 +22,9 @@ A Todo app frontend built with Remix and Material UI with focus on usability and
 
 1.  Clone this repository.
 
+        git clone https://github.com/AntonCodesCom/simple-todo-remix
+        cd simple-todo-remix
+
 1.  Install dependencies:
 
         npm install
@@ -36,7 +39,7 @@ npm run dev
 
 ## Testing
 
-Running internal integration tests:
+Running internal unit & integration tests:
 
 ```sh
 npm test
