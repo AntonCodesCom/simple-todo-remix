@@ -4,17 +4,17 @@ A Todo app frontend built with Remix and Material UI with focus on usability and
 
 ## Features
 
-- Creating, toggling, editing and deleting Todos
-- Simple but nice & convenient design based on Material UI
-- Sophisticated user interface made simple
-- Neat form validation
-- User authentication
-- Integration with RESTful API (NestJS)
-- Loading and empty states
-- Server response data type safety
-- Graceful error handling
-- Graceful environment variables handling
-- Covered with automated tests
+- Creating, toggling, editing and deleting Todos.
+- Simple but nice & convenient design based on Material UI.
+- Sophisticated user interface made simple.
+- Neat form validation.
+- User authentication.
+- Integration with RESTful API (NestJS).
+- Loading and empty states.
+- Server response data type safety.
+- Graceful error handling.
+- Graceful environment variables handling.
+- Covered with automated tests.
 
 ## Installation
 
@@ -44,8 +44,8 @@ npm test
 
 Running Playwright end-to-end tests:
 
-- launch the API backend in non-production mode on localhost:3000
-- launch this app in development mode
+- launch the API backend in non-production mode on `localhost:3000`;
+- launch this app in development mode;
 - run the e2e tests:
 
         npm run test:e2e:dev
