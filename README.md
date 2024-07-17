@@ -2,6 +2,10 @@
 
 A Todo app frontend built with Remix and Material UI with focus on usability and reliability.
 
+This is a Remix version of the Todo app frontend.
+
+The Next.js version can be found [here](https://github.com/AntonCodesCom/simple-todo-nextjs).
+
 ## Features
 
 - Creating, toggling, editing and deleting Todos.
