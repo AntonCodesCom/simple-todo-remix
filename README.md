@@ -1,5 +1,7 @@
 # Simple Todo (Remix)
 
+Live demo: https://todo-remix.azurewebsites.net/
+
 A Todo app frontend built with Remix and Material UI with focus on usability and reliability.
 
 This is a Remix version of the Todo app frontend.
